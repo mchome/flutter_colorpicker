@@ -1,0 +1,11 @@
+name: flutter_colorpicker_example
+description: A new Flutter project.
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_colorpicker:
+    path: ../
+
+flutter:
+  uses-material-design: true

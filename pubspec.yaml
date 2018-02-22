@@ -1,0 +1,9 @@
+name: flutter_colorpicker
+description: A new flutter package project.
+version: 0.0.1
+author:
+homepage:
+
+dependencies:
+  flutter:
+    sdk: flutter
