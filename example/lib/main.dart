@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
       child: new RaisedButton(
         elevation: 3.0,
         onPressed: () {
+          pickerColor = currentColor;
           showDialog(
             context: context,
             child: new AlertDialog(
