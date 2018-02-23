@@ -1,6 +1,6 @@
 name: flutter_colorpicker
-description: A new flutter package project.
-version: 0.0.1
+description: A HSV color picker for your flutter app.
+version: 0.0.1+1
 author: "fuyumi <fnatic.roach@gmail.com>"
 homepage: https://github.com/mchome/flutter_colorpicker
 

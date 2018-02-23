@@ -1,3 +1,9 @@
-## [0.0.1] - TODO: Add release date.
+# CHANGELOG
 
-* TODO: Describe initial release.
+## [0.0.1+1]
+
+* Update readme.
+
+## [0.0.1]
+
+* Initial release.
