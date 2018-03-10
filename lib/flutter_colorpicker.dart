@@ -113,8 +113,7 @@ class _ColorPickerState extends State<ColorPicker> {
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return new Container(
-      width: 300.0,
-      height: (orientation == Orientation.portrait) ? 440.0 : 270.0,
+      width: 400.0,
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -149,7 +148,7 @@ class _ColorPickerState extends State<ColorPicker> {
               );
             },
           ),
-          new Padding(padding: const EdgeInsets.all(10.0)),
+          new Padding(padding: const EdgeInsets.all(5.0)),
           new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -175,7 +174,7 @@ class _ColorPickerState extends State<ColorPicker> {
                   ),
                 ),
               ),
-              new Padding(padding: const EdgeInsets.only(right: 25.0)),
+              new Padding(padding: const EdgeInsets.only(right: 10.0)),
               new Column(
                 children: <Widget>[
                   new Container(

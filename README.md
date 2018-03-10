@@ -65,7 +65,6 @@ showDialog(
 
 ![preview](https://user-images.githubusercontent.com/7392658/36585408-bb4e96a4-18b8-11e8-8c20-d4dc200e1a7c.gif)
 
-
 Details in [example/](https://github.com/mchome/flutter_colorpicker/tree/master/example) folder.
 
 I have created the `ColorPicker` widget so you can use the color picker out of the box.

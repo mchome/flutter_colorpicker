@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 main() => runApp(
-  new MaterialApp(
-    home: new Scaffold(
-      appBar: new AppBar(
-        title: const Text('Flutter Color Picker Example'),
+      new MaterialApp(
+        home: new Scaffold(
+          appBar: new AppBar(
+            title: const Text('Flutter Color Picker Example'),
+          ),
+          body: new MyApp(),
+        ),
       ),
-      body: new MyApp(),
-    ),
-  ),
-);
+    );
 
 class MyApp extends StatefulWidget {
   @override
@@ -41,7 +41,8 @@ class _MyAppState extends State<MyApp> {
             child: new AlertDialog(
               title: const Text('Pick a color!'),
               content: new SingleChildScrollView(
-                child: new ColorPicker(pickerColor: pickerColor, onColorChanged: changeColor),
+                child: new ColorPicker(
+                    pickerColor: pickerColor, onColorChanged: changeColor),
               ),
               actions: <Widget>[
                 new FlatButton(
@@ -62,4 +63,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
