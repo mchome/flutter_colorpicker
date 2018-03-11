@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.0.3]
+
+* Optimization for responsibility design.
+
 ## [0.0.2]
 
 * Change widget's width.

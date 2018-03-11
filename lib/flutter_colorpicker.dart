@@ -10,17 +10,18 @@ class ColorPicker extends StatefulWidget {
   ColorPicker({
     @required this.pickerColor,
     @required this.onColorChanged,
+    this.enableLabel: true,
+    this.colorPickerWidth: 300.0,
+    this.colorPainterHeight: 220.0,
   });
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
+  final bool enableLabel;
+  final double colorPickerWidth;
+  final double colorPainterHeight;
 
-  final Map<String, double> colorPainterSize = {
-    'width': 300.0,
-    'height': 250.0
-  };
-  final Map<String, double> huePainterSize = {'width': 200.0, 'height': 13.0};
-  final Map<String, double> alphaPainterSize = {'width': 200.0, 'height': 13.0};
+  final double sliderPainterHeight = 13.0;
 
   @override
   State<StatefulWidget> createState() => new _ColorPickerState();
@@ -113,18 +114,18 @@ class _ColorPickerState extends State<ColorPicker> {
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return new Container(
-      width: 400.0,
+      width: widget.colorPickerWidth,
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new LayoutBuilder(
             builder: (BuildContext context, BoxConstraints box) {
               double height = (orientation == Orientation.portrait)
-                  ? widget.colorPainterSize['height']
-                  : widget.colorPainterSize['height'] / 1.5;
+                  ? widget.colorPainterHeight
+                  : widget.colorPainterHeight / 1.5;
               return new Container(
                 // build color picker
-                width: widget.colorPainterSize['width'],
+                width: box.maxWidth,
                 height: height,
                 child: new GestureDetector(
                   onPanUpdate: (DragUpdateDetails details) {
@@ -132,15 +133,14 @@ class _ColorPickerState extends State<ColorPicker> {
                     Offset localOffset =
                         getBox.globalToLocal(details.globalPosition);
                     setState(() {
-                      saturation = localOffset.dx
-                              .clamp(0.0, widget.colorPainterSize['width']) /
-                          widget.colorPainterSize['width'];
+                      saturation = localOffset.dx.clamp(0.0, box.maxWidth) /
+                          box.maxWidth;
                       value = 1 - localOffset.dy.clamp(0.0, height) / height;
                       getColorValue();
                     });
                   },
                   child: new CustomPaint(
-                    size: new Size(widget.colorPainterSize['width'], height),
+                    size: new Size(box.maxWidth, height),
                     painter: new ColorPainter(hue,
                         saturation: saturation, value: value),
                   ),
@@ -150,7 +150,6 @@ class _ColorPickerState extends State<ColorPicker> {
           ),
           new Padding(padding: const EdgeInsets.all(5.0)),
           new Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               new Container(
                 // build color indicator
@@ -174,148 +173,153 @@ class _ColorPickerState extends State<ColorPicker> {
                   ),
                 ),
               ),
-              new Padding(padding: const EdgeInsets.only(right: 10.0)),
-              new Column(
-                children: <Widget>[
-                  new Container(
-                    width: widget.huePainterSize['width'],
-                    height: widget.huePainterSize['height'] * 3,
-                    child: new CustomMultiChildLayout(
-                      delegate: new _SliderLayout(),
+              new Padding(padding: const EdgeInsets.only(right: 15.0)),
+              new Expanded(
+                child: new LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints box) {
+                    return new Column(
                       children: <Widget>[
-                        new LayoutId(
-                          id: _SliderLayout.painter,
-                          child: new ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(5.0)),
-                            child: new CustomPaint(
-                              painter: new HuePainter(),
-                            ),
-                          ),
-                        ),
-                        new LayoutId(
-                          id: _SliderLayout.pointer,
-                          child: new Transform(
-                            transform: new Matrix4.identity()
-                              ..translate(
-                                  widget.huePainterSize['width'] * hue / 360),
-                            child: new CustomPaint(
-                              painter: new HuePointerPainter(),
-                            ),
-                          ),
-                        ),
-                        new LayoutId(
-                          id: _SliderLayout.gestureContainer,
-                          child: new LayoutBuilder(
-                            // build hue slider
-                            builder:
-                                (BuildContext context, BoxConstraints box) {
-                              return new GestureDetector(
-                                onPanUpdate: (DragUpdateDetails details) {
-                                  RenderBox getBox = context.findRenderObject();
-                                  Offset localOffset = getBox
-                                      .globalToLocal(details.globalPosition);
-                                  setState(() {
-                                    hue = localOffset.dx.clamp(0.0,
-                                            widget.huePainterSize['width']) /
-                                        widget.huePainterSize['width'] *
-                                        360;
-                                    getColorValue();
-                                  });
-                                },
-                                child: new Container(
-                                  color: const Color(0),
+                        new Container(
+                          width: box.maxWidth,
+                          height: widget.sliderPainterHeight * 3,
+                          child: new CustomMultiChildLayout(
+                            delegate: new _SliderLayout(),
+                            children: <Widget>[
+                              new LayoutId(
+                                id: _SliderLayout.painter,
+                                child: new ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(5.0)),
+                                  child: new CustomPaint(
+                                    painter: new HuePainter(),
+                                  ),
                                 ),
-                              );
-                            },
+                              ),
+                              new LayoutId(
+                                id: _SliderLayout.pointer,
+                                child: new Transform(
+                                  transform: new Matrix4.identity()
+                                    ..translate(box.maxWidth * hue / 360),
+                                  child: new CustomPaint(
+                                    painter: new HuePointerPainter(),
+                                  ),
+                                ),
+                              ),
+                              new LayoutId(
+                                id: _SliderLayout.gestureContainer,
+                                child: new LayoutBuilder(
+                                  // build hue slider
+                                  builder: (BuildContext context,
+                                      BoxConstraints box) {
+                                    return new GestureDetector(
+                                      onPanUpdate: (DragUpdateDetails details) {
+                                        RenderBox getBox =
+                                            context.findRenderObject();
+                                        Offset localOffset =
+                                            getBox.globalToLocal(
+                                                details.globalPosition);
+                                        setState(() {
+                                          hue = localOffset.dx
+                                                  .clamp(0.0, box.maxWidth) /
+                                              box.maxWidth *
+                                              360;
+                                          getColorValue();
+                                        });
+                                      },
+                                      child: new Container(
+                                        color: const Color(0),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        new Container(
+                          width: box.maxWidth,
+                          height: widget.sliderPainterHeight * 3,
+                          child: new CustomMultiChildLayout(
+                            delegate: new _SliderLayout(),
+                            children: <Widget>[
+                              new LayoutId(
+                                id: _SliderLayout.painter,
+                                child: new ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(5.0)),
+                                  child: new CustomPaint(
+                                    painter: new AlphaPainter(),
+                                  ),
+                                ),
+                              ),
+                              new LayoutId(
+                                id: _SliderLayout.pointer,
+                                child: new Transform(
+                                  transform: new Matrix4.identity()
+                                    ..translate(box.maxWidth * alpha),
+                                  child: new CustomPaint(
+                                    painter: new AlphaPointerPainter(),
+                                  ),
+                                ),
+                              ),
+                              new LayoutId(
+                                id: _SliderLayout.gestureContainer,
+                                child: new LayoutBuilder(
+                                  // build transparent slider
+                                  builder: (BuildContext context,
+                                      BoxConstraints box) {
+                                    return new GestureDetector(
+                                      onPanUpdate: (DragUpdateDetails details) {
+                                        RenderBox getBox =
+                                            context.findRenderObject();
+                                        Offset localOffset =
+                                            getBox.globalToLocal(
+                                                details.globalPosition);
+                                        setState(() {
+                                          alpha = localOffset.dx
+                                                  .clamp(0.0, box.maxWidth) /
+                                              box.maxWidth;
+                                          getColorValue();
+                                        });
+                                      },
+                                      child: new Container(
+                                        color: const Color(0),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  new Container(
-                    width: widget.alphaPainterSize['width'],
-                    height: widget.alphaPainterSize['height'] * 3,
-                    child: new CustomMultiChildLayout(
-                      delegate: new _SliderLayout(),
-                      children: <Widget>[
-                        new LayoutId(
-                          id: _SliderLayout.painter,
-                          child: new ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                                const Radius.circular(5.0)),
-                            child: new CustomPaint(
-                              painter: new AlphaPainter(),
-                            ),
-                          ),
-                        ),
-                        new LayoutId(
-                          id: _SliderLayout.pointer,
-                          child: new Transform(
-                            transform: new Matrix4.identity()
-                              ..translate(
-                                  widget.alphaPainterSize['width'] * alpha),
-                            child: new CustomPaint(
-                              painter: new AlphaPointerPainter(),
-                            ),
-                          ),
-                        ),
-                        new LayoutId(
-                          id: _SliderLayout.gestureContainer,
-                          child: new LayoutBuilder(
-                            // build transparent slider
-                            builder:
-                                (BuildContext context, BoxConstraints box) {
-                              return new GestureDetector(
-                                onPanUpdate: (DragUpdateDetails details) {
-                                  RenderBox getBox = context.findRenderObject();
-                                  Offset localOffset = getBox
-                                      .globalToLocal(details.globalPosition);
-                                  setState(() {
-                                    alpha = localOffset.dx.clamp(0.0,
-                                            widget.alphaPainterSize['width']) /
-                                        widget.alphaPainterSize['width'];
-                                    getColorValue();
-                                  });
-                                },
-                                child: new Container(
-                                  color: const Color(0),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                    );
+                  },
+                ),
               ),
+              new Padding(padding: const EdgeInsets.only(right: 15.0)),
             ],
           ),
-          (orientation == Orientation.portrait)
-              ? new Column(
+          new Padding(padding: const EdgeInsets.all(5.0)),
+          (orientation == Orientation.portrait && widget.enableLabel)
+              ? new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Padding(padding: const EdgeInsets.all(10.0)),
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        new DropdownButton(
-                          value: colorType,
-                          onChanged: (String val) => setState(() {
-                                colorType = val;
-                                getColorValue();
-                              }),
-                          items: colorTypes.map((Map<String, List> item) {
-                            return new DropdownMenuItem(
-                              value: item.keys.map((String key) => key).first,
-                              child: new Text(
-                                  item.keys.map((String key) => key).first),
-                            );
-                          }).toList(),
-                        ),
-                      ]..addAll(colorValueLabels() ?? <Widget>[]),
+                    new DropdownButton(
+                      value: colorType,
+                      onChanged: (String val) => setState(() {
+                            colorType = val;
+                            getColorValue();
+                          }),
+                      items: colorTypes.map((Map<String, List> item) {
+                        return new DropdownMenuItem(
+                          value: item.keys.map((String key) => key).first,
+                          child: new Text(
+                              item.keys.map((String key) => key).first),
+                        );
+                      }).toList(),
                     ),
-                  ],
+                  ]..addAll(colorValueLabels() ?? <Widget>[]),
                 )
               : new Container(),
         ],
@@ -328,7 +332,7 @@ class _ColorPickerState extends State<ColorPicker> {
       if (item.keys.first == colorType) {
         return item[colorType].map((String val) {
           return new Container(
-            width: 50.0,
+            width: 43.0,
             height: 70.0,
             child: new Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -337,7 +341,12 @@ class _ColorPickerState extends State<ColorPicker> {
                     style: new TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 16.0)),
                 new Padding(padding: const EdgeInsets.only(top: 10.0)),
-                new Text(colorValue[item[colorType].indexOf(val)]),
+                new Expanded(
+                  child: new Text(
+                    colorValue[item[colorType].indexOf(val)],
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
           );
