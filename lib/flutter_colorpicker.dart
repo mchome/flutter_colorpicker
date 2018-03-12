@@ -7,13 +7,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ColorPicker extends StatefulWidget {
-  ColorPicker({
-    @required this.pickerColor,
-    @required this.onColorChanged,
-    this.enableLabel: true,
-    this.colorPickerWidth: 300.0,
-    this.pickerAreaHeightPercent: 1.0
-  });
+  ColorPicker(
+      {@required this.pickerColor,
+      @required this.onColorChanged,
+      this.enableLabel: true,
+      this.colorPickerWidth: 300.0,
+      this.pickerAreaHeightPercent: 1.0});
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
