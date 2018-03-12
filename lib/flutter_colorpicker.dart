@@ -12,14 +12,14 @@ class ColorPicker extends StatefulWidget {
     @required this.onColorChanged,
     this.enableLabel: true,
     this.colorPickerWidth: 300.0,
-    this.colorPainterHeight: 220.0,
+    this.pickerAreaHeightPercent: 1.0
   });
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final bool enableLabel;
   final double colorPickerWidth;
-  final double colorPainterHeight;
+  final double pickerAreaHeightPercent;
 
   final double sliderPainterHeight = 13.0;
 
@@ -112,7 +112,6 @@ class _ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    final Orientation orientation = MediaQuery.of(context).orientation;
     return new Container(
       width: widget.colorPickerWidth,
       child: new Column(
@@ -120,9 +119,7 @@ class _ColorPickerState extends State<ColorPicker> {
         children: <Widget>[
           new LayoutBuilder(
             builder: (BuildContext context, BoxConstraints box) {
-              double height = (orientation == Orientation.portrait)
-                  ? widget.colorPainterHeight
-                  : widget.colorPainterHeight / 1.5;
+              double height = box.maxWidth * widget.pickerAreaHeightPercent;
               return new Container(
                 // build color picker
                 width: box.maxWidth,
@@ -301,7 +298,7 @@ class _ColorPickerState extends State<ColorPicker> {
             ],
           ),
           new Padding(padding: const EdgeInsets.all(5.0)),
-          (orientation == Orientation.portrait && widget.enableLabel)
+          (widget.enableLabel)
               ? new Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[

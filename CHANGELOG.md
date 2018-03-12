@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.0.4]
+
+* Replace a parameter from `colorPainterHeight` to `pickerAreaHeightPercent` to give a ratio on the picker area.
+
 ## [0.0.3]
 
 * Optimization for responsibility design.

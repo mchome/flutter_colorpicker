@@ -42,7 +42,11 @@ class _MyAppState extends State<MyApp> {
               title: const Text('Pick a color!'),
               content: new SingleChildScrollView(
                 child: new ColorPicker(
-                    pickerColor: pickerColor, onColorChanged: changeColor),
+                  pickerColor: pickerColor,
+                  onColorChanged: changeColor,
+                  colorPickerWidth: 1000.0,
+                  pickerAreaHeightPercent: 0.7,
+                ),
               ),
               actions: <Widget>[
                 new FlatButton(

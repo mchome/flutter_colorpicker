@@ -48,7 +48,12 @@ showDialog(
     child: new AlertDialog(
         title: const Text('Pick a color!'),
         content: new SingleChildScrollView(
-            child: new ColorPicker(pickerColor: pickerColor, onColorChanged: changeColor),
+            child: new ColorPicker(
+                pickerColor: pickerColor,
+                onColorChanged: changeColor,
+                enableLabel: true,
+                pickerAreaHeightPercent: 0.8,
+            ),
         ),
         actions: <Widget>[
             new FlatButton(
