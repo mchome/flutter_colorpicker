@@ -1,6 +1,6 @@
 name: flutter_colorpicker
 description: A HSV color picker for your flutter app.
-version: 0.0.4
+version: 0.0.5
 author: "fuyumi <fnatic.roach@gmail.com>"
 homepage: https://github.com/mchome/flutter_colorpicker
 
@@ -9,4 +9,5 @@ dependencies:
     sdk: flutter
 
 environment:
-    sdk: ">=1.8.0 <2.0.0"
+  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+  flutter: ">=0.1.4 <2.0.0"

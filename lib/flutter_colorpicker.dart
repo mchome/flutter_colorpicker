@@ -99,7 +99,7 @@ class _ColorPickerState extends State<ColorPicker> {
     super.initState();
     String baseEncodedImage =
         'iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==';
-    chessTexture = BASE64.decode(baseEncodedImage);
+    chessTexture = base64.decode(baseEncodedImage);
     HSVColor color = new HSVColor.fromColor(widget.pickerColor);
     hue = color.hue;
     saturation = color.saturation;

@@ -38,26 +38,28 @@ class _MyAppState extends State<MyApp> {
           pickerColor = currentColor;
           showDialog(
             context: context,
-            child: new AlertDialog(
-              title: const Text('Pick a color!'),
-              content: new SingleChildScrollView(
-                child: new ColorPicker(
-                  pickerColor: pickerColor,
-                  onColorChanged: changeColor,
-                  colorPickerWidth: 1000.0,
-                  pickerAreaHeightPercent: 0.7,
+            builder: (BuildContext context) {
+              return new AlertDialog(
+                title: const Text('Pick a color!'),
+                content: new SingleChildScrollView(
+                  child: new ColorPicker(
+                    pickerColor: pickerColor,
+                    onColorChanged: changeColor,
+                    colorPickerWidth: 1000.0,
+                    pickerAreaHeightPercent: 0.7,
+                  ),
                 ),
-              ),
-              actions: <Widget>[
-                new FlatButton(
-                  child: new Text('Got it'),
-                  onPressed: () {
-                    setState(() => currentColor = pickerColor);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
+                actions: <Widget>[
+                  new FlatButton(
+                    child: new Text('Got it'),
+                    onPressed: () {
+                      setState(() => currentColor = pickerColor);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
           );
         },
         child: new Text('Change me'),
