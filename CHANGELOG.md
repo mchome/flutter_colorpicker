@@ -11,7 +11,7 @@
 
 ## [0.0.3]
 
-* Optimization for responsibility design.
+* Optimization for responsive design.
 
 ## [0.0.2]
 
