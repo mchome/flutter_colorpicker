@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 main() => runApp(
-      new MaterialApp(
-        home: new Scaffold(
-          appBar: new AppBar(
+      MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
             title: const Text('Flutter Color Picker Example'),
           ),
-          body: new MyApp(),
+          body: MyApp(),
         ),
       ),
     );
 
 class MyApp extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _MyAppState();
+  State<StatefulWidget> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  Color pickerColor = new Color(0xff443a49);
-  Color currentColor = new Color(0xff443a49);
+  Color pickerColor = Color(0xff443a49);
+  Color currentColor = Color(0xff443a49);
 
   ValueChanged<Color> onColorChanged;
 
@@ -31,18 +31,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return new Center(
-      child: new RaisedButton(
+    return Center(
+      child: RaisedButton(
         elevation: 3.0,
         onPressed: () {
           pickerColor = currentColor;
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return new AlertDialog(
+              return AlertDialog(
                 title: const Text('Pick a color!'),
-                content: new SingleChildScrollView(
-                  child: new ColorPicker(
+                content: SingleChildScrollView(
+                  child: ColorPicker(
                     pickerColor: pickerColor,
                     onColorChanged: changeColor,
                     colorPickerWidth: 1000.0,
@@ -50,8 +50,8 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
                 actions: <Widget>[
-                  new FlatButton(
-                    child: new Text('Got it'),
+                  FlatButton(
+                    child: Text('Got it'),
                     onPressed: () {
                       setState(() => currentColor = pickerColor);
                       Navigator.of(context).pop();
@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
             },
           );
         },
-        child: new Text('Change me'),
+        child: Text('Change me'),
         color: currentColor,
         textColor: const Color(0xffffffff),
       ),

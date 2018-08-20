@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.0.6]
+
+* Better landscape view.
+
 ## [0.0.5]
 
 * Replace some deprecated functions.
