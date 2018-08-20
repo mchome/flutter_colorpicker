@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.0.7]
+
+* Fix analysis warning.
+
 ## [0.0.6]
 
 * Better landscape view.

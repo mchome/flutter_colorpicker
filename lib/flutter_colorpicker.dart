@@ -357,6 +357,8 @@ class _ColorPickerState extends State<ColorPicker> {
           ),
         );
     }
+
+    return Container();
   }
 
   List<Widget> colorValueLabels() {
