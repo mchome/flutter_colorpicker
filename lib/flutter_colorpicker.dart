@@ -177,7 +177,7 @@ class _ColorPickerState extends State<ColorPicker> {
                 LayoutId(
                   id: _SliderLayout.pointer,
                   child: Transform(
-                    transform: Matrix4.identity()..translate(width * hue / 360),
+                    transform: Matrix4.identity()..translate((width - 30.0) * hue / 360 + 15.0),
                     child: CustomPaint(
                       painter: HuePointerPainter(),
                     ),
@@ -229,7 +229,7 @@ class _ColorPickerState extends State<ColorPicker> {
                 LayoutId(
                   id: _SliderLayout.pointer,
                   child: Transform(
-                    transform: Matrix4.identity()..translate(width * alpha),
+                    transform: Matrix4.identity()..translate((width - 30.0) * alpha + 15.0),
                     child: CustomPaint(
                       painter: AlphaPointerPainter(),
                     ),
@@ -301,7 +301,6 @@ class _ColorPickerState extends State<ColorPicker> {
                 children: <Widget>[
                   Padding(padding: const EdgeInsets.only(right: 5.0)),
                   _colorIndicator,
-                  Padding(padding: const EdgeInsets.only(right: 15.0)),
                   Expanded(
                     child: LayoutBuilder(
                       builder: (BuildContext context, BoxConstraints box) {
@@ -309,7 +308,6 @@ class _ColorPickerState extends State<ColorPicker> {
                       },
                     ),
                   ),
-                  Padding(padding: const EdgeInsets.only(right: 15.0)),
                 ],
               ),
               Padding(padding: const EdgeInsets.all(5.0)),
@@ -331,11 +329,11 @@ class _ColorPickerState extends State<ColorPicker> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(
-                      width: widget.colorPickerWidth / 4,
+                      width: 3 * widget.colorPickerWidth / 4,
                       child: Row(
                         children: <Widget>[
-                          _colorIndicator,
                           Padding(padding: const EdgeInsets.only(right: 15.0)),
+                          _colorIndicator,
                           Expanded(
                             child: LayoutBuilder(
                               builder:
@@ -344,7 +342,6 @@ class _ColorPickerState extends State<ColorPicker> {
                               },
                             ),
                           ),
-                          Padding(padding: const EdgeInsets.only(right: 15.0)),
                         ],
                       ),
                     ),
@@ -400,8 +397,8 @@ class _SliderLayout extends MultiChildLayoutDelegate {
   @override
   void performLayout(Size size) {
     layoutChild(painter,
-        BoxConstraints.tightFor(width: size.width, height: size.height / 5));
-    positionChild(painter, Offset(0.0, size.height * 0.4));
+        BoxConstraints.tightFor(width: size.width - 30.0, height: size.height / 5));
+    positionChild(painter, Offset(15.0, size.height * 0.4));
     layoutChild(
         pointer, BoxConstraints.tightFor(width: 5.0, height: size.height / 4));
     positionChild(pointer, Offset(0.0, size.height * 0.4));
