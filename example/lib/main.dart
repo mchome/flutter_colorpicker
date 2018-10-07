@@ -40,7 +40,21 @@ class _MyAppState extends State<MyApp> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text('Pick a color!'),
+                titlePadding: EdgeInsets.all(0.0),
+                contentPadding: EdgeInsets.all(0.0),
+                title: Container(
+                  color: Theme.of(context).primaryColor,
+                  child: Center(
+                    child: const Text(
+                      'Pick a color!',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: const Color(0xffffffff),
+                      ),
+                    ),
+                  ),
+                  padding: EdgeInsets.all(20.0),
+                ),
                 content: SingleChildScrollView(
                   child: ColorPicker(
                     pickerColor: pickerColor,

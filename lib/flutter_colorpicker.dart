@@ -484,7 +484,7 @@ class HuePointerPainter extends CustomPainter {
     canvas.drawShadow(
       Path()
         ..addOval(
-          Rect.fromCircle(center: Offset.zero, radius: size.width * 1.8),
+          Rect.fromCircle(center: Offset(0.5, 2.0), radius: size.width * 1.8),
         ),
       Colors.black,
       4.0,
@@ -525,7 +525,7 @@ class AlphaPointerPainter extends CustomPainter {
     canvas.drawShadow(
       Path()
         ..addOval(
-          Rect.fromCircle(center: Offset.zero, radius: size.width * 1.8),
+          Rect.fromCircle(center: Offset(0.5, 2.0), radius: size.width * 1.8),
         ),
       Colors.black,
       4.0,
