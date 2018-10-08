@@ -1,3 +1,11 @@
+/// HSV color picker
+///
+/// [ColorPicker] -> [_ColorPickerState] ->
+/// -> [_colorPicker] -> [ColorPainter]
+/// -> [_colorIndicator]
+/// -> [_pickerSlider] -> [_SliderLayout] -> [TrackPainter] / [ThumbPainter]
+/// -> [_pickerLabel]
+
 library flutter_colorpicker;
 
 import 'dart:convert';
@@ -6,21 +14,25 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+enum TrackType { hue, alpha }
+
 class ColorPicker extends StatefulWidget {
   ColorPicker(
       {@required this.pickerColor,
       @required this.onColorChanged,
+      this.enableAlpha: true,
       this.enableLabel: true,
       this.colorPickerWidth: 300.0,
       this.pickerAreaHeightPercent: 1.0});
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
+  final bool enableAlpha;
   final bool enableLabel;
   final double colorPickerWidth;
   final double pickerAreaHeightPercent;
 
-  final double sliderPainterHeight = 13.0;
+  final double trackPainterHeight = 13.0;
 
   @override
   State<StatefulWidget> createState() => _ColorPickerState();
@@ -32,7 +44,10 @@ class _ColorPickerState extends State<ColorPicker> {
   double value = 1.0;
   double alpha = 1.0;
 
-  List<Map<String, List<String>>> colorTypes = [
+  static final String base64EncodedImage =
+      'iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==';
+
+  static final List<Map<String, List<String>>> colorTypes = [
     {
       'HEX': ['R', 'G', 'B', 'A']
     },
@@ -93,12 +108,40 @@ class _ColorPickerState extends State<ColorPicker> {
     }
   }
 
+  List<Widget> colorValueLabels() {
+    List widget = colorTypes.map((Map<String, List<String>> item) {
+      if (item.keys.first == colorType) {
+        return item[colorType].map((String val) {
+          return Container(
+            width: 43.0,
+            height: 70.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text(val,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0)),
+                Padding(padding: const EdgeInsets.only(top: 10.0)),
+                Expanded(
+                  child: Text(
+                    colorValue[item[colorType].indexOf(val)],
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList();
+      }
+    }).toList();
+    widget.removeWhere((v) => v == null);
+    return widget.first;
+  }
+
   @override
   initState() {
     super.initState();
-    String baseEncodedImage =
-        'iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==';
-    chessTexture = base64.decode(baseEncodedImage);
+    chessTexture = base64.decode(base64EncodedImage);
     HSVColor color = HSVColor.fromColor(widget.pickerColor);
     hue = color.hue;
     saturation = color.saturation;
@@ -112,7 +155,7 @@ class _ColorPickerState extends State<ColorPicker> {
   Widget build(BuildContext context) {
     Orientation _orientation = MediaQuery.of(context).orientation;
 
-    Widget colorPicker(double width) {
+    Widget _colorPicker(double width) {
       double height = width * widget.pickerAreaHeightPercent;
 
       return Container(
@@ -157,36 +200,42 @@ class _ColorPickerState extends State<ColorPicker> {
 
     Widget _pickerSlider(double width) {
       return Column(
-        children: <Widget>[
-          Container(
+        children: [TrackType.hue, TrackType.alpha].map((TrackType sliderType) {
+          if (sliderType == TrackType.alpha && !widget.enableAlpha) {
+            return Container();
+          }
+
+          double _percent = (sliderType == TrackType.hue) ? hue / 360 : alpha;
+
+          return Container(
             width: width,
-            height: widget.sliderPainterHeight * 3,
+            height: widget.trackPainterHeight * 3,
             child: CustomMultiChildLayout(
               delegate: _SliderLayout(),
               children: <Widget>[
                 LayoutId(
-                  id: _SliderLayout.painter,
+                  id: _SliderLayout.track,
                   child: ClipRRect(
                     borderRadius:
                         const BorderRadius.all(const Radius.circular(5.0)),
                     child: CustomPaint(
-                      painter: HuePainter(),
+                      painter: TrackPainter(sliderType),
                     ),
                   ),
                 ),
                 LayoutId(
-                  id: _SliderLayout.pointer,
+                  id: _SliderLayout.thumb,
                   child: Transform(
-                    transform: Matrix4.identity()..translate((width - 30.0) * hue / 360 + 15.0),
+                    transform: Matrix4.identity()
+                      ..translate((width - 30.0) * _percent + 15.0),
                     child: CustomPaint(
-                      painter: HuePointerPainter(),
+                      painter: ThumbPainter(),
                     ),
                   ),
                 ),
                 LayoutId(
                   id: _SliderLayout.gestureContainer,
                   child: LayoutBuilder(
-                    // build hue slider
                     builder: (BuildContext context, BoxConstraints box) {
                       return GestureDetector(
                         onPanUpdate: (DragUpdateDetails details) {
@@ -194,9 +243,14 @@ class _ColorPickerState extends State<ColorPicker> {
                           Offset localOffset =
                               getBox.globalToLocal(details.globalPosition);
                           setState(() {
-                            hue = localOffset.dx.clamp(0.0, box.maxWidth) /
-                                box.maxWidth *
-                                360;
+                            if (sliderType == TrackType.hue) {
+                              hue = localOffset.dx.clamp(0.0, box.maxWidth) /
+                                  box.maxWidth *
+                                  360;
+                            } else if (sliderType == TrackType.alpha) {
+                              alpha = localOffset.dx.clamp(0.0, box.maxWidth) /
+                                  box.maxWidth;
+                            }
                             getColorValue();
                           });
                         },
@@ -209,59 +263,8 @@ class _ColorPickerState extends State<ColorPicker> {
                 ),
               ],
             ),
-          ),
-          Container(
-            width: width,
-            height: widget.sliderPainterHeight * 3,
-            child: CustomMultiChildLayout(
-              delegate: _SliderLayout(),
-              children: <Widget>[
-                LayoutId(
-                  id: _SliderLayout.painter,
-                  child: ClipRRect(
-                    borderRadius:
-                        const BorderRadius.all(const Radius.circular(5.0)),
-                    child: CustomPaint(
-                      painter: AlphaPainter(),
-                    ),
-                  ),
-                ),
-                LayoutId(
-                  id: _SliderLayout.pointer,
-                  child: Transform(
-                    transform: Matrix4.identity()..translate((width - 30.0) * alpha + 15.0),
-                    child: CustomPaint(
-                      painter: AlphaPointerPainter(),
-                    ),
-                  ),
-                ),
-                LayoutId(
-                  id: _SliderLayout.gestureContainer,
-                  child: LayoutBuilder(
-                    // build transparent slider
-                    builder: (BuildContext context, BoxConstraints box) {
-                      return GestureDetector(
-                        onPanUpdate: (DragUpdateDetails details) {
-                          RenderBox getBox = context.findRenderObject();
-                          Offset localOffset =
-                              getBox.globalToLocal(details.globalPosition);
-                          setState(() {
-                            alpha = localOffset.dx.clamp(0.0, box.maxWidth) /
-                                box.maxWidth;
-                            getColorValue();
-                          });
-                        },
-                        child: Container(
-                          color: const Color(0),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          );
+        }).toList(),
       );
     }
 
@@ -293,13 +296,13 @@ class _ColorPickerState extends State<ColorPicker> {
             children: <Widget>[
               LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints box) {
-                  return colorPicker(box.maxWidth);
+                  return _colorPicker(box.maxWidth);
                 },
               ),
               Padding(padding: const EdgeInsets.all(5.0)),
               Row(
                 children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(right: 5.0)),
+                  Padding(padding: const EdgeInsets.only(right: 10.0)),
                   _colorIndicator,
                   Expanded(
                     child: LayoutBuilder(
@@ -322,14 +325,13 @@ class _ColorPickerState extends State<ColorPicker> {
             children: <Widget>[
               LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints box) {
-                  return colorPicker(widget.colorPickerWidth / 4);
+                  return _colorPicker(widget.colorPickerWidth / 4);
                 },
               ),
               Expanded(
                 child: Column(
                   children: <Widget>[
-                    SizedBox(
-                      width: 3 * widget.colorPickerWidth / 4,
+                    Container(
                       child: Row(
                         children: <Widget>[
                           Padding(padding: const EdgeInsets.only(right: 15.0)),
@@ -342,6 +344,7 @@ class _ColorPickerState extends State<ColorPicker> {
                               },
                             ),
                           ),
+                          Padding(padding: const EdgeInsets.only(right: 15.0)),
                         ],
                       ),
                     ),
@@ -357,58 +360,6 @@ class _ColorPickerState extends State<ColorPicker> {
 
     return Container();
   }
-
-  List<Widget> colorValueLabels() {
-    List widget = colorTypes.map((Map<String, List<String>> item) {
-      if (item.keys.first == colorType) {
-        return item[colorType].map((String val) {
-          return Container(
-            width: 43.0,
-            height: 70.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(val,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0)),
-                Padding(padding: const EdgeInsets.only(top: 10.0)),
-                Expanded(
-                  child: Text(
-                    colorValue[item[colorType].indexOf(val)],
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList();
-      }
-    }).toList();
-    widget.removeWhere((v) => v == null);
-    return widget.first;
-  }
-}
-
-class _SliderLayout extends MultiChildLayoutDelegate {
-  static final String painter = 'painter';
-  static final String pointer = 'pointer';
-  static final String gestureContainer = 'gesturecontainer';
-
-  @override
-  void performLayout(Size size) {
-    layoutChild(painter,
-        BoxConstraints.tightFor(width: size.width - 30.0, height: size.height / 5));
-    positionChild(painter, Offset(15.0, size.height * 0.4));
-    layoutChild(
-        pointer, BoxConstraints.tightFor(width: 5.0, height: size.height / 4));
-    positionChild(pointer, Offset(0.0, size.height * 0.4));
-    layoutChild(gestureContainer,
-        BoxConstraints.tightFor(width: size.width, height: size.height));
-    positionChild(gestureContainer, Offset.zero);
-  }
-
-  @override
-  bool shouldRelayout(_SliderLayout oldDelegate) => false;
 }
 
 class ColorPainter extends CustomPainter {
@@ -458,60 +409,54 @@ class ColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-class HuePainter extends CustomPainter {
+class _SliderLayout extends MultiChildLayoutDelegate {
+  static final String track = 'track';
+  static final String thumb = 'thumb';
+  static final String gestureContainer = 'gesturecontainer';
+
   @override
-  paint(Canvas canvas, Size size) {
-    Rect rect = Offset.zero & size;
-    Gradient gradient = LinearGradient(colors: [
-      const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 60.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 120.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 180.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 240.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 300.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
-    ]);
-    canvas.drawRect(rect, Paint()..shader = gradient.createShader(rect));
+  void performLayout(Size size) {
+    layoutChild(
+        track,
+        BoxConstraints.tightFor(
+            width: size.width - 30.0, height: size.height / 5));
+    positionChild(track, Offset(15.0, size.height * 0.4));
+    layoutChild(
+        thumb, BoxConstraints.tightFor(width: 5.0, height: size.height / 4));
+    positionChild(thumb, Offset(0.0, size.height * 0.4));
+    layoutChild(gestureContainer,
+        BoxConstraints.tightFor(width: size.width, height: size.height));
+    positionChild(gestureContainer, Offset.zero);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRelayout(_SliderLayout oldDelegate) => false;
 }
 
-class HuePointerPainter extends CustomPainter {
-  @override
-  paint(Canvas canvas, Size size) {
-    canvas.drawShadow(
-      Path()
-        ..addOval(
-          Rect.fromCircle(center: Offset(0.5, 2.0), radius: size.width * 1.8),
-        ),
-      Colors.black,
-      4.0,
-      true,
-    );
-    canvas.drawCircle(
-        Offset(0.0, size.height * 0.4),
-        size.height,
-        Paint()
-          ..color = Colors.white
-          ..style = PaintingStyle.fill);
-  }
+class TrackPainter extends CustomPainter {
+  const TrackPainter(this.trackType);
 
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
+  final TrackType trackType;
 
-class AlphaPainter extends CustomPainter {
+  static final List<Color> hueColors = [
+    const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
+    const HSVColor.fromAHSV(1.0, 60.0, 1.0, 1.0).toColor(),
+    const HSVColor.fromAHSV(1.0, 120.0, 1.0, 1.0).toColor(),
+    const HSVColor.fromAHSV(1.0, 180.0, 1.0, 1.0).toColor(),
+    const HSVColor.fromAHSV(1.0, 240.0, 1.0, 1.0).toColor(),
+    const HSVColor.fromAHSV(1.0, 300.0, 1.0, 1.0).toColor(),
+    const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
+  ];
+  static final List<Color> alphaColors = [
+    Colors.black.withOpacity(0.0),
+    Colors.black.withOpacity(1.0),
+  ];
+
   @override
   paint(Canvas canvas, Size size) {
     Rect rect = Offset.zero & size;
     Gradient gradient = LinearGradient(
-      colors: [
-        Colors.black.withOpacity(0.0),
-        Colors.black.withOpacity(1.0),
-      ],
-    );
+        colors: (trackType == TrackType.hue) ? hueColors : alphaColors);
     canvas.drawRect(rect, Paint()..shader = gradient.createShader(rect));
   }
 
@@ -519,7 +464,7 @@ class AlphaPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-class AlphaPointerPainter extends CustomPainter {
+class ThumbPainter extends CustomPainter {
   @override
   paint(Canvas canvas, Size size) {
     canvas.drawShadow(
@@ -528,7 +473,7 @@ class AlphaPointerPainter extends CustomPainter {
           Rect.fromCircle(center: Offset(0.5, 2.0), radius: size.width * 1.8),
         ),
       Colors.black,
-      4.0,
+      3.0,
       true,
     );
     canvas.drawCircle(

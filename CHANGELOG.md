@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.1.0]
+
+* Improve slider dragging.
+* A new material color picker.
+* Update example app.
+
 ## [0.0.7]
 
 * Fix analysis warning.
