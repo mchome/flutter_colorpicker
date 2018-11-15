@@ -41,8 +41,6 @@ class GridPicker extends StatefulWidget {
     this.showHexInput = false,
   });
 
-  
-
   @override
   State<StatefulWidget> createState() => _GridPickerState();
 }
@@ -65,19 +63,19 @@ class _GridPickerState extends State<GridPicker> {
     return Container(
       padding: EdgeInsets.all(8.0),
       child: new ListTile(
-        title: new TextField(
+          title: new TextField(
+            textAlign: TextAlign.center,
             controller: _hexController,
           ),
           trailing: IconButton(
             icon: Icon(Icons.check),
-            onPressed: (){
+            onPressed: () {
               var _hexValue = int.parse(_hexController.text);
               _currentColor = new Color(_hexValue).withOpacity(1.0);
               widget.onColorChanged(_currentColor);
               Navigator.pop(context);
             },
-          )
-      ),
+          )),
     );
   }
 
@@ -94,14 +92,16 @@ class _GridPickerState extends State<GridPicker> {
             scrollDirection: (_orientation == Orientation.portrait)
                 ? Axis.vertical
                 : Axis.horizontal,
-            children: []
-              ..addAll(widget.availableColors.map((Color _color) {
+            children: []..addAll(widget.availableColors.map((Color _color) {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
                       _currentColor = _color;
                       widget.onColorChanged(_currentColor);
-                      _hexController.text = _currentColor.value.toRadixString(16).toUpperCase().replaceFirst('FF', '0x');
+                      _hexController.text = _currentColor.value
+                          .toRadixString(16)
+                          .toUpperCase()
+                          .replaceFirst('FF', '0x');
                     });
                   },
                   child: Container(
