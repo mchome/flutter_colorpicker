@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_colorpicker/grid_picker.dart';
 import 'package:flutter_colorpicker/material_picker.dart';
 
 main() => runApp(
@@ -21,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   ValueChanged<Color> onColorChanged;
 
   changeSimpleColor(Color color) => setState(() => currentColor = color);
+  changeGridColor(Color color) => setState(() => currentColor = color);
   changeMaterialColor(Color color) => setState(() {
         currentColor = color;
         Navigator.of(context).pop();
@@ -29,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Flutter Color Picker Example'),
@@ -37,6 +39,7 @@ class _MyAppState extends State<MyApp> {
             tabs: <Widget>[
               Tab(text: 'Simple picker'),
               Tab(text: 'Material picker'),
+              Tab(text: 'Grid picker'),
             ],
           ),
         ),
@@ -87,6 +90,35 @@ class _MyAppState extends State<MyApp> {
                             pickerColor: currentColor,
                             onColorChanged: changeMaterialColor,
                             enableLabel: true,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Text('Change me'),
+                color: currentColor,
+                textColor: useWhiteForeground(currentColor)
+                    ? const Color(0xffffffff)
+                    : const Color(0xff000000),
+              ),
+            ),
+            Center(
+              child: RaisedButton(
+                elevation: 3.0,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        titlePadding: EdgeInsets.all(0.0),
+                        contentPadding: EdgeInsets.all(0.0),
+                        content: SingleChildScrollView(
+                          child: GridPicker(
+                            pickerColor: currentColor,
+                            onColorChanged: changeGridColor,
+                            enableLabel: false,
+                            showHexInput: true,
                           ),
                         ),
                       );
