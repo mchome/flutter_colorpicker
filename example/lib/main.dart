@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flutter_colorpicker/grid_picker.dart';
 import 'package:flutter_colorpicker/material_picker.dart';
+import 'package:flutter_colorpicker/grid_picker.dart';
+import 'package:flutter_colorpicker/utils.dart';
 
 main() => runApp(
       MaterialApp(
@@ -21,9 +23,8 @@ class _MyAppState extends State<MyApp> {
 
   ValueChanged<Color> onColorChanged;
 
-  changeSimpleColor(Color color) => setState(() => currentColor = color);
-  changeGridColor(Color color) => setState(() => currentColor = color);
-  changeMaterialColor(Color color) => setState(() {
+  changeColor(Color color) => setState(() => currentColor = color);
+  changeColorAndPopout(Color color) => setState(() {
         currentColor = color;
         Navigator.of(context).pop();
       });
@@ -37,9 +38,9 @@ class _MyAppState extends State<MyApp> {
           title: Text('Flutter Color Picker Example'),
           bottom: TabBar(
             tabs: <Widget>[
-              Tab(text: 'Simple picker'),
-              Tab(text: 'Material picker'),
-              Tab(text: 'Grid picker'),
+              Tab(text: 'HSV(Rect)'),
+              Tab(text: 'Material'),
+              Tab(text: 'Grid'),
             ],
           ),
         ),
@@ -58,7 +59,7 @@ class _MyAppState extends State<MyApp> {
                         content: SingleChildScrollView(
                           child: ColorPicker(
                             pickerColor: currentColor,
-                            onColorChanged: changeSimpleColor,
+                            onColorChanged: changeColor,
                             colorPickerWidth: 1000.0,
                             pickerAreaHeightPercent: 0.7,
                             enableAlpha: true,
@@ -88,7 +89,7 @@ class _MyAppState extends State<MyApp> {
                         content: SingleChildScrollView(
                           child: MaterialPicker(
                             pickerColor: currentColor,
-                            onColorChanged: changeMaterialColor,
+                            onColorChanged: changeColorAndPopout,
                             enableLabel: true,
                           ),
                         ),
@@ -116,9 +117,9 @@ class _MyAppState extends State<MyApp> {
                         content: SingleChildScrollView(
                           child: GridPicker(
                             pickerColor: currentColor,
-                            onColorChanged: changeGridColor,
-                            enableLabel: false,
+                            onColorChanged: changeColor,
                             showHexInput: true,
+                            rowCounts: 4,
                           ),
                         ),
                       );

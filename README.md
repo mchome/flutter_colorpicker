@@ -82,6 +82,3 @@ showDialog(
 ![04](https://user-images.githubusercontent.com/7392658/46619112-dde07900-cb53-11e8-91d9-a4d1ee70cf3b.png)
 
 Details in [example/](https://github.com/mchome/flutter_colorpicker/tree/master/example) folder.
-
-I have created the `ColorPicker` widget so you can use the color picker out of the box.
-But you can create your own style with the `CustomPaint`.

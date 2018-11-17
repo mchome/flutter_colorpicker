@@ -4,6 +4,8 @@ library material_colorpicker;
 
 import 'package:flutter/material.dart';
 
+import 'package:flutter_colorpicker/utils.dart';
+
 class MaterialPicker extends StatefulWidget {
   MaterialPicker({
     @required this.pickerColor,
@@ -43,7 +45,10 @@ class _MaterialPickerState extends State<MaterialPicker> {
     [Colors.black],
   ];
 
-  List<Color> _paletteTypes(List<Color> colors) {
+  List<Color> _currentColor = [Colors.red, Colors.redAccent];
+  Color _currentShading;
+
+  List<Color> _shadingTypes(List<Color> colors) {
     List<Color> result = [];
 
     colors.forEach((Color colorType) {
@@ -83,18 +88,15 @@ class _MaterialPickerState extends State<MaterialPicker> {
     return result;
   }
 
-  List<Color> _currentColor = [Colors.red, Colors.redAccent];
-  Color _currentPalette;
-
   @override
   initState() {
     super.initState();
     _colorTypes.forEach((List<Color> _colors) {
-      _paletteTypes(_colors).forEach((Color color) {
+      _shadingTypes(_colors).forEach((Color color) {
         if (widget.pickerColor == color) {
           return setState(() {
             _currentColor = _colors;
-            _currentPalette = color;
+            _currentShading = color;
           });
         }
       });
@@ -105,7 +107,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
   Widget build(BuildContext context) {
     Orientation _orientation = MediaQuery.of(context).orientation;
 
-    Widget _colorsGrid() {
+    Widget _colorList() {
       return Container(
         width: (_orientation == Orientation.portrait) ? 60.0 : null,
         height: (_orientation == Orientation.portrait) ? null : 60.0,
@@ -120,8 +122,8 @@ class _MaterialPickerState extends State<MaterialPicker> {
               : Axis.horizontal,
           children: [
             (_orientation == Orientation.portrait)
-                ? Padding(padding: EdgeInsets.only(top: 5.0))
-                : Padding(padding: EdgeInsets.only(left: 5.0))
+                ? Padding(padding: EdgeInsets.only(top: 7.0))
+                : Padding(padding: EdgeInsets.only(left: 7.0))
           ]
             ..addAll(_colorTypes.map((List<Color> _colors) {
               Color _colorType = _colors[0];
@@ -130,8 +132,8 @@ class _MaterialPickerState extends State<MaterialPicker> {
                 child: Container(
                   color: Color(0),
                   padding: (_orientation == Orientation.portrait)
-                      ? EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0)
-                      : EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                      ? EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0)
+                      : EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
                   child: Align(
                     child: Container(
                       width: 25.0,
@@ -168,7 +170,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
       );
     }
 
-    Widget _palettesGrid() {
+    Widget _shadingList() {
       return Container(
         width: 500.0,
         child: ListView(
@@ -180,17 +182,17 @@ class _MaterialPickerState extends State<MaterialPicker> {
                 ? Padding(padding: EdgeInsets.only(top: 15.0))
                 : Padding(padding: EdgeInsets.only(left: 15.0))
           ]
-            ..addAll(_paletteTypes(_currentColor).map((Color _color) {
+            ..addAll(_shadingTypes(_currentColor).map((Color _color) {
               return GestureDetector(
                 onTap: () {
-                  setState(() => _currentPalette = _color);
-                  widget.onColorChanged(_currentPalette);
+                  setState(() => _currentShading = _color);
+                  widget.onColorChanged(_currentShading);
                 },
                 child: Container(
                   color: Color(0),
                   padding: (_orientation == Orientation.portrait)
-                      ? EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0)
-                      : EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                      ? EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0)
+                      : EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
                   child: Align(
                     child: Container(
                       width:
@@ -199,7 +201,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                           (_orientation == Orientation.portrait) ? 50.0 : 220.0,
                       decoration: BoxDecoration(
                         color: _color,
-                        boxShadow: (_currentPalette == _color)
+                        boxShadow: (_currentShading == _color)
                             ? [
                                 (_color == Theme.of(context).cardColor)
                                     ? BoxShadow(
@@ -207,7 +209,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                                         blurRadius: 5.0,
                                       )
                                     : BoxShadow(
-                                        color: _currentPalette,
+                                        color: _currentShading,
                                         blurRadius: 5.0,
                                       ),
                               ]
@@ -255,9 +257,9 @@ class _MaterialPickerState extends State<MaterialPicker> {
           height: 500.0,
           child: Row(
             children: <Widget>[
-              _colorsGrid(),
+              _colorList(),
               Expanded(
-                child: _palettesGrid(),
+                child: _shadingList(),
               ),
             ],
           ),
@@ -269,9 +271,9 @@ class _MaterialPickerState extends State<MaterialPicker> {
           child: Column(
             children: <Widget>[
               Expanded(
-                child: _palettesGrid(),
+                child: _shadingList(),
               ),
-              _colorsGrid(),
+              _colorList(),
             ],
           ),
         );
@@ -279,8 +281,4 @@ class _MaterialPickerState extends State<MaterialPicker> {
 
     return Container();
   }
-}
-
-bool useWhiteForeground(Color color) {
-  return 1.05 / (color.computeLuminance() + 0.05) > 4.5;
 }
