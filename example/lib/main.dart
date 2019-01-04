@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -26,7 +28,8 @@ class _MyAppState extends State<MyApp> {
   changeColor(Color color) => setState(() => currentColor = color);
   changeColorAndPopout(Color color) => setState(() {
         currentColor = color;
-        Navigator.of(context).pop();
+        Timer(const Duration(milliseconds: 500),
+            () => Navigator.of(context).pop());
       });
 
   @override

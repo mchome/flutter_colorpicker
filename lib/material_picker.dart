@@ -135,7 +135,8 @@ class _MaterialPickerState extends State<MaterialPicker> {
                       ? EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0)
                       : EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
                   child: Align(
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
                       width: 25.0,
                       height: 25.0,
                       decoration: BoxDecoration(
@@ -194,7 +195,8 @@ class _MaterialPickerState extends State<MaterialPicker> {
                       ? EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0)
                       : EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
                   child: Align(
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
                       width:
                           (_orientation == Orientation.portrait) ? 250.0 : 50.0,
                       height:
