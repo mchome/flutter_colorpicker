@@ -89,8 +89,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
   }
 
   @override
-  initState() {
-    super.initState();
+  void initState() {
     _colorTypes.forEach((List<Color> _colors) {
       _shadingTypes(_colors).forEach((Color color) {
         if (widget.pickerColor == color) {
@@ -101,6 +100,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
         }
       });
     });
+    super.initState();
   }
 
   @override

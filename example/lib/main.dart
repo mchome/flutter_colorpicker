@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_colorpicker/material_picker.dart';
-import 'package:flutter_colorpicker/grid_picker.dart';
+import 'package:flutter_colorpicker/block_picker.dart';
 import 'package:flutter_colorpicker/utils.dart';
 
 main() => runApp(
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
             tabs: <Widget>[
               Tab(text: 'HSV(Rect)'),
               Tab(text: 'Material'),
-              Tab(text: 'Grid'),
+              Tab(text: 'Block'),
             ],
           ),
         ),
@@ -57,8 +57,8 @@ class _MyAppState extends State<MyApp> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        titlePadding: EdgeInsets.all(0.0),
-                        contentPadding: EdgeInsets.all(0.0),
+                        titlePadding: const EdgeInsets.all(0.0),
+                        contentPadding: const EdgeInsets.all(0.0),
                         content: SingleChildScrollView(
                           child: ColorPicker(
                             pickerColor: currentColor,
@@ -87,8 +87,8 @@ class _MyAppState extends State<MyApp> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        titlePadding: EdgeInsets.all(0.0),
-                        contentPadding: EdgeInsets.all(0.0),
+                        titlePadding: const EdgeInsets.all(0.0),
+                        contentPadding: const EdgeInsets.all(0.0),
                         content: SingleChildScrollView(
                           child: MaterialPicker(
                             pickerColor: currentColor,
@@ -115,14 +115,11 @@ class _MyAppState extends State<MyApp> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        titlePadding: EdgeInsets.all(0.0),
-                        contentPadding: EdgeInsets.all(0.0),
+                        title: Text('Select a color'),
                         content: SingleChildScrollView(
-                          child: GridPicker(
+                          child: BlockPicker(
                             pickerColor: currentColor,
                             onColorChanged: changeColor,
-                            showHexInput: true,
-                            rowCounts: 4,
                           ),
                         ),
                       );

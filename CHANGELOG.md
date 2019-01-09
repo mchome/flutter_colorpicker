@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.2.0]
+
+* A new block color picker.
+* Update example app.
+
 ## [0.1.0]
 
 * Improve slider dragging.

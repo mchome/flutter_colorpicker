@@ -60,6 +60,12 @@ showDialog(
       //   onColorChanged: changeColor,
       //   enableLabel: true, // only on portrait mode
       // ),
+      //
+      // Use Block color picker
+      // child: BlockPicker(
+      //   pickerColor: currentColor,
+      //   onColorChanged: changeColor,
+      // ),
     ),
     actions: <Widget>[
       FlatButton(
@@ -80,5 +86,6 @@ showDialog(
 ![02](https://user-images.githubusercontent.com/7392658/46619116-df11a600-cb53-11e8-8b6b-4e495f8dbea9.png)
 ![03](https://user-images.githubusercontent.com/7392658/46619111-dd47e280-cb53-11e8-9701-38900857321f.png)
 ![04](https://user-images.githubusercontent.com/7392658/46619112-dde07900-cb53-11e8-91d9-a4d1ee70cf3b.png)
+![05](https://user-images.githubusercontent.com/7392658/50912123-56fdae00-146c-11e9-8d63-be3a26a20b72.png)
 
 Details in [example/](https://github.com/mchome/flutter_colorpicker/tree/master/example) folder.

@@ -17,13 +17,14 @@ import 'package:flutter/material.dart';
 enum TrackType { hue, alpha }
 
 class ColorPicker extends StatefulWidget {
-  ColorPicker(
-      {@required this.pickerColor,
-      @required this.onColorChanged,
-      this.enableAlpha: true,
-      this.enableLabel: true,
-      this.colorPickerWidth: 300.0,
-      this.pickerAreaHeightPercent: 1.0});
+  ColorPicker({
+    @required this.pickerColor,
+    @required this.onColorChanged,
+    this.enableAlpha: true,
+    this.enableLabel: true,
+    this.colorPickerWidth: 300.0,
+    this.pickerAreaHeightPercent: 1.0,
+  });
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
@@ -63,11 +64,13 @@ class _ColorPickerState extends State<ColorPicker> {
 
   Uint8List chessTexture = Uint8List(0);
 
-  getColorValue() {
+  void changeColor() {
     Color color = HSVColor.fromAHSV(alpha, hue, saturation, value).toColor();
-    if (color != widget.pickerColor) {
-      widget.onColorChanged(color);
-    }
+    widget.onColorChanged(color);
+  }
+
+  void getColorValue() {
+    Color color = HSVColor.fromAHSV(alpha, hue, saturation, value).toColor();
     switch (colorType) {
       case 'HEX':
         colorValue = [
@@ -139,16 +142,15 @@ class _ColorPickerState extends State<ColorPicker> {
   }
 
   @override
-  initState() {
-    super.initState();
+  void initState() {
     chessTexture = base64.decode(base64EncodedImage);
     HSVColor color = HSVColor.fromColor(widget.pickerColor);
     hue = color.hue;
     saturation = color.saturation;
     value = color.value;
     alpha = color.alpha;
-    getColorValue();
-    setState(() {});
+    setState(() => getColorValue());
+    super.initState();
   }
 
   @override
@@ -169,6 +171,7 @@ class _ColorPickerState extends State<ColorPicker> {
               saturation = localOffset.dx.clamp(0.0, width) / width;
               value = 1 - localOffset.dy.clamp(0.0, height) / height;
               getColorValue();
+              changeColor();
             });
           },
           child: CustomPaint(
@@ -252,6 +255,7 @@ class _ColorPickerState extends State<ColorPicker> {
                                   box.maxWidth;
                             }
                             getColorValue();
+                            changeColor();
                           });
                         },
                         child: Container(
@@ -374,7 +378,7 @@ class ColorPainter extends CustomPainter {
   double value;
 
   @override
-  paint(Canvas canvas, Size size) {
+  void paint(Canvas canvas, Size size) {
     Rect rect = Offset.zero & size;
     Gradient gradientBW = LinearGradient(
       begin: Alignment.topCenter,
@@ -453,7 +457,7 @@ class TrackPainter extends CustomPainter {
   ];
 
   @override
-  paint(Canvas canvas, Size size) {
+  void paint(Canvas canvas, Size size) {
     Rect rect = Offset.zero & size;
     Gradient gradient = LinearGradient(
         colors: (trackType == TrackType.hue) ? hueColors : alphaColors);
@@ -466,7 +470,7 @@ class TrackPainter extends CustomPainter {
 
 class ThumbPainter extends CustomPainter {
   @override
-  paint(Canvas canvas, Size size) {
+  void paint(Canvas canvas, Size size) {
     canvas.drawShadow(
       Path()
         ..addOval(
