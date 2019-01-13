@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.2.1]
+
+* Rename some types.
+
 ## [0.2.0]
 
 * A new block color picker.

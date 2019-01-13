@@ -29,10 +29,10 @@ const List<Color> _defaultColors = [
   Colors.black,
 ];
 
-typedef LayoutBuilder = Widget Function(
-    BuildContext context, List<Color> colors, Item child);
-typedef Item = Widget Function(Color color);
-typedef ItemBuilder = Widget Function(
+typedef PickerLayoutBuilder = Widget Function(
+    BuildContext context, List<Color> colors, PickerItem child);
+typedef PickerItem = Widget Function(Color color);
+typedef PickerItemBuilder = Widget Function(
   Color color,
   bool isCurrentColor,
   Function changeColor,
@@ -50,11 +50,11 @@ class BlockPicker extends StatefulWidget {
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final List<Color> availableColors;
-  final LayoutBuilder layoutBuilder;
-  final ItemBuilder itemBuilder;
+  final PickerLayoutBuilder layoutBuilder;
+  final PickerItemBuilder itemBuilder;
 
   static Widget defaultLayoutBuilder(
-      BuildContext context, List<Color> colors, Item child) {
+      BuildContext context, List<Color> colors, PickerItem child) {
     Orientation orientation = MediaQuery.of(context).orientation;
 
     return Container(
