@@ -77,7 +77,7 @@ class _ColorPickerState extends State<ColorPicker> {
           color.red.toRadixString(16).toUpperCase(),
           color.green.toRadixString(16).toUpperCase(),
           color.blue.toRadixString(16).toUpperCase(),
-          (alpha * 100).toInt().toString() + ' %'
+          '${(alpha * 100).toInt()}%',
         ];
         break;
       case 'RGB':
@@ -85,7 +85,7 @@ class _ColorPickerState extends State<ColorPicker> {
           color.red.toString(),
           color.green.toString(),
           color.blue.toString(),
-          (alpha * 100).toInt().toString() + ' %'
+          '${(alpha * 100).toInt()}%',
         ];
         break;
       case 'HSL':
@@ -100,10 +100,10 @@ class _ColorPickerState extends State<ColorPicker> {
             s = saturation * value / (2 - l * 2);
         }
         colorValue = [
-          hue.toInt().toString(),
-          (s * 100).round().toString() + ' %',
-          (l * 100).round().toString() + ' %',
-          (alpha * 100).toInt().toString() + ' %'
+          '${hue.toInt()}',
+          '${(s * 100).round()}%',
+          '${(l * 100).round()}%',
+          '${(alpha * 100).toInt()}%',
         ];
         break;
       default:
@@ -122,8 +122,10 @@ class _ColorPickerState extends State<ColorPicker> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(val,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    )),
                 Padding(padding: const EdgeInsets.only(top: 10.0)),
                 Expanded(
                   child: Text(
