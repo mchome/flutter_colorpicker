@@ -1,6 +1,7 @@
 # flutter_colorpicker
 
 [![pub package](https://img.shields.io/pub/v/flutter_colorpicker.svg)](https://pub.dartlang.org/packages/flutter_colorpicker)
+[![donate](https://img.shields.io/badge/Donate-PayPal-green.svg?logo=paypal)](https://www.paypal.me/mchome19)
 
 A HSV color picker inspired by chrome devtools and a material color picker for your flutter app.
 
@@ -32,13 +33,12 @@ flutter packages upgrade
 Use it in [showDialog] widget:
 
 ```dart
-// create some value
+// create some values
 Color pickerColor = Color(0xff443a49);
 Color currentColor = Color(0xff443a49);
-ValueChanged<Color> onColorChanged;
 
-// bind some values with [ValueChanged<Color>] callback
-changeColor(Color color) {
+// ValueChanged<Color> callback
+void changeColor(Color color) {
   setState(() => pickerColor = color);
 }
 
@@ -54,14 +54,16 @@ showDialog(
         enableLabel: true,
         pickerAreaHeightPercent: 0.8,
       ),
-      // Use Material color picker
+      // Use Material color picker:
+      //
       // child: MaterialPicker(
       //   pickerColor: pickerColor,
       //   onColorChanged: changeColor,
       //   enableLabel: true, // only on portrait mode
       // ),
       //
-      // Use Block color picker
+      // Use Block color picker:
+      //
       // child: BlockPicker(
       //   pickerColor: currentColor,
       //   onColorChanged: changeColor,
@@ -69,7 +71,7 @@ showDialog(
     ),
     actions: <Widget>[
       FlatButton(
-        child: Text('Got it'),
+        child: const Text('Got it'),
         onPressed: () {
           setState(() => currentColor = pickerColor);
           Navigator.of(context).pop();

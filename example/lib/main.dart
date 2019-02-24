@@ -7,13 +7,15 @@ import 'package:flutter_colorpicker/material_picker.dart';
 import 'package:flutter_colorpicker/block_picker.dart';
 import 'package:flutter_colorpicker/utils.dart';
 
-main() => runApp(
-      MaterialApp(
-        title: 'Flutter Example',
-        theme: ThemeData(primaryColor: Colors.blue),
-        home: MyApp(),
-      ),
-    );
+void main() {
+  runApp(
+    MaterialApp(
+      title: 'Flutter Example',
+      theme: ThemeData(primaryColor: Colors.blue),
+      home: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -21,12 +23,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Color currentColor = Color(0xff443a49);
+  Color currentColor = const Color(0xff443a49);
 
-  ValueChanged<Color> onColorChanged;
-
-  changeColor(Color color) => setState(() => currentColor = color);
-  changeColorAndPopout(Color color) => setState(() {
+  void changeColor(Color color) => setState(() => currentColor = color);
+  void changeColorAndPopout(Color color) => setState(() {
         currentColor = color;
         Timer(const Duration(milliseconds: 500),
             () => Navigator.of(context).pop());
@@ -41,9 +41,9 @@ class _MyAppState extends State<MyApp> {
           title: Text('Flutter Color Picker Example'),
           bottom: TabBar(
             tabs: <Widget>[
-              Tab(text: 'HSV(Rect)'),
-              Tab(text: 'Material'),
-              Tab(text: 'Block'),
+              const Tab(text: 'HSV(Rect)'),
+              const Tab(text: 'Material'),
+              const Tab(text: 'Block'),
             ],
           ),
         ),
@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
                     },
                   );
                 },
-                child: Text('Change me'),
+                child: const Text('Change me'),
                 color: currentColor,
                 textColor: useWhiteForeground(currentColor)
                     ? const Color(0xffffffff)
@@ -100,7 +100,7 @@ class _MyAppState extends State<MyApp> {
                     },
                   );
                 },
-                child: Text('Change me'),
+                child: const Text('Change me'),
                 color: currentColor,
                 textColor: useWhiteForeground(currentColor)
                     ? const Color(0xffffffff)
@@ -126,7 +126,7 @@ class _MyAppState extends State<MyApp> {
                     },
                   );
                 },
-                child: Text('Change me'),
+                child: const Text('Change me'),
                 color: currentColor,
                 textColor: useWhiteForeground(currentColor)
                     ? const Color(0xffffffff)
