@@ -156,6 +156,18 @@ class _ColorPickerState extends State<ColorPicker> {
   }
 
   @override
+  void didUpdateWidget(ColorPicker oldWidget) {
+    chessTexture = base64.decode(base64EncodedImage);
+    HSVColor color = HSVColor.fromColor(widget.pickerColor);
+    hue = color.hue;
+    saturation = color.saturation;
+    value = color.value;
+    alpha = color.alpha;
+    setState(() => getColorValue());
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     Orientation _orientation = MediaQuery.of(context).orientation;
 
