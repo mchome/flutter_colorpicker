@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.2.3]
+
+* MaterialPicker: Flexible size.
+
 ## [0.2.2]
 
 * Add didUpdateWidget lifecycle to handle changes to pickerColor.
