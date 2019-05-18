@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -23,14 +21,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Color currentColor = const Color(0xff443a49);
+  Color currentColor = Colors.amber;
 
   void changeColor(Color color) => setState(() => currentColor = color);
-  void changeColorAndPopout(Color color) => setState(() {
-        currentColor = color;
-        Timer(const Duration(milliseconds: 500),
-            () => Navigator.of(context).pop());
-      });
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +34,14 @@ class _MyAppState extends State<MyApp> {
           title: Text('Flutter Color Picker Example'),
           bottom: TabBar(
             tabs: <Widget>[
-              const Tab(text: 'HSV(Rect)'),
+              const Tab(text: 'HSV'),
               const Tab(text: 'Material'),
               const Tab(text: 'Block'),
             ],
           ),
         ),
         body: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
             Center(
               child: RaisedButton(
@@ -61,9 +55,9 @@ class _MyAppState extends State<MyApp> {
                         contentPadding: const EdgeInsets.all(0.0),
                         content: SingleChildScrollView(
                           child: ColorPicker(
-                            pickerColor: currentColor,
-                            onColorChanged: changeColor,
-                            colorPickerWidth: 1000.0,
+                            currentColor,
+                            changeColor,
+                            colorPickerWidth: 300.0,
                             pickerAreaHeightPercent: 0.7,
                             enableAlpha: true,
                           ),
@@ -92,7 +86,7 @@ class _MyAppState extends State<MyApp> {
                         content: SingleChildScrollView(
                           child: MaterialPicker(
                             pickerColor: currentColor,
-                            onColorChanged: changeColorAndPopout,
+                            onColorChanged: changeColor,
                             enableLabel: true,
                           ),
                         ),

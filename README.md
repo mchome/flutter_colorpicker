@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/flutter_colorpicker.svg)](https://pub.dartlang.org/packages/flutter_colorpicker)
 [![donate](https://img.shields.io/badge/Donate-PayPal-green.svg?logo=paypal)](https://www.paypal.me/mchome19)
 
-A HSV color picker inspired by chrome devtools and a material color picker for your flutter app.
+A HSV(HSB) color picker inspired by chrome devtools and a material color picker for your flutter app.
 
 ## Getting Started
 
