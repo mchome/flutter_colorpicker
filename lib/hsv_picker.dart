@@ -78,8 +78,8 @@ class _SliderLayout extends MultiChildLayoutDelegate {
   bool shouldRelayout(_SliderLayout oldDelegate) => false;
 }
 
-class TrackPainter extends CustomPainter {
-  const TrackPainter(this.trackType);
+class HueTrackPainter extends CustomPainter {
+  const HueTrackPainter(this.trackType);
 
   final TrackType trackType;
 
@@ -205,9 +205,9 @@ List<String> _colorValue(HSVColor hsvColor, ColorModel colorModel) {
   final Color color = hsvColor.toColor();
   if (colorModel == ColorModel.hex) {
     return [
-      color.red.toRadixString(16).toUpperCase(),
-      color.green.toRadixString(16).toUpperCase(),
-      color.blue.toRadixString(16).toUpperCase(),
+      color.red.toRadixString(16).toUpperCase().padLeft(2, '0'),
+      color.green.toRadixString(16).toUpperCase().padLeft(2, '0'),
+      color.blue.toRadixString(16).toUpperCase().padLeft(2, '0'),
       '${(color.opacity * 100).round()}%',
     ];
   } else if (colorModel == ColorModel.rgb) {
@@ -343,7 +343,7 @@ class ColorPickerSlider extends StatelessWidget {
             child: ClipRRect(
               borderRadius:
                   const BorderRadius.all(const Radius.circular(1000.0)),
-              child: CustomPaint(painter: TrackPainter(trackType)),
+              child: CustomPaint(painter: HueTrackPainter(trackType)),
             ),
           ),
           LayoutId(
@@ -447,8 +447,53 @@ class ColorPickerArea extends StatelessWidget {
                 hsvColor.withSaturation(saturation).withValue(value));
           },
           child: CustomPaint(painter: HSVColorPainter(hsvColor)),
+          // child: CustomPaint(painter: HSLColorPainter(hsvToHsl(hsvColor))),
         );
       },
     );
   }
+}
+
+class HSLColorPainter extends CustomPainter {
+  const HSLColorPainter(this.hslColor);
+
+  final HSLColor hslColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final Gradient gradientH = LinearGradient(
+      colors: [
+        const Color(0xff808080),
+        HSVColor.fromAHSV(1.0, hslColor.hue, 1.0, 1.0).toColor(),
+      ],
+    );
+    final Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [0.0, 0.5, 0.5, 1],
+      colors: [
+        Colors.white,
+        const Color(0x00ffffff),
+        Colors.transparent,
+        Colors.black,
+      ],
+    );
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
+
+    canvas.drawCircle(
+      Offset(size.width * hslColor.saturation,
+          size.height * (1 - hslColor.lightness)),
+      size.height * 0.04,
+      Paint()
+        ..color =
+            useWhiteForeground(hslColor.toColor()) ? Colors.white : Colors.black
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
