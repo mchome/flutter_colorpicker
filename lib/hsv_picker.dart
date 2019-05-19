@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/utils.dart';
 
-enum TrackType { hue, saturation, value, alpha }
+enum PaletteType { hsv, hsl }
+enum TrackType { hue, saturation, value, lightness, alpha }
 enum ColorModel { hex, rgb, hsv, hsl }
 
 class HSVColorPainter extends CustomPainter {
@@ -78,24 +79,11 @@ class _SliderLayout extends MultiChildLayoutDelegate {
   bool shouldRelayout(_SliderLayout oldDelegate) => false;
 }
 
-class HueTrackPainter extends CustomPainter {
-  const HueTrackPainter(this.trackType);
+class TrackPainter extends CustomPainter {
+  const TrackPainter(this.trackType, this.hsvColor);
 
   final TrackType trackType;
-
-  static final List<Color> hueColors = [
-    const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
-    const HSVColor.fromAHSV(1.0, 60.0, 1.0, 1.0).toColor(),
-    const HSVColor.fromAHSV(1.0, 120.0, 1.0, 1.0).toColor(),
-    const HSVColor.fromAHSV(1.0, 180.0, 1.0, 1.0).toColor(),
-    const HSVColor.fromAHSV(1.0, 240.0, 1.0, 1.0).toColor(),
-    const HSVColor.fromAHSV(1.0, 300.0, 1.0, 1.0).toColor(),
-    const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
-  ];
-  static final List<Color> alphaColors = [
-    Colors.black.withOpacity(0.0),
-    Colors.black.withOpacity(1.0),
-  ];
+  final HSVColor hsvColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -116,15 +104,48 @@ class HueTrackPainter extends CustomPainter {
 
     switch (trackType) {
       case TrackType.hue:
-        Gradient gradient = LinearGradient(colors: hueColors);
+        final List<Color> colors = [
+          const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
+          const HSVColor.fromAHSV(1.0, 60.0, 1.0, 1.0).toColor(),
+          const HSVColor.fromAHSV(1.0, 120.0, 1.0, 1.0).toColor(),
+          const HSVColor.fromAHSV(1.0, 180.0, 1.0, 1.0).toColor(),
+          const HSVColor.fromAHSV(1.0, 240.0, 1.0, 1.0).toColor(),
+          const HSVColor.fromAHSV(1.0, 300.0, 1.0, 1.0).toColor(),
+          const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
+        ];
+        Gradient gradient = LinearGradient(colors: colors);
         canvas.drawRect(rect, Paint()..shader = gradient.createShader(rect));
         break;
       case TrackType.saturation:
+        final List<Color> colors = [
+          HSVColor.fromAHSV(1.0, hsvColor.hue, 0.0, 1.0).toColor(),
+          HSVColor.fromAHSV(1.0, hsvColor.hue, 1.0, 1.0).toColor(),
+        ];
+        Gradient gradient = LinearGradient(colors: colors);
+        canvas.drawRect(rect, Paint()..shader = gradient.createShader(rect));
         break;
       case TrackType.value:
+        final List<Color> colors = [
+          HSVColor.fromAHSV(1.0, hsvColor.hue, 1.0, 0.0).toColor(),
+          HSVColor.fromAHSV(1.0, hsvColor.hue, 1.0, 1.0).toColor(),
+        ];
+        Gradient gradient = LinearGradient(colors: colors);
+        canvas.drawRect(rect, Paint()..shader = gradient.createShader(rect));
+        break;
+      case TrackType.lightness:
+        final List<Color> colors = [
+          HSLColor.fromAHSL(1.0, hsvColor.hue, 1.0, 0.0).toColor(),
+          HSLColor.fromAHSL(1.0, hsvColor.hue, 1.0, 1.0).toColor(),
+        ];
+        Gradient gradient = LinearGradient(colors: colors);
+        canvas.drawRect(rect, Paint()..shader = gradient.createShader(rect));
         break;
       case TrackType.alpha:
-        Gradient gradient = LinearGradient(colors: alphaColors);
+        final List<Color> colors = [
+          Colors.black.withOpacity(0.0),
+          Colors.black.withOpacity(1.0),
+        ];
+        Gradient gradient = LinearGradient(colors: colors);
         canvas.drawRect(rect, Paint()..shader = gradient.createShader(rect));
         break;
     }
@@ -341,9 +362,8 @@ class ColorPickerSlider extends StatelessWidget {
           LayoutId(
             id: _SliderLayout.track,
             child: ClipRRect(
-              borderRadius:
-                  const BorderRadius.all(const Radius.circular(1000.0)),
-              child: CustomPaint(painter: HueTrackPainter(trackType)),
+              borderRadius: const BorderRadius.all(const Radius.circular(50.0)),
+              child: CustomPaint(painter: TrackPainter(trackType, hsvColor)),
             ),
           ),
           LayoutId(
@@ -425,10 +445,12 @@ class ColorPickerArea extends StatelessWidget {
   const ColorPickerArea(
     this.hsvColor,
     this.onColorChanged,
+    this.paletteType,
   );
 
   final HSVColor hsvColor;
   final ValueChanged<HSVColor> onColorChanged;
+  final PaletteType paletteType;
 
   @override
   Widget build(BuildContext context) {
@@ -441,13 +463,31 @@ class ColorPickerArea extends StatelessWidget {
           onPanUpdate: (DragUpdateDetails details) {
             RenderBox getBox = context.findRenderObject();
             Offset localOffset = getBox.globalToLocal(details.globalPosition);
-            double saturation = localOffset.dx.clamp(0.0, width) / width;
-            double value = 1 - localOffset.dy.clamp(0.0, height) / height;
-            onColorChanged(
-                hsvColor.withSaturation(saturation).withValue(value));
+            double horizontal = localOffset.dx.clamp(0.0, width) / width;
+            double vertical = 1 - localOffset.dy.clamp(0.0, height) / height;
+            switch (paletteType) {
+              case PaletteType.hsv:
+                onColorChanged(
+                    hsvColor.withSaturation(horizontal).withValue(vertical));
+                break;
+              case PaletteType.hsl:
+                onColorChanged(hslToHsv(hsvToHsl(hsvColor)
+                    .withSaturation(horizontal)
+                    .withLightness(vertical)));
+                break;
+            }
           },
-          child: CustomPaint(painter: HSVColorPainter(hsvColor)),
-          // child: CustomPaint(painter: HSLColorPainter(hsvToHsl(hsvColor))),
+          child: Builder(
+            builder: (BuildContext context) {
+              switch (paletteType) {
+                case PaletteType.hsv:
+                  return CustomPaint(painter: HSVColorPainter(hsvColor));
+                case PaletteType.hsl:
+                  return CustomPaint(
+                      painter: HSLColorPainter(hsvToHsl(hsvColor)));
+              }
+            },
+          ),
         );
       },
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_colorpicker/hsv_picker.dart';
 import 'package:flutter_colorpicker/material_picker.dart';
 import 'package:flutter_colorpicker/block_picker.dart';
 import 'package:flutter_colorpicker/utils.dart';
@@ -60,6 +61,8 @@ class _MyAppState extends State<MyApp> {
                             colorPickerWidth: 300.0,
                             pickerAreaHeightPercent: 0.7,
                             enableAlpha: true,
+                            displayThumbColor: true,
+                            paletteType: PaletteType.hsv,
                           ),
                         ),
                       );

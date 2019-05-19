@@ -8,16 +8,20 @@ class ColorPicker extends StatefulWidget {
   const ColorPicker(
     this.color,
     this.onColorChanged, {
+    this.paletteType: PaletteType.hsv,
     this.enableAlpha: true,
     this.enableLabel: true,
+    this.displayThumbColor: false,
     this.colorPickerWidth: 300.0,
     this.pickerAreaHeightPercent: 1.0,
   });
 
   final Color color;
   final ValueChanged<Color> onColorChanged;
+  final PaletteType paletteType;
   final bool enableAlpha;
   final bool enableLabel;
+  final bool displayThumbColor;
   final double colorPickerWidth;
   final double pickerAreaHeightPercent;
 
@@ -51,7 +55,7 @@ class _ColorPickerState extends State<ColorPicker> {
             child: ColorPickerArea(currentHsvColor, (HSVColor color) {
               setState(() => currentHsvColor = color);
               widget.onColorChanged(currentHsvColor.toColor());
-            }),
+            }, widget.paletteType),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15.0, 5.0, 10.0, 5.0),
@@ -70,7 +74,7 @@ class _ColorPickerState extends State<ColorPicker> {
                           setState(() => currentHsvColor = color);
                           widget.onColorChanged(currentHsvColor.toColor());
                         },
-                        displayThumbColor: true,
+                        displayThumbColor: widget.displayThumbColor,
                       ),
                     ),
                     widget.enableAlpha
@@ -85,7 +89,7 @@ class _ColorPickerState extends State<ColorPicker> {
                                 widget
                                     .onColorChanged(currentHsvColor.toColor());
                               },
-                              displayThumbColor: true,
+                              displayThumbColor: widget.displayThumbColor,
                             ),
                           )
                         : SizedBox(),
@@ -108,7 +112,7 @@ class _ColorPickerState extends State<ColorPicker> {
               child: ColorPickerArea(currentHsvColor, (HSVColor color) {
                 setState(() => currentHsvColor = color);
                 widget.onColorChanged(currentHsvColor.toColor());
-              }),
+              }, widget.paletteType),
             ),
           ),
           Column(
