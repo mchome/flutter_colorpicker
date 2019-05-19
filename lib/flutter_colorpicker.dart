@@ -1,8 +1,12 @@
+/// HSV(HSB)/HSL color picker
+
 library flutter_colorpicker;
 
 import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/hsv_picker.dart';
+
+export 'package:flutter_colorpicker/hsv_picker.dart';
 
 class ColorPicker extends StatefulWidget {
   const ColorPicker(
@@ -30,7 +34,7 @@ class ColorPicker extends StatefulWidget {
 }
 
 class _ColorPickerState extends State<ColorPicker> {
-  HSVColor currentHsvColor = HSVColor.fromColor(Colors.transparent);
+  HSVColor currentHsvColor = const HSVColor.fromAHSV(0.0, 0.0, 0.0, 0.0);
 
   @override
   void initState() {

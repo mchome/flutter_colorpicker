@@ -1,9 +1,9 @@
 # flutter_colorpicker
 
-[![pub package](https://img.shields.io/pub/v/flutter_colorpicker.svg)](https://pub.dartlang.org/packages/flutter_colorpicker)
+[![pub package](https://img.shields.io/pub/v/flutter_colorpicker.svg)](https://pub.dev/packages/flutter_colorpicker)
 [![donate](https://img.shields.io/badge/Donate-PayPal-green.svg?logo=paypal)](https://www.paypal.me/mchome19)
 
-A HSV(HSB) color picker inspired by chrome devtools and a material color picker for your flutter app.
+A HSV(HSB)/HSL color picker inspired by chrome devtools and a material color picker for your flutter app.
 
 ## Getting Started
 
@@ -84,10 +84,11 @@ showDialog(
 
 ![preview](https://user-images.githubusercontent.com/7392658/36585408-bb4e96a4-18b8-11e8-8c20-d4dc200e1a7c.gif)
 
-![01](https://user-images.githubusercontent.com/7392658/46619114-de790f80-cb53-11e8-81c8-278d4dc51606.png)
-![02](https://user-images.githubusercontent.com/7392658/46619116-df11a600-cb53-11e8-8b6b-4e495f8dbea9.png)
-![03](https://user-images.githubusercontent.com/7392658/46619111-dd47e280-cb53-11e8-9701-38900857321f.png)
-![04](https://user-images.githubusercontent.com/7392658/46619112-dde07900-cb53-11e8-91d9-a4d1ee70cf3b.png)
-![05](https://user-images.githubusercontent.com/7392658/50912123-56fdae00-146c-11e9-8d63-be3a26a20b72.png)
+<!-- markdownlint-disable MD033 -->
+<img src="https://user-images.githubusercontent.com/7392658/46619114-de790f80-cb53-11e8-81c8-278d4dc51606.png" height="300">
+<img src="https://user-images.githubusercontent.com/7392658/46619116-df11a600-cb53-11e8-8b6b-4e495f8dbea9.png" height="300">
+<img src="https://user-images.githubusercontent.com/7392658/46619111-dd47e280-cb53-11e8-9701-38900857321f.png" height="300">
+<img src="https://user-images.githubusercontent.com/7392658/46619112-dde07900-cb53-11e8-91d9-a4d1ee70cf3b.png" height="300">
+<img src="https://user-images.githubusercontent.com/7392658/50912123-56fdae00-146c-11e9-8d63-be3a26a20b72.png" height="300">
 
 Details in [example/](https://github.com/mchome/flutter_colorpicker/tree/master/example) folder.

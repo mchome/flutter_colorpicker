@@ -48,6 +48,50 @@ class HSVColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+class HSLColorPainter extends CustomPainter {
+  const HSLColorPainter(this.hslColor);
+
+  final HSLColor hslColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final Gradient gradientH = LinearGradient(
+      colors: [
+        const Color(0xff808080),
+        HSLColor.fromAHSL(1.0, hslColor.hue, 1.0, 0.5).toColor(),
+      ],
+    );
+    final Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [0.0, 0.5, 0.5, 1],
+      colors: [
+        Colors.white,
+        const Color(0x00ffffff),
+        Colors.transparent,
+        Colors.black,
+      ],
+    );
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
+
+    canvas.drawCircle(
+      Offset(size.width * hslColor.saturation,
+          size.height * (1 - hslColor.lightness)),
+      size.height * 0.04,
+      Paint()
+        ..color =
+            useWhiteForeground(hslColor.toColor()) ? Colors.white : Colors.black
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
 class _SliderLayout extends MultiChildLayoutDelegate {
   static final String track = 'track';
   static final String thumb = 'thumb';
@@ -492,48 +536,4 @@ class ColorPickerArea extends StatelessWidget {
       },
     );
   }
-}
-
-class HSLColorPainter extends CustomPainter {
-  const HSLColorPainter(this.hslColor);
-
-  final HSLColor hslColor;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Rect rect = Offset.zero & size;
-    final Gradient gradientH = LinearGradient(
-      colors: [
-        const Color(0xff808080),
-        HSVColor.fromAHSV(1.0, hslColor.hue, 1.0, 1.0).toColor(),
-      ],
-    );
-    final Gradient gradientV = LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      stops: [0.0, 0.5, 0.5, 1],
-      colors: [
-        Colors.white,
-        const Color(0x00ffffff),
-        Colors.transparent,
-        Colors.black,
-      ],
-    );
-    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
-    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
-
-    canvas.drawCircle(
-      Offset(size.width * hslColor.saturation,
-          size.height * (1 - hslColor.lightness)),
-      size.height * 0.04,
-      Paint()
-        ..color =
-            useWhiteForeground(hslColor.toColor()) ? Colors.white : Colors.black
-        ..strokeWidth = 1.5
-        ..style = PaintingStyle.stroke,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

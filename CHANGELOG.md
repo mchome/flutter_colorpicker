@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.2.4]
+
+* Add hsl palette.
+
 ## [0.2.3]
 
 * MaterialPicker: Flexible size.
