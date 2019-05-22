@@ -5,15 +5,7 @@ import 'package:flutter_colorpicker/material_picker.dart';
 import 'package:flutter_colorpicker/block_picker.dart';
 import 'package:flutter_colorpicker/utils.dart';
 
-void main() {
-  runApp(
-    MaterialApp(
-      title: 'Flutter Example',
-      theme: ThemeData(primaryColor: Colors.blue),
-      home: MyApp(),
-    ),
-  );
-}
+void main() => runApp(MaterialApp(home: MyApp()));
 
 class MyApp extends StatefulWidget {
   @override

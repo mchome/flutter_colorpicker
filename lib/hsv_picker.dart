@@ -323,28 +323,28 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
 
   List<Widget> colorValueLabels() {
     return _colorTypes[_colorType].map((String item) {
-      return SizedBox(
-        width: 43.0,
-        height: 50.0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              item,
-              style: Theme.of(context)
-                  .textTheme
-                  .body1
-                  .copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
-            ),
-            SizedBox(height: 10.0),
-            Expanded(
-              child: Text(
-                _colorValue(widget.hsvColor, _colorType)[
-                    _colorTypes[_colorType].indexOf(item)],
-                overflow: TextOverflow.ellipsis,
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 7.0),
+        child: IntrinsicHeight(
+          child: Column(
+            children: <Widget>[
+              Text(
+                item,
+                style: Theme.of(context)
+                    .textTheme
+                    .body1
+                    .copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
               ),
-            ),
-          ],
+              SizedBox(height: 10.0),
+              Expanded(
+                child: Text(
+                  _colorValue(widget.hsvColor, _colorType)[
+                      _colorTypes[_colorType].indexOf(item)],
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }).toList();

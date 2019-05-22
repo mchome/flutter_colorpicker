@@ -64,6 +64,7 @@ class _ColorPickerState extends State<ColorPicker> {
           Padding(
             padding: const EdgeInsets.fromLTRB(15.0, 5.0, 10.0, 5.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ColorIndicator(currentHsvColor),
                 Column(
