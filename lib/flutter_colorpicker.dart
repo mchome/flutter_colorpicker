@@ -9,9 +9,9 @@ import 'package:flutter_colorpicker/hsv_picker.dart';
 export 'package:flutter_colorpicker/hsv_picker.dart';
 
 class ColorPicker extends StatefulWidget {
-  const ColorPicker(
-    this.color,
-    this.onColorChanged, {
+  const ColorPicker({
+    @required this.pickerColor,
+    @required this.onColorChanged,
     this.paletteType: PaletteType.hsv,
     this.enableAlpha: true,
     this.enableLabel: true,
@@ -20,7 +20,7 @@ class ColorPicker extends StatefulWidget {
     this.pickerAreaHeightPercent: 1.0,
   });
 
-  final Color color;
+  final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final PaletteType paletteType;
   final bool enableAlpha;
@@ -39,13 +39,13 @@ class _ColorPickerState extends State<ColorPicker> {
   @override
   void initState() {
     super.initState();
-    currentHsvColor = HSVColor.fromColor(widget.color);
+    currentHsvColor = HSVColor.fromColor(widget.pickerColor);
   }
 
   @override
   void didUpdateWidget(ColorPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    currentHsvColor = HSVColor.fromColor(widget.color);
+    currentHsvColor = HSVColor.fromColor(widget.pickerColor);
   }
 
   @override
@@ -67,43 +67,45 @@ class _ColorPickerState extends State<ColorPicker> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ColorIndicator(currentHsvColor),
-                Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 40.0,
-                      width: 225.0,
-                      child: ColorPickerSlider(
-                        TrackType.hue,
-                        currentHsvColor,
-                        (HSVColor color) {
-                          setState(() => currentHsvColor = color);
-                          widget.onColorChanged(currentHsvColor.toColor());
-                        },
-                        displayThumbColor: widget.displayThumbColor,
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 40.0,
+                        width: widget.colorPickerWidth - 75.0,
+                        child: ColorPickerSlider(
+                          TrackType.hue,
+                          currentHsvColor,
+                          (HSVColor color) {
+                            setState(() => currentHsvColor = color);
+                            widget.onColorChanged(currentHsvColor.toColor());
+                          },
+                          displayThumbColor: widget.displayThumbColor,
+                        ),
                       ),
-                    ),
-                    widget.enableAlpha
-                        ? SizedBox(
-                            height: 40.0,
-                            width: 225.0,
-                            child: ColorPickerSlider(
-                              TrackType.alpha,
-                              currentHsvColor,
-                              (HSVColor color) {
-                                setState(() => currentHsvColor = color);
-                                widget
-                                    .onColorChanged(currentHsvColor.toColor());
-                              },
-                              displayThumbColor: widget.displayThumbColor,
-                            ),
-                          )
-                        : SizedBox(),
-                  ],
+                      widget.enableAlpha
+                          ? SizedBox(
+                              height: 40.0,
+                              width: widget.colorPickerWidth - 75.0,
+                              child: ColorPickerSlider(
+                                TrackType.alpha,
+                                currentHsvColor,
+                                (HSVColor color) {
+                                  setState(() => currentHsvColor = color);
+                                  widget.onColorChanged(
+                                      currentHsvColor.toColor());
+                                },
+                                displayThumbColor: widget.displayThumbColor,
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-          widget.enableAlpha ? ColorPickerLabel(currentHsvColor) : SizedBox(),
+          widget.enableLabel ? ColorPickerLabel(currentHsvColor) : SizedBox(),
           SizedBox(height: 20.0),
         ],
       );
@@ -163,7 +165,7 @@ class _ColorPickerState extends State<ColorPicker> {
                 ],
               ),
               SizedBox(height: 20.0),
-              widget.enableAlpha
+              widget.enableLabel
                   ? ColorPickerLabel(currentHsvColor)
                   : SizedBox(),
             ],

@@ -47,12 +47,13 @@ class _MyAppState extends State<MyApp> {
                         contentPadding: const EdgeInsets.all(0.0),
                         content: SingleChildScrollView(
                           child: ColorPicker(
-                            currentColor,
-                            changeColor,
+                            pickerColor: currentColor,
+                            onColorChanged: changeColor,
                             colorPickerWidth: 300.0,
                             pickerAreaHeightPercent: 0.7,
                             enableAlpha: true,
                             displayThumbColor: true,
+                            enableLabel: true,
                             paletteType: PaletteType.hsv,
                           ),
                         ),
