@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.2.5]
+
+* Fix enableLabel.
+* Fix scrollbar.
+
 ## [0.2.4]
 
 * Add hsl palette.
