@@ -496,6 +496,17 @@ class ColorPickerArea extends StatelessWidget {
   final ValueChanged<HSVColor> onColorChanged;
   final PaletteType paletteType;
 
+  void _handleColorChange(double horizontal, double vertical) {
+    switch (paletteType) {
+      case PaletteType.hsv:
+        onColorChanged(hsvColor.withSaturation(horizontal).withValue(vertical));
+        break;
+      case PaletteType.hsl:
+        onColorChanged(hslToHsv(hsvToHsl(hsvColor).withSaturation(horizontal).withLightness(vertical)));
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -504,22 +515,19 @@ class ColorPickerArea extends StatelessWidget {
         double height = constraints.maxHeight;
 
         return GestureDetector(
+          onPanDown: (DragDownDetails details) {
+            RenderBox getBox = context.findRenderObject();
+            Offset localOffset = getBox.globalToLocal(details.globalPosition);
+            double horizontal = localOffset.dx.clamp(0.0, width) / width;
+            double vertical = 1 - localOffset.dy.clamp(0.0, height) / height;
+            _handleColorChange(horizontal, vertical);
+          },
           onPanUpdate: (DragUpdateDetails details) {
             RenderBox getBox = context.findRenderObject();
             Offset localOffset = getBox.globalToLocal(details.globalPosition);
             double horizontal = localOffset.dx.clamp(0.0, width) / width;
             double vertical = 1 - localOffset.dy.clamp(0.0, height) / height;
-            switch (paletteType) {
-              case PaletteType.hsv:
-                onColorChanged(
-                    hsvColor.withSaturation(horizontal).withValue(vertical));
-                break;
-              case PaletteType.hsl:
-                onColorChanged(hslToHsv(hsvToHsl(hsvColor)
-                    .withSaturation(horizontal)
-                    .withLightness(vertical)));
-                break;
-            }
+            _handleColorChange(horizontal, vertical);
           },
           child: Builder(
             builder: (BuildContext context) {
