@@ -502,7 +502,9 @@ class ColorPickerArea extends StatelessWidget {
         onColorChanged(hsvColor.withSaturation(horizontal).withValue(vertical));
         break;
       case PaletteType.hsl:
-        onColorChanged(hslToHsv(hsvToHsl(hsvColor).withSaturation(horizontal).withLightness(vertical)));
+        onColorChanged(hslToHsv(hsvToHsl(hsvColor)
+            .withSaturation(horizontal)
+            .withLightness(vertical)));
         break;
     }
   }
@@ -537,6 +539,8 @@ class ColorPickerArea extends StatelessWidget {
                 case PaletteType.hsl:
                   return CustomPaint(
                       painter: HSLColorPainter(hsvToHsl(hsvColor)));
+                default:
+                  return CustomPaint();
               }
             },
           ),
