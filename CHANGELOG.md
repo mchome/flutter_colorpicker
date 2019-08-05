@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.2.6]
+
+* Update color selection also for tap down.
+
 ## [0.2.5]
 
 * Fix enableLabel.
