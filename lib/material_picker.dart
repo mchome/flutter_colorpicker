@@ -245,8 +245,8 @@ class _MaterialPickerState extends State<MaterialPicker> {
             );
           }))
           ..add((_orientation == Orientation.portrait)
-              ? Padding(padding: EdgeInsets.only(top: 15.0))
-              : Padding(padding: EdgeInsets.only(left: 15.0))),
+              ? const Padding(padding: const EdgeInsets.only(top: 15.0))
+              : const Padding(padding: const EdgeInsets.only(left: 15.0))),
       );
     }
 

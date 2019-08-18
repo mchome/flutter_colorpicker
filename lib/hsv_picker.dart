@@ -266,42 +266,6 @@ class IndicatorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-List<String> _colorValue(HSVColor hsvColor, ColorModel colorModel) {
-  final Color color = hsvColor.toColor();
-  if (colorModel == ColorModel.hex) {
-    return [
-      color.red.toRadixString(16).toUpperCase().padLeft(2, '0'),
-      color.green.toRadixString(16).toUpperCase().padLeft(2, '0'),
-      color.blue.toRadixString(16).toUpperCase().padLeft(2, '0'),
-      '${(color.opacity * 100).round()}%',
-    ];
-  } else if (colorModel == ColorModel.rgb) {
-    return [
-      color.red.toString(),
-      color.green.toString(),
-      color.blue.toString(),
-      '${(color.opacity * 100).round()}%',
-    ];
-  } else if (colorModel == ColorModel.hsv) {
-    return [
-      '${hsvColor.hue.round()}°',
-      '${(hsvColor.saturation * 100).round()}%',
-      '${(hsvColor.value * 100).round()}%',
-      '${(hsvColor.alpha * 100).round()}%',
-    ];
-  } else if (colorModel == ColorModel.hsl) {
-    HSLColor hslColor = hsvToHsl(hsvColor);
-    return [
-      '${hslColor.hue.round()}°',
-      '${(hslColor.saturation * 100).round()}%',
-      '${(hslColor.lightness * 100).round()}%',
-      '${(hsvColor.alpha * 100).round()}%',
-    ];
-  } else {
-    return ['??', '??', '??', '??'];
-  }
-}
-
 class ColorPickerLabel extends StatefulWidget {
   const ColorPickerLabel(this.hsvColor);
 
@@ -321,6 +285,42 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
 
   ColorModel _colorType = ColorModel.hex;
 
+  List<String> colorValue(HSVColor hsvColor, ColorModel colorModel) {
+    final Color color = hsvColor.toColor();
+    if (colorModel == ColorModel.hex) {
+      return [
+        color.red.toRadixString(16).toUpperCase().padLeft(2, '0'),
+        color.green.toRadixString(16).toUpperCase().padLeft(2, '0'),
+        color.blue.toRadixString(16).toUpperCase().padLeft(2, '0'),
+        '${(color.opacity * 100).round()}%',
+      ];
+    } else if (colorModel == ColorModel.rgb) {
+      return [
+        color.red.toString(),
+        color.green.toString(),
+        color.blue.toString(),
+        '${(color.opacity * 100).round()}%',
+      ];
+    } else if (colorModel == ColorModel.hsv) {
+      return [
+        '${hsvColor.hue.round()}°',
+        '${(hsvColor.saturation * 100).round()}%',
+        '${(hsvColor.value * 100).round()}%',
+        '${(hsvColor.alpha * 100).round()}%',
+      ];
+    } else if (colorModel == ColorModel.hsl) {
+      HSLColor hslColor = hsvToHsl(hsvColor);
+      return [
+        '${hslColor.hue.round()}°',
+        '${(hslColor.saturation * 100).round()}%',
+        '${(hslColor.lightness * 100).round()}%',
+        '${(hsvColor.alpha * 100).round()}%',
+      ];
+    } else {
+      return ['??', '??', '??', '??'];
+    }
+  }
+
   List<Widget> colorValueLabels() {
     return _colorTypes[_colorType].map((String item) {
       return Padding(
@@ -338,7 +338,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
               SizedBox(height: 10.0),
               Expanded(
                 child: Text(
-                  _colorValue(widget.hsvColor, _colorType)[
+                  colorValue(widget.hsvColor, _colorType)[
                       _colorTypes[_colorType].indexOf(item)],
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -352,29 +352,26 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        DropdownButton(
-          value: _colorType,
-          onChanged: (ColorModel type) => setState(() => _colorType = type),
-          items: _colorTypes
-              .map((ColorModel type, _) {
-                return MapEntry(
-                  DropdownMenuItem(
-                    value: type,
-                    child: Text(type.toString().split('.').last.toUpperCase()),
-                  ),
-                  null,
-                );
-              })
-              .keys
-              .toList(),
-        ),
-      ]
-        ..add(SizedBox(width: 5.0))
-        ..addAll(colorValueLabels() ?? <Widget>[]),
-    );
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      DropdownButton(
+        value: _colorType,
+        onChanged: (ColorModel type) => setState(() => _colorType = type),
+        items: _colorTypes
+            .map((ColorModel type, _) {
+              return MapEntry(
+                DropdownMenuItem(
+                  value: type,
+                  child: Text(type.toString().split('.').last.toUpperCase()),
+                ),
+                null,
+              );
+            })
+            .keys
+            .toList(),
+      ),
+      SizedBox(width: 5.0),
+      ...colorValueLabels(),
+    ]);
   }
 }
 
@@ -532,7 +529,7 @@ class ColorPickerArea extends StatelessWidget {
             _handleColorChange(horizontal, vertical);
           },
           child: Builder(
-            builder: (BuildContext context) {
+            builder: (BuildContext _) {
               switch (paletteType) {
                 case PaletteType.hsv:
                   return CustomPaint(painter: HSVColorPainter(hsvColor));

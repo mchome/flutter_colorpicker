@@ -55,6 +55,10 @@ class _MyAppState extends State<MyApp> {
                             displayThumbColor: true,
                             enableLabel: true,
                             paletteType: PaletteType.hsv,
+                            pickerAreaBorderRadius: const BorderRadius.only(
+                              topLeft: const Radius.circular(2.0),
+                              topRight: const Radius.circular(2.0),
+                            ),
                           ),
                         ),
                       );
