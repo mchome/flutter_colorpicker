@@ -267,9 +267,12 @@ class IndicatorPainter extends CustomPainter {
 }
 
 class ColorPickerLabel extends StatefulWidget {
-  const ColorPickerLabel(this.hsvColor);
+  const ColorPickerLabel(
+      this.hsvColor, this.backgroundDropDown, this.textColor);
 
   final HSVColor hsvColor;
+  final Color backgroundDropDown;
+  final Color textColor;
 
   @override
   _ColorPickerLabelState createState() => _ColorPickerLabelState();
@@ -330,10 +333,10 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
             children: <Widget>[
               Text(
                 item,
-                style: Theme.of(context)
-                    .textTheme
-                    .body1
-                    .copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
+                style: Theme.of(context).textTheme.body1.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    color: widget.textColor),
               ),
               SizedBox(height: 10.0),
               Expanded(
@@ -341,6 +344,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                   colorValue(widget.hsvColor, _colorType)[
                       _colorTypes[_colorType].indexOf(item)],
                   overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: widget.textColor),
                 ),
               ),
             ],
@@ -353,21 +357,27 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      DropdownButton(
-        value: _colorType,
-        onChanged: (ColorModel type) => setState(() => _colorType = type),
-        items: _colorTypes
-            .map((ColorModel type, _) {
-              return MapEntry(
-                DropdownMenuItem(
-                  value: type,
-                  child: Text(type.toString().split('.').last.toUpperCase()),
-                ),
-                null,
-              );
-            })
-            .keys
-            .toList(),
+      new Theme(
+        data:
+            Theme.of(context).copyWith(canvasColor: widget.backgroundDropDown),
+        child: DropdownButton(
+          style: TextStyle(color: widget.textColor),
+          value: _colorType,
+          onChanged: (ColorModel type) => setState(() => _colorType = type),
+          items: _colorTypes
+              .map((ColorModel type, _) {
+                return MapEntry(
+                  DropdownMenuItem(
+                    value: type,
+                    child: Text(type.toString().split('.').last.toUpperCase(),
+                        style: TextStyle(color: widget.textColor)),
+                  ),
+                  null,
+                );
+              })
+              .keys
+              .toList(),
+        ),
       ),
       SizedBox(width: 5.0),
       ...colorValueLabels(),

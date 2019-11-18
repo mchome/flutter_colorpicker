@@ -18,6 +18,8 @@ class ColorPicker extends StatefulWidget {
     this.displayThumbColor: false,
     this.colorPickerWidth: 300.0,
     this.pickerAreaHeightPercent: 1.0,
+    this.backgroundDropDown: Colors.white,
+    this.textColor: Colors.black,
     this.pickerAreaBorderRadius: const BorderRadius.all(Radius.zero),
   }) : assert(pickerAreaBorderRadius != null);
 
@@ -29,6 +31,8 @@ class ColorPicker extends StatefulWidget {
   final bool displayThumbColor;
   final double colorPickerWidth;
   final double pickerAreaHeightPercent;
+  final Color backgroundDropDown;
+  final Color textColor;
   final BorderRadius pickerAreaBorderRadius;
 
   @override
@@ -110,7 +114,9 @@ class _ColorPickerState extends State<ColorPicker> {
               ],
             ),
           ),
-          if (widget.enableLabel) ColorPickerLabel(currentHsvColor),
+          if (widget.enableLabel)
+            ColorPickerLabel(
+                currentHsvColor, widget.backgroundDropDown, widget.textColor),
           SizedBox(height: 20.0),
         ],
       );
@@ -149,7 +155,9 @@ class _ColorPickerState extends State<ColorPicker> {
                 ],
               ),
               SizedBox(height: 20.0),
-              if (widget.enableLabel) ColorPickerLabel(currentHsvColor),
+              if (widget.enableLabel)
+                ColorPickerLabel(currentHsvColor, widget.backgroundDropDown,
+                    widget.textColor),
             ],
           ),
         ],
