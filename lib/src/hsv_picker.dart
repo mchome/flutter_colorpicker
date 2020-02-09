@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/utils.dart';
+
+import 'package:flutter_colorpicker/src/utils.dart';
 
 enum PaletteType { hsv, hsl }
 enum TrackType { hue, saturation, value, lightness, alpha }
@@ -332,7 +333,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                 item,
                 style: Theme.of(context)
                     .textTheme
-                    .body1
+                    .bodyText2
                     .copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
               ),
               SizedBox(height: 10.0),

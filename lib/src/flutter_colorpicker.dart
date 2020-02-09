@@ -4,9 +4,7 @@ library flutter_colorpicker;
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_colorpicker/hsv_picker.dart';
-
-export 'package:flutter_colorpicker/hsv_picker.dart';
+import 'package:flutter_colorpicker/src/hsv_picker.dart';
 
 class ColorPicker extends StatefulWidget {
   const ColorPicker({

@@ -4,7 +4,7 @@ library material_colorpicker;
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_colorpicker/utils.dart';
+import 'package:flutter_colorpicker/src/utils.dart';
 
 class MaterialPicker extends StatefulWidget {
   MaterialPicker({
@@ -106,32 +106,30 @@ class _MaterialPickerState extends State<MaterialPicker> {
   @override
   Widget build(BuildContext context) {
     Orientation _orientation = MediaQuery.of(context).orientation;
+    bool _isPortrait = _orientation == Orientation.portrait;
 
     Widget _colorList() {
       return Container(
-        width: (_orientation == Orientation.portrait) ? 60.0 : null,
-        height: (_orientation == Orientation.portrait) ? null : 60.0,
+        width: _isPortrait ? 60.0 : null,
+        height: _isPortrait ? null : 60.0,
         decoration: BoxDecoration(
-          border: (_orientation == Orientation.portrait)
+          border: _isPortrait
               ? Border(right: BorderSide(color: Colors.grey[300], width: 1.0))
               : Border(top: BorderSide(color: Colors.grey[300], width: 1.0)),
         ),
         child: ListView(
-          scrollDirection: (_orientation == Orientation.portrait)
-              ? Axis.vertical
-              : Axis.horizontal,
+          scrollDirection: _isPortrait ? Axis.vertical : Axis.horizontal,
           children: [
-            (_orientation == Orientation.portrait)
-                ? Padding(padding: EdgeInsets.only(top: 7.0))
-                : Padding(padding: EdgeInsets.only(left: 7.0))
-          ]
-            ..addAll(_colorTypes.map((List<Color> _colors) {
+            _isPortrait
+                ? const Padding(padding: EdgeInsets.only(top: 7.0))
+                : const Padding(padding: EdgeInsets.only(left: 7.0)),
+            ..._colorTypes.map((List<Color> _colors) {
               Color _colorType = _colors[0];
               return GestureDetector(
                 onTap: () => setState(() => _currentColor = _colors),
                 child: Container(
                   color: Color(0),
-                  padding: (_orientation == Orientation.portrait)
+                  padding: _isPortrait
                       ? EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0)
                       : EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
                   child: Align(
@@ -142,9 +140,9 @@ class _MaterialPickerState extends State<MaterialPicker> {
                       decoration: BoxDecoration(
                         color: _colorType,
                         borderRadius: BorderRadius.circular(60.0),
-                        boxShadow: (_currentColor == _colors)
+                        boxShadow: _currentColor == _colors
                             ? [
-                                (_colorType == Theme.of(context).cardColor)
+                                _colorType == Theme.of(context).cardColor
                                     ? BoxShadow(
                                         color: Colors.grey[300],
                                         blurRadius: 5.0,
@@ -155,7 +153,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                                       ),
                               ]
                             : null,
-                        border: (_colorType == Theme.of(context).cardColor)
+                        border: _colorType == Theme.of(context).cardColor
                             ? Border.all(color: Colors.grey[300], width: 1.0)
                             : null,
                       ),
@@ -163,25 +161,23 @@ class _MaterialPickerState extends State<MaterialPicker> {
                   ),
                 ),
               );
-            }))
-            ..add((_orientation == Orientation.portrait)
-                ? Padding(padding: EdgeInsets.only(top: 5.0))
-                : Padding(padding: EdgeInsets.only(left: 5.0))),
+            }),
+            _isPortrait
+                ? const Padding(padding: EdgeInsets.only(top: 5.0))
+                : const Padding(padding: EdgeInsets.only(left: 5.0)),
+          ],
         ),
       );
     }
 
     Widget _shadingList() {
       return ListView(
-        scrollDirection: (_orientation == Orientation.portrait)
-            ? Axis.vertical
-            : Axis.horizontal,
+        scrollDirection: _isPortrait ? Axis.vertical : Axis.horizontal,
         children: [
-          (_orientation == Orientation.portrait)
+          _isPortrait
               ? Padding(padding: EdgeInsets.only(top: 15.0))
-              : Padding(padding: EdgeInsets.only(left: 15.0))
-        ]
-          ..addAll(_shadingTypes(_currentColor).map((Color _color) {
+              : Padding(padding: EdgeInsets.only(left: 15.0)),
+          ..._shadingTypes(_currentColor).map((Color _color) {
             return GestureDetector(
               onTap: () {
                 setState(() => _currentShading = _color);
@@ -189,21 +185,19 @@ class _MaterialPickerState extends State<MaterialPicker> {
               },
               child: Container(
                 color: Color(0),
-                padding: (_orientation == Orientation.portrait)
+                padding: _isPortrait
                     ? EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0)
                     : EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
                 child: Align(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
-                    width:
-                        (_orientation == Orientation.portrait) ? 250.0 : 50.0,
-                    height:
-                        (_orientation == Orientation.portrait) ? 50.0 : 220.0,
+                    width: _isPortrait ? 250.0 : 50.0,
+                    height: _isPortrait ? 50.0 : 220.0,
                     decoration: BoxDecoration(
                       color: _color,
-                      boxShadow: (_currentShading == _color)
+                      boxShadow: _currentShading == _color
                           ? [
-                              (_color == Theme.of(context).cardColor)
+                              _color == Theme.of(context).cardColor
                                   ? BoxShadow(
                                       color: Colors.grey[300],
                                       blurRadius: 5.0,
@@ -214,12 +208,11 @@ class _MaterialPickerState extends State<MaterialPicker> {
                                     ),
                             ]
                           : null,
-                      border: (_color == Theme.of(context).cardColor)
+                      border: _color == Theme.of(context).cardColor
                           ? Border.all(color: Colors.grey[300], width: 1.0)
                           : null,
                     ),
-                    child: (_orientation == Orientation.portrait &&
-                            widget.enableLabel)
+                    child: (_isPortrait && widget.enableLabel)
                         ? Align(
                             alignment: Alignment.centerRight,
                             child: Text(
@@ -243,10 +236,11 @@ class _MaterialPickerState extends State<MaterialPicker> {
                 ),
               ),
             );
-          }))
-          ..add((_orientation == Orientation.portrait)
+          }),
+          _isPortrait
               ? const Padding(padding: const EdgeInsets.only(top: 15.0))
-              : const Padding(padding: const EdgeInsets.only(left: 15.0))),
+              : const Padding(padding: const EdgeInsets.only(left: 15.0)),
+        ],
       );
     }
 
@@ -254,7 +248,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
       case Orientation.portrait:
         return SizedBox(
           height: 500.0,
-          width: MediaQuery.of(context).size.width,
+          width: 350.0,
           child: Row(
             children: <Widget>[
               _colorList(),
@@ -270,7 +264,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
       case Orientation.landscape:
         return SizedBox(
           width: 500.0,
-          height: MediaQuery.of(context).size.height - 100.0,
+          height: 300.0,
           child: Column(
             children: <Widget>[
               Expanded(
@@ -283,8 +277,8 @@ class _MaterialPickerState extends State<MaterialPicker> {
             ],
           ),
         );
+      default:
+        return Container();
     }
-
-    return Container();
   }
 }

@@ -4,7 +4,7 @@ library block_colorpicker;
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_colorpicker/utils.dart';
+import 'package:flutter_colorpicker/src/utils.dart';
 
 const List<Color> _defaultColors = [
   Colors.red,
