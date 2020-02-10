@@ -60,17 +60,19 @@ class _ColorPickerState extends State<ColorPicker> {
     );
   }
 
-  Widget colorPickerArea() => ClipRRect(
-        borderRadius: widget.pickerAreaBorderRadius,
-        child: ColorPickerArea(
-          currentHsvColor,
-          (HSVColor color) {
-            setState(() => currentHsvColor = color);
-            widget.onColorChanged(currentHsvColor.toColor());
-          },
-          widget.paletteType,
-        ),
-      );
+  Widget colorPickerArea() {
+    return ClipRRect(
+      borderRadius: widget.pickerAreaBorderRadius,
+      child: ColorPickerArea(
+        currentHsvColor,
+        (HSVColor color) {
+          setState(() => currentHsvColor = color);
+          widget.onColorChanged(currentHsvColor.toColor());
+        },
+        widget.paletteType,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

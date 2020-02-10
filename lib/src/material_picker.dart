@@ -1,4 +1,4 @@
-/// Material color picker
+/// Material Color Picker
 
 library material_colorpicker;
 

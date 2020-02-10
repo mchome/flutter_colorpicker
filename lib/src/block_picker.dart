@@ -1,4 +1,4 @@
-/// Block color picker
+/// Block Color Picker
 
 library block_colorpicker;
 
@@ -33,10 +33,7 @@ typedef PickerLayoutBuilder = Widget Function(
     BuildContext context, List<Color> colors, PickerItem child);
 typedef PickerItem = Widget Function(Color color);
 typedef PickerItemBuilder = Widget Function(
-  Color color,
-  bool isCurrentColor,
-  Function changeColor,
-);
+    Color color, bool isCurrentColor, Function changeColor);
 
 class BlockPicker extends StatefulWidget {
   const BlockPicker({
