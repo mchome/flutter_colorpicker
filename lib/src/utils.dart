@@ -28,7 +28,12 @@ HSLColor hsvToHsl(HSVColor color) {
     else
       s = color.saturation * color.value / (2 - l * 2);
   }
-  return HSLColor.fromAHSL(color.alpha, color.hue, s, l);
+  return HSLColor.fromAHSL(
+    color.alpha,
+    color.hue,
+    s.clamp(0.0, 1.0),
+    l.clamp(0.0, 1.0),
+  );
 }
 
 /// reference: https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_HSV
@@ -39,9 +44,12 @@ HSVColor hslToHsv(HSLColor color) {
   v = color.lightness +
       color.saturation *
           (color.lightness < 0.5 ? color.lightness : 1 - color.lightness);
-  if (v != 0) {
-    s = 2 - 2 * color.lightness / v;
-  }
+  if (v != 0) s = 2 - 2 * color.lightness / v;
 
-  return HSVColor.fromAHSV(color.alpha, color.hue, s, v);
+  return HSVColor.fromAHSV(
+    color.alpha,
+    color.hue,
+    s.clamp(0.0, 1.0),
+    v.clamp(0.0, 1.0),
+  );
 }

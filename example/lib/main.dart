@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/colorpicker.dart';
 
-void main() => runApp(MaterialApp(home: MyApp()));
+void main() => runApp(MaterialApp(
+      home: MyApp(),
+      // theme: ThemeData.dark(),
+    ));
 
 class MyApp extends StatefulWidget {
   @override
@@ -10,7 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Color currentColor = Colors.amber;
+  Color currentColor = Colors.limeAccent;
 
   void changeColor(Color color) => setState(() => currentColor = color);
 
@@ -32,42 +35,73 @@ class _MyAppState extends State<MyApp> {
         body: TabBarView(
           physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
-            Center(
-              child: RaisedButton(
-                elevation: 3.0,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        titlePadding: const EdgeInsets.all(0.0),
-                        contentPadding: const EdgeInsets.all(0.0),
-                        content: SingleChildScrollView(
-                          child: ColorPicker(
-                            pickerColor: currentColor,
-                            onColorChanged: changeColor,
-                            colorPickerWidth: 300.0,
-                            pickerAreaHeightPercent: 0.7,
-                            enableAlpha: true,
-                            displayThumbColor: true,
-                            enableLabel: true,
-                            paletteType: PaletteType.hsv,
-                            pickerAreaBorderRadius: const BorderRadius.only(
-                              topLeft: const Radius.circular(2.0),
-                              topRight: const Radius.circular(2.0),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  elevation: 3.0,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          titlePadding: const EdgeInsets.all(0.0),
+                          contentPadding: const EdgeInsets.all(0.0),
+                          content: SingleChildScrollView(
+                            child: ColorPicker(
+                              pickerColor: currentColor,
+                              onColorChanged: changeColor,
+                              colorPickerWidth: 300.0,
+                              pickerAreaHeightPercent: 0.7,
+                              enableAlpha: true,
+                              displayThumbColor: true,
+                              enableLabel: true,
+                              paletteType: PaletteType.hsv,
+                              pickerAreaBorderRadius: const BorderRadius.only(
+                                topLeft: const Radius.circular(2.0),
+                                topRight: const Radius.circular(2.0),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: const Text('Change me'),
-                color: currentColor,
-                textColor: useWhiteForeground(currentColor)
-                    ? const Color(0xffffffff)
-                    : const Color(0xff000000),
-              ),
+                        );
+                      },
+                    );
+                  },
+                  child: const Text('Change me'),
+                  color: currentColor,
+                  textColor: useWhiteForeground(currentColor)
+                      ? const Color(0xffffffff)
+                      : const Color(0xff000000),
+                ),
+                RaisedButton(
+                  elevation: 3.0,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Pick a color'),
+                          content: SingleChildScrollView(
+                            child: SlidePicker(
+                              pickerColor: currentColor,
+                              onColorChanged: changeColor,
+                              enableAlpha: false,
+                              displayThumbColor: true,
+                              enableLabel: false,
+                              paletteType: PaletteType.hsl,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: const Text('Change me again'),
+                  color: currentColor,
+                  textColor: useWhiteForeground(currentColor)
+                      ? const Color(0xffffffff)
+                      : const Color(0xff000000),
+                ),
+              ],
             ),
             Center(
               child: RaisedButton(

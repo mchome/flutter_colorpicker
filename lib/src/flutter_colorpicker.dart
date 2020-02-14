@@ -1,4 +1,6 @@
-/// HSV(HSB)/HSL color picker
+/// HSV(HSB)/HSL Color Picker example
+///
+/// You can create your own layout by importing `hsv_picker.dart`.
 
 library flutter_colorpicker;
 
@@ -17,7 +19,10 @@ class ColorPicker extends StatefulWidget {
     this.colorPickerWidth: 300.0,
     this.pickerAreaHeightPercent: 1.0,
     this.pickerAreaBorderRadius: const BorderRadius.all(Radius.zero),
-  }) : assert(pickerAreaBorderRadius != null);
+  })  : assert(paletteType != null),
+        assert(enableAlpha != null),
+        assert(enableLabel != null),
+        assert(pickerAreaBorderRadius != null);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
@@ -149,11 +154,114 @@ class _ColorPickerState extends State<ColorPicker> {
                 ],
               ),
               SizedBox(height: 20.0),
-              if (widget.enableLabel) ColorPickerLabel(currentHsvColor),
+              if (widget.enableLabel)
+                ColorPickerLabel(
+                  currentHsvColor,
+                  enableAlpha: widget.enableAlpha,
+                ),
             ],
           ),
         ],
       );
     }
+  }
+}
+
+class SlidePicker extends StatefulWidget {
+  const SlidePicker({
+    @required this.pickerColor,
+    @required this.onColorChanged,
+    this.paletteType: PaletteType.hsv,
+    this.enableAlpha: true,
+    this.enableLabel: true,
+    this.displayThumbColor: false,
+  })  : assert(paletteType != null),
+        assert(enableAlpha != null),
+        assert(enableLabel != null);
+
+  final Color pickerColor;
+  final ValueChanged<Color> onColorChanged;
+  final PaletteType paletteType;
+  final bool enableAlpha;
+  final bool enableLabel;
+  final bool displayThumbColor;
+
+  @override
+  State<StatefulWidget> createState() => _SlidePickerState();
+}
+
+class _SlidePickerState extends State<SlidePicker> {
+  HSVColor currentHsvColor = const HSVColor.fromAHSV(0.0, 0.0, 0.0, 0.0);
+
+  @override
+  void initState() {
+    super.initState();
+    currentHsvColor = HSVColor.fromColor(widget.pickerColor);
+  }
+
+  @override
+  void didUpdateWidget(SlidePicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    currentHsvColor = HSVColor.fromColor(widget.pickerColor);
+  }
+
+  Widget colorPickerSlider(TrackType trackType) {
+    return ColorPickerSlider(
+      trackType,
+      currentHsvColor,
+      (HSVColor color) {
+        setState(() => currentHsvColor = color);
+        widget.onColorChanged(currentHsvColor.toColor());
+      },
+      displayThumbColor: widget.displayThumbColor,
+      fullThumbColor: true,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<SizedBox> sliders = [
+      for (TrackType palette in [
+        if (widget.paletteType == PaletteType.hsv) ...[
+          TrackType.hue,
+          TrackType.saturation,
+          TrackType.value,
+        ],
+        if (widget.paletteType == PaletteType.hsl) ...[
+          TrackType.hue,
+          TrackType.saturationForHSL,
+          TrackType.lightness,
+        ],
+        if (widget.paletteType == PaletteType.rgb) ...[
+          TrackType.red,
+          TrackType.green,
+          TrackType.blue,
+        ],
+      ])
+        SizedBox(
+          height: 40.0,
+          width: 260.0,
+          child: colorPickerSlider(palette),
+        ),
+    ];
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        ...sliders,
+        if (widget.enableAlpha)
+          SizedBox(
+            height: 40.0,
+            width: 260.0,
+            child: colorPickerSlider(TrackType.alpha),
+          ),
+        SizedBox(height: 20.0),
+        if (widget.enableLabel)
+          ColorPickerLabel(
+            currentHsvColor,
+            enableAlpha: widget.enableAlpha,
+          ),
+      ],
+    );
   }
 }
