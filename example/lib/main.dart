@@ -85,10 +85,10 @@ class _MyAppState extends State<MyApp> {
                             child: SlidePicker(
                               pickerColor: currentColor,
                               onColorChanged: changeColor,
+                              paletteType: PaletteType.rgb,
                               enableAlpha: false,
                               displayThumbColor: true,
                               enableLabel: false,
-                              paletteType: PaletteType.hsl,
                             ),
                           ),
                         );

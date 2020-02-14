@@ -123,7 +123,7 @@ class _BlockPickerState extends State<BlockPicker> {
       context,
       widget.availableColors,
       (Color color, [bool _, Function __]) => widget.itemBuilder(
-          color, _currentColor == color, () => changeColor(color)),
+          color, _currentColor.value == color.value, () => changeColor(color)),
     );
   }
 }

@@ -468,7 +468,7 @@ class ColorPickerSlider extends StatelessWidget {
         case TrackType.saturationForHSL:
           thumbOffset += (box.maxWidth - 30.0) * hsvToHsl(hsvColor).saturation;
           thumbColor = HSLColor.fromAHSL(
-                  1.0, hsvColor.hue, hsvToHsl(hsvColor).saturation, 0.5) // TODO
+                  1.0, hsvColor.hue, hsvToHsl(hsvColor).saturation, 0.5)
               .toColor();
           break;
         case TrackType.value:

@@ -92,7 +92,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
   void initState() {
     _colorTypes.forEach((List<Color> _colors) {
       _shadingTypes(_colors).forEach((Color color) {
-        if (widget.pickerColor == color) {
+        if (widget.pickerColor.value == color.value) {
           return setState(() {
             _currentColor = _colors;
             _currentShading = color;
