@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.3.1]
+
+* Back compatibility for stable branch.
+
 ## [0.3.0]
 
 * Add SlidePicker.
