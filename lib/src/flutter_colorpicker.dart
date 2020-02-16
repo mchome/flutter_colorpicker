@@ -182,6 +182,8 @@ class SlidePicker extends StatefulWidget {
     this.paletteType: PaletteType.hsv,
     this.enableAlpha: true,
     this.sliderSize: const Size(260, 40),
+    this.showSliderText: true,
+    this.sliderTextStyle,
     this.showLabel: true,
     this.labelTextStyle,
     this.showIndicator: true,
@@ -190,6 +192,7 @@ class SlidePicker extends StatefulWidget {
     this.indicatorAlignmentEnd: const Alignment(1.0, 3.0),
     this.displayThumbColor: false,
   })  : assert(paletteType != null),
+        assert(showSliderText != null),
         assert(enableAlpha != null),
         assert(showLabel != null);
 
@@ -198,6 +201,8 @@ class SlidePicker extends StatefulWidget {
   final PaletteType paletteType;
   final bool enableAlpha;
   final Size sliderSize;
+  final bool showSliderText;
+  final TextStyle sliderTextStyle;
   final bool showLabel;
   final TextStyle labelTextStyle;
   final bool showIndicator;
@@ -285,14 +290,16 @@ class _SlidePickerState extends State<SlidePicker> {
           height: widget.sliderSize.height,
           child: Row(
             children: <Widget>[
-              SizedBox(width: 5.0),
-              Text(
-                palette.toString().split('.').last[0].toUpperCase(),
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
-              ),
+              if (widget.showSliderText)
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    palette.toString().split('.').last[0].toUpperCase(),
+                    style: widget.sliderTextStyle ??
+                        Theme.of(context).textTheme.bodyText1.copyWith(
+                            fontWeight: FontWeight.bold, fontSize: 16.0),
+                  ),
+                ),
               Expanded(child: colorPickerSlider(palette)),
             ],
           ),
