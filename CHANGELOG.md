@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.3.2]
+
+* SlidePicker add indicatorBorderRadius.
+
 ## [0.3.1]
 
 * Back compatibility for stable branch.

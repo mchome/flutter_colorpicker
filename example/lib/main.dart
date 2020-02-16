@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/foundation.dart'
+//     show debugDefaultTargetPlatformOverride;
 
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-void main() => runApp(MaterialApp(home: MyApp()));
+void main() {
+  // debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  runApp(MaterialApp(home: MyApp()));
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -97,6 +102,10 @@ class _MyAppState extends State<MyApp> {
                                 displayThumbColor: true,
                                 showLabel: false,
                                 showIndicator: true,
+                                indicatorBorderRadius:
+                                    const BorderRadius.vertical(
+                                  top: const Radius.circular(25.0),
+                                ),
                               ),
                             ),
                           );

@@ -2,7 +2,7 @@
 ///
 /// You can create your own layout by importing `hsv_picker.dart`.
 
-library flutter_colorpicker;
+library hsv_picker;
 
 import 'package:flutter/material.dart';
 
@@ -191,10 +191,12 @@ class SlidePicker extends StatefulWidget {
     this.indicatorAlignmentBegin: const Alignment(-1.0, -3.0),
     this.indicatorAlignmentEnd: const Alignment(1.0, 3.0),
     this.displayThumbColor: false,
+    this.indicatorBorderRadius: const BorderRadius.all(Radius.zero),
   })  : assert(paletteType != null),
         assert(showSliderText != null),
         assert(enableAlpha != null),
-        assert(showLabel != null);
+        assert(showLabel != null),
+        assert(indicatorBorderRadius != null);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
@@ -210,6 +212,7 @@ class SlidePicker extends StatefulWidget {
   final AlignmentGeometry indicatorAlignmentBegin;
   final AlignmentGeometry indicatorAlignmentEnd;
   final bool displayThumbColor;
+  final BorderRadius indicatorBorderRadius;
 
   @override
   State<StatefulWidget> createState() => _SlidePickerState();
@@ -244,24 +247,27 @@ class _SlidePickerState extends State<SlidePicker> {
   }
 
   Widget indicator() {
-    return Container(
-      width: widget.indicatorSize.width,
-      height: widget.indicatorSize.height,
-      margin: const EdgeInsets.only(bottom: 15.0),
-      foregroundDecoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            widget.pickerColor,
-            widget.pickerColor,
-            currentHsvColor.toColor(),
-            currentHsvColor.toColor(),
-          ],
-          begin: widget.indicatorAlignmentBegin,
-          end: widget.indicatorAlignmentEnd,
-          stops: [0.0, 0.5, 0.5, 1.0],
+    return ClipRRect(
+      borderRadius: widget.indicatorBorderRadius,
+      child: Container(
+        width: widget.indicatorSize.width,
+        height: widget.indicatorSize.height,
+        margin: const EdgeInsets.only(bottom: 15.0),
+        foregroundDecoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              widget.pickerColor,
+              widget.pickerColor,
+              currentHsvColor.toColor(),
+              currentHsvColor.toColor(),
+            ],
+            begin: widget.indicatorAlignmentBegin,
+            end: widget.indicatorAlignmentEnd,
+            stops: [0.0, 0.5, 0.5, 1.0],
+          ),
         ),
+        child: const CustomPaint(painter: const CheckerPainter()),
       ),
-      child: const CustomPaint(painter: const CheckerPainter()),
     );
   }
 
