@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.3.0]
+
+* Add SlidePicker.
+* Add example web support.
+
 ## [0.2.6]
 
 * Update color selection also for tap down.

@@ -6,29 +6,6 @@ A HSV(HSB)/HSL color picker inspired by chrome devtools and a material color pic
 
 ## Getting Started
 
-### Installation
-
-Add this to your pubspec.yaml (or create it):
-
-```yaml
-dependencies:
-  flutter_colorpicker: any
-```
-
-Then run the flutter tooling:
-
-```bash
-flutter packages get
-```
-
-Or upgrade the packages with:
-
-```bash
-flutter packages upgrade
-```
-
-### Example
-
 Use it in [showDialog] widget:
 
 ```dart
@@ -50,7 +27,7 @@ showDialog(
       child: ColorPicker(
         pickerColor: pickerColor,
         onColorChanged: changeColor,
-        enableLabel: true,
+        showLabel: true,
         pickerAreaHeightPercent: 0.8,
       ),
       // Use Material color picker:
@@ -58,7 +35,7 @@ showDialog(
       // child: MaterialPicker(
       //   pickerColor: pickerColor,
       //   onColorChanged: changeColor,
-      //   enableLabel: true, // only on portrait mode
+      //   showLabel: true, // only on portrait mode
       // ),
       //
       // Use Block color picker:
@@ -82,6 +59,7 @@ showDialog(
 ```
 
 ![preview](https://user-images.githubusercontent.com/7392658/36585408-bb4e96a4-18b8-11e8-8c20-d4dc200e1a7c.gif)
+![SlidePicker](https://user-images.githubusercontent.com/7392658/74600957-5efa3980-50d3-11ea-9458-55842927e565.png)
 
 <!-- markdownlint-disable MD033 -->
 <img src="https://user-images.githubusercontent.com/7392658/46619114-de790f80-cb53-11e8-81c8-278d4dc51606.png" width="23%">
