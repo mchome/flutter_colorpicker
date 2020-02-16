@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
                               pickerAreaHeightPercent: 0.7,
                               enableAlpha: true,
                               displayThumbColor: true,
-                              enableLabel: true,
+                              showLabel: true,
                               paletteType: PaletteType.hsv,
                               pickerAreaBorderRadius: const BorderRadius.only(
                                 topLeft: const Radius.circular(2.0),
@@ -80,7 +80,11 @@ class _MyAppState extends State<MyApp> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('Pick a color'),
+                          titlePadding: const EdgeInsets.all(0.0),
+                          contentPadding: const EdgeInsets.all(0.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
                           content: SingleChildScrollView(
                             child: SlidePicker(
                               pickerColor: currentColor,
@@ -88,7 +92,8 @@ class _MyAppState extends State<MyApp> {
                               paletteType: PaletteType.rgb,
                               enableAlpha: false,
                               displayThumbColor: true,
-                              enableLabel: false,
+                              showLabel: false,
+                              showIndicator: true,
                             ),
                           ),
                         );

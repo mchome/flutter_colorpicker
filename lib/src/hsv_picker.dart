@@ -62,9 +62,10 @@ class HSVColorPainter extends CustomPainter {
 }
 
 class HSLColorPainter extends CustomPainter {
-  const HSLColorPainter(this.hslColor);
+  const HSLColorPainter(this.hslColor, {this.pointerColor});
 
   final HSLColor hslColor;
+  final Color pointerColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -94,8 +95,9 @@ class HSLColorPainter extends CustomPainter {
           size.height * (1 - hslColor.lightness)),
       size.height * 0.04,
       Paint()
-        ..color =
-            useWhiteForeground(hslColor.toColor()) ? Colors.white : Colors.black
+        ..color = pointerColor ?? useWhiteForeground(hslColor.toColor())
+            ? Colors.white
+            : Colors.black
         ..strokeWidth = 1.5
         ..style = PaintingStyle.stroke,
     );
@@ -313,11 +315,33 @@ class IndicatorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+class CheckerPainter extends CustomPainter {
+  const CheckerPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Size chessSize = Size(size.height / 6, size.height / 6);
+    Paint chessPaintB = Paint()..color = const Color(0xffcccccc);
+    Paint chessPaintW = Paint()..color = Colors.white;
+    List.generate((size.height / chessSize.height).round(), (int y) {
+      List.generate((size.width / chessSize.width).round(), (int x) {
+        canvas.drawRect(
+          Offset(chessSize.width * x, chessSize.width * y) & chessSize,
+          (x + y) % 2 != 0 ? chessPaintW : chessPaintB,
+        );
+      });
+    });
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
 class ColorPickerLabel extends StatefulWidget {
   const ColorPickerLabel(
     this.hsvColor, {
     this.enableAlpha: true,
-    this.fontSize: 16.0,
+    this.textStyle,
     this.editable: false, // TODO: TBD
     this.onColorChanged, // TODO: TBD
   })  : assert(enableAlpha != null),
@@ -325,7 +349,7 @@ class ColorPickerLabel extends StatefulWidget {
 
   final HSVColor hsvColor;
   final bool enableAlpha;
-  final double fontSize;
+  final TextStyle textStyle;
   final bool editable;
   final ValueChanged<HSVColor> onColorChanged;
 
@@ -390,9 +414,9 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                 children: <Widget>[
                   Text(
                     item,
-                    style: Theme.of(context).textTheme.bodyText2.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: widget.fontSize ?? 16.0),
+                    style: widget.textStyle ??
+                        Theme.of(context).textTheme.bodyText2.copyWith(
+                            fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
                   SizedBox(height: 10.0),
                   Expanded(
@@ -415,18 +439,13 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
       DropdownButton(
         value: _colorType,
         onChanged: (ColorModel type) => setState(() => _colorType = type),
-        items: _colorTypes
-            .map((ColorModel type, _) {
-              return MapEntry(
-                DropdownMenuItem(
-                  value: type,
-                  child: Text(type.toString().split('.').last.toUpperCase()),
-                ),
-                null,
-              );
-            })
-            .keys
-            .toList(),
+        items: [
+          for (ColorModel type in _colorTypes.keys)
+            DropdownMenuItem(
+              value: type,
+              child: Text(type.toString().split('.').last.toUpperCase()),
+            )
+        ],
       ),
       SizedBox(width: 10.0),
       ...colorValueLabels(),
@@ -448,6 +467,45 @@ class ColorPickerSlider extends StatelessWidget {
   final ValueChanged<HSVColor> onColorChanged;
   final bool displayThumbColor;
   final bool fullThumbColor;
+
+  void slideEvent(RenderBox getBox, BoxConstraints box, Offset globalPosition) {
+    double localDx = getBox.globalToLocal(globalPosition).dx - 15.0;
+    double progress =
+        localDx.clamp(0.0, box.maxWidth - 30.0) / (box.maxWidth - 30.0);
+    switch (trackType) {
+      case TrackType.hue:
+        onColorChanged(hsvColor.withHue(progress * 360));
+        break;
+      case TrackType.saturation:
+        onColorChanged(hsvColor.withSaturation(progress));
+        break;
+      case TrackType.saturationForHSL:
+        onColorChanged(hslToHsv(hsvToHsl(hsvColor).withSaturation(progress)));
+        break;
+      case TrackType.value:
+        onColorChanged(hsvColor.withValue(progress));
+        break;
+      case TrackType.lightness:
+        onColorChanged(hslToHsv(hsvToHsl(hsvColor).withLightness(progress)));
+        break;
+      case TrackType.red:
+        onColorChanged(HSVColor.fromColor(
+            hsvColor.toColor().withRed((progress * 0xff).round())));
+        break;
+      case TrackType.green:
+        onColorChanged(HSVColor.fromColor(
+            hsvColor.toColor().withGreen((progress * 0xff).round())));
+        break;
+      case TrackType.blue:
+        onColorChanged(HSVColor.fromColor(
+            hsvColor.toColor().withBlue((progress * 0xff).round())));
+        break;
+      case TrackType.alpha:
+        onColorChanged(hsvColor.withAlpha(
+            localDx.clamp(0.0, box.maxWidth - 30.0) / (box.maxWidth - 30.0)));
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -531,53 +589,12 @@ class ColorPickerSlider extends StatelessWidget {
             id: _SliderLayout.gestureContainer,
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints box) {
+                RenderBox getBox = context.findRenderObject();
                 return GestureDetector(
-                  onPanUpdate: (DragUpdateDetails details) {
-                    RenderBox getBox = context.findRenderObject();
-                    double localDx =
-                        getBox.globalToLocal(details.globalPosition).dx - 15.0;
-                    double progress = localDx.clamp(0.0, box.maxWidth - 30.0) /
-                        (box.maxWidth - 30.0);
-                    switch (trackType) {
-                      case TrackType.hue:
-                        onColorChanged(hsvColor.withHue(progress * 360));
-                        break;
-                      case TrackType.saturation:
-                        onColorChanged(hsvColor.withSaturation(progress));
-                        break;
-                      case TrackType.saturationForHSL:
-                        onColorChanged(hslToHsv(
-                            hsvToHsl(hsvColor).withSaturation(progress)));
-                        break;
-                      case TrackType.value:
-                        onColorChanged(hsvColor.withValue(progress));
-                        break;
-                      case TrackType.lightness:
-                        onColorChanged(hslToHsv(
-                            hsvToHsl(hsvColor).withLightness(progress)));
-                        break;
-                      case TrackType.red:
-                        onColorChanged(HSVColor.fromColor(hsvColor
-                            .toColor()
-                            .withRed((progress * 0xff).round())));
-                        break;
-                      case TrackType.green:
-                        onColorChanged(HSVColor.fromColor(hsvColor
-                            .toColor()
-                            .withGreen((progress * 0xff).round())));
-                        break;
-                      case TrackType.blue:
-                        onColorChanged(HSVColor.fromColor(hsvColor
-                            .toColor()
-                            .withBlue((progress * 0xff).round())));
-                        break;
-                      case TrackType.alpha:
-                        onColorChanged(hsvColor.withAlpha(
-                            localDx.clamp(0.0, box.maxWidth - 30.0) /
-                                (box.maxWidth - 30.0)));
-                        break;
-                    }
-                  },
+                  onPanDown: (DragDownDetails details) =>
+                      slideEvent(getBox, box, details.globalPosition),
+                  onPanUpdate: (DragUpdateDetails details) =>
+                      slideEvent(getBox, box, details.globalPosition),
                 );
               },
             ),

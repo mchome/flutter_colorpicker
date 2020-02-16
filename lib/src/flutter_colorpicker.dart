@@ -14,21 +14,23 @@ class ColorPicker extends StatefulWidget {
     @required this.onColorChanged,
     this.paletteType: PaletteType.hsv,
     this.enableAlpha: true,
-    this.enableLabel: true,
+    this.showLabel: true,
+    this.labelTextStyle,
     this.displayThumbColor: false,
     this.colorPickerWidth: 300.0,
     this.pickerAreaHeightPercent: 1.0,
     this.pickerAreaBorderRadius: const BorderRadius.all(Radius.zero),
   })  : assert(paletteType != null),
         assert(enableAlpha != null),
-        assert(enableLabel != null),
+        assert(showLabel != null),
         assert(pickerAreaBorderRadius != null);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final PaletteType paletteType;
   final bool enableAlpha;
-  final bool enableLabel;
+  final bool showLabel;
+  final TextStyle labelTextStyle;
   final bool displayThumbColor;
   final double colorPickerWidth;
   final double pickerAreaHeightPercent;
@@ -115,7 +117,12 @@ class _ColorPickerState extends State<ColorPicker> {
               ],
             ),
           ),
-          if (widget.enableLabel) ColorPickerLabel(currentHsvColor),
+          if (widget.showLabel)
+            ColorPickerLabel(
+              currentHsvColor,
+              enableAlpha: widget.enableAlpha,
+              textStyle: widget.labelTextStyle,
+            ),
           SizedBox(height: 20.0),
         ],
       );
@@ -154,10 +161,11 @@ class _ColorPickerState extends State<ColorPicker> {
                 ],
               ),
               SizedBox(height: 20.0),
-              if (widget.enableLabel)
+              if (widget.showLabel)
                 ColorPickerLabel(
                   currentHsvColor,
                   enableAlpha: widget.enableAlpha,
+                  textStyle: widget.labelTextStyle,
                 ),
             ],
           ),
@@ -173,17 +181,29 @@ class SlidePicker extends StatefulWidget {
     @required this.onColorChanged,
     this.paletteType: PaletteType.hsv,
     this.enableAlpha: true,
-    this.enableLabel: true,
+    this.sliderSize: const Size(260, 40),
+    this.showLabel: true,
+    this.labelTextStyle,
+    this.showIndicator: true,
+    this.indicatorSize: const Size(280, 50),
+    this.indicatorAlignmentBegin: const Alignment(-1.0, -3.0),
+    this.indicatorAlignmentEnd: const Alignment(1.0, 3.0),
     this.displayThumbColor: false,
   })  : assert(paletteType != null),
         assert(enableAlpha != null),
-        assert(enableLabel != null);
+        assert(showLabel != null);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final PaletteType paletteType;
   final bool enableAlpha;
-  final bool enableLabel;
+  final Size sliderSize;
+  final bool showLabel;
+  final TextStyle labelTextStyle;
+  final bool showIndicator;
+  final Size indicatorSize;
+  final AlignmentGeometry indicatorAlignmentBegin;
+  final AlignmentGeometry indicatorAlignmentEnd;
   final bool displayThumbColor;
 
   @override
@@ -218,6 +238,28 @@ class _SlidePickerState extends State<SlidePicker> {
     );
   }
 
+  Widget indicator() {
+    return Container(
+      width: widget.indicatorSize.width,
+      height: widget.indicatorSize.height,
+      margin: const EdgeInsets.only(bottom: 15.0),
+      foregroundDecoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            widget.pickerColor,
+            widget.pickerColor,
+            currentHsvColor.toColor(),
+            currentHsvColor.toColor(),
+          ],
+          begin: widget.indicatorAlignmentBegin,
+          end: widget.indicatorAlignmentEnd,
+          stops: [0.0, 0.5, 0.5, 1.0],
+        ),
+      ),
+      child: const CustomPaint(painter: const CheckerPainter()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<SizedBox> sliders = [
@@ -239,15 +281,28 @@ class _SlidePickerState extends State<SlidePicker> {
         ],
       ])
         SizedBox(
-          height: 40.0,
-          width: 260.0,
-          child: colorPickerSlider(palette),
+          width: widget.sliderSize.width,
+          height: widget.sliderSize.height,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 5.0),
+              Text(
+                palette.toString().split('.').last[0].toUpperCase(),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
+              ),
+              Expanded(child: colorPickerSlider(palette)),
+            ],
+          ),
         ),
     ];
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+        if (widget.showIndicator) indicator(),
         ...sliders,
         if (widget.enableAlpha)
           SizedBox(
@@ -256,10 +311,14 @@ class _SlidePickerState extends State<SlidePicker> {
             child: colorPickerSlider(TrackType.alpha),
           ),
         SizedBox(height: 20.0),
-        if (widget.enableLabel)
-          ColorPickerLabel(
-            currentHsvColor,
-            enableAlpha: widget.enableAlpha,
+        if (widget.showLabel)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: ColorPickerLabel(
+              currentHsvColor,
+              enableAlpha: widget.enableAlpha,
+              textStyle: widget.labelTextStyle,
+            ),
           ),
       ],
     );
