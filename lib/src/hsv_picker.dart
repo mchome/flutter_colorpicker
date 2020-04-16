@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/src/utils.dart';
@@ -659,6 +660,15 @@ class ColorPickerArea extends StatelessWidget {
     }
   }
 
+  void _handleGesture(
+      Offset position, BuildContext context, double height, double width) {
+    RenderBox getBox = context.findRenderObject();
+    Offset localOffset = getBox.globalToLocal(position);
+    double horizontal = localOffset.dx.clamp(0.0, width) / width;
+    double vertical = 1 - localOffset.dy.clamp(0.0, height) / height;
+    _handleColorChange(horizontal, vertical);
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -666,20 +676,19 @@ class ColorPickerArea extends StatelessWidget {
         double width = constraints.maxWidth;
         double height = constraints.maxHeight;
 
-        return GestureDetector(
-          onPanDown: (DragDownDetails details) {
-            RenderBox getBox = context.findRenderObject();
-            Offset localOffset = getBox.globalToLocal(details.globalPosition);
-            double horizontal = localOffset.dx.clamp(0.0, width) / width;
-            double vertical = 1 - localOffset.dy.clamp(0.0, height) / height;
-            _handleColorChange(horizontal, vertical);
-          },
-          onPanUpdate: (DragUpdateDetails details) {
-            RenderBox getBox = context.findRenderObject();
-            Offset localOffset = getBox.globalToLocal(details.globalPosition);
-            double horizontal = localOffset.dx.clamp(0.0, width) / width;
-            double vertical = 1 - localOffset.dy.clamp(0.0, height) / height;
-            _handleColorChange(horizontal, vertical);
+        return RawGestureDetector(
+          gestures: {
+            AlwaysWinPanGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+                AlwaysWinPanGestureRecognizer>(
+              () => AlwaysWinPanGestureRecognizer(),
+              (AlwaysWinPanGestureRecognizer instance) {
+                instance
+                  ..onDown = ((details) => _handleGesture(
+                      details.globalPosition, context, height, width))
+                  ..onUpdate = ((details) => _handleGesture(
+                      details.globalPosition, context, height, width));
+              },
+            ),
           },
           child: Builder(
             builder: (BuildContext _) {
@@ -698,4 +707,15 @@ class ColorPickerArea extends StatelessWidget {
       },
     );
   }
+}
+
+class AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
+  @override
+  void addAllowedPointer(PointerEvent event) {
+    super.addAllowedPointer(event);
+    resolve(GestureDisposition.accepted);
+  }
+
+  @override
+  String get debugDescription => 'alwaysWin';
 }
