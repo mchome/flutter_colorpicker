@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.3.3]
+
+* [#19](https://github.com/mchome/flutter_colorpicker/pull/19) Handle multiple GestureDetector of ColorPicker.
+    (Thanks [friebetill](https://github.com/friebetill))
+
 ## [0.3.2]
 
 * SlidePicker add indicatorBorderRadius.
