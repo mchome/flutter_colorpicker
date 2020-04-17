@@ -121,7 +121,7 @@ class _BlockPickerState extends State<BlockPicker> {
   Widget build(BuildContext context) {
     return widget.layoutBuilder(
       context,
-      widget.availableColors,
+      widget.availableColors??_defaultColors,
       (Color color, [bool _, Function __]) => widget.itemBuilder(
           color, _currentColor.value == color.value, () => changeColor(color)),
     );
