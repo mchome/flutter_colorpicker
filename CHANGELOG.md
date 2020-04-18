@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.3.4]
+
+* [#20](https://github.com/mchome/flutter_colorpicker/pull/20) Added null control for availableColors parameter.
+    (Thanks [ekangal](https://github.com/ekangal))
+
 ## [0.3.3]
 
 * [#19](https://github.com/mchome/flutter_colorpicker/pull/19) Handle multiple GestureDetector of ColorPicker.
