@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter/foundation.dart'
-//     show debugDefaultTargetPlatformOverride;
-
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {

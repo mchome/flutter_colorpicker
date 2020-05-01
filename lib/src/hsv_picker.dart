@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_colorpicker/src/utils.dart';
 
 enum PaletteType { hsv, hsl, rgb }
@@ -416,7 +415,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                   Text(
                     item,
                     style: widget.textStyle ??
-                        Theme.of(context).textTheme.body1.copyWith(
+                        Theme.of(context).textTheme.bodyText2.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
                   SizedBox(height: 10.0),

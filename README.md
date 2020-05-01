@@ -36,7 +36,8 @@ showDialog(
       //
       // child: MaterialPicker(
       //   pickerColor: pickerColor,
-      //   onColorChanged: changeColor,
+      //   onPrimaryChanged: changeColor,
+      //   onSecondaryChanged: changeColor,
       //   showLabel: true, // only on portrait mode
       // ),
       //
