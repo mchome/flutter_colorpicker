@@ -133,7 +133,8 @@ class _MyAppState extends State<MyApp> {
                           content: SingleChildScrollView(
                             child: MaterialPicker(
                               pickerColor: currentColor,
-                              onColorChanged: changeColor,
+                              onPrimaryChanged: changeColor,
+                              onSecondaryChanged: changeColor,
                               enableLabel: true,
                             ),
                           ),
