@@ -416,7 +416,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                   Text(
                     item,
                     style: widget.textStyle ??
-                        Theme.of(context).textTheme.body1.copyWith(
+                        Theme.of(context).textTheme.bodyText2.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
                   SizedBox(height: 10.0),
@@ -475,7 +475,9 @@ class ColorPickerSlider extends StatelessWidget {
         localDx.clamp(0.0, box.maxWidth - 30.0) / (box.maxWidth - 30.0);
     switch (trackType) {
       case TrackType.hue:
-        onColorChanged(hsvColor.withHue(progress * 360));
+        // 360 is the same as zero
+        // if set to 360, sliding to end goes to zero
+        onColorChanged(hsvColor.withHue(progress * 359));
         break;
       case TrackType.saturation:
         onColorChanged(hsvColor.withSaturation(progress));
