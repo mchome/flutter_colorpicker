@@ -1,6 +1,6 @@
 name: flutter_colorpicker
 description: A HSV(HSB)/HSL color picker inspired by chrome devtools and a material color picker for your flutter app.
-version: 0.3.4
+version: 0.3.5
 homepage: https://github.com/mchome/flutter_colorpicker
 
 dependencies:
@@ -8,5 +8,5 @@ dependencies:
     sdk: flutter
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
-  flutter: ">=1.5.4 <2.0.0"
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.10.0"

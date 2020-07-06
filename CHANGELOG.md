@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.3.5]
+
+* [#21](https://github.com/mchome/flutter_colorpicker/pull/21) Added Primary and Secondary Color Notifiers in Material Picker Only
+    (Thanks [Saifallak](https://github.com/Saifallak))
+
 ## [0.3.4]
 
 * [#20](https://github.com/mchome/flutter_colorpicker/pull/20) Added null control for availableColors parameter.

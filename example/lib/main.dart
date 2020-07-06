@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter/foundation.dart'
-//     show debugDefaultTargetPlatformOverride;
-
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
@@ -133,7 +130,8 @@ class _MyAppState extends State<MyApp> {
                           content: SingleChildScrollView(
                             child: MaterialPicker(
                               pickerColor: currentColor,
-                              onColorChanged: changeColor,
+                              onPrimaryChanged: changeColor,
+                              onSecondaryChanged: changeColor,
                               enableLabel: true,
                             ),
                           ),

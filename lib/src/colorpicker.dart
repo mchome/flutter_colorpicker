@@ -5,7 +5,6 @@
 library hsv_picker;
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter_colorpicker/src/hsv_picker.dart';
 
 class ColorPicker extends StatefulWidget {

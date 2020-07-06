@@ -3,18 +3,19 @@
 library material_colorpicker;
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter_colorpicker/src/utils.dart';
 
 class MaterialPicker extends StatefulWidget {
   MaterialPicker({
     @required this.pickerColor,
-    @required this.onColorChanged,
+    @required this.onPrimaryChanged,
+    @required this.onSecondaryChanged,
     this.enableLabel: false,
   });
 
   final Color pickerColor;
-  final ValueChanged<Color> onColorChanged;
+  final ValueChanged<Color> onPrimaryChanged;
+  final ValueChanged<Color> onSecondaryChanged;
   final bool enableLabel;
 
   @override
@@ -126,7 +127,10 @@ class _MaterialPickerState extends State<MaterialPicker> {
             ..._colorTypes.map((List<Color> _colors) {
               Color _colorType = _colors[0];
               return GestureDetector(
-                onTap: () => setState(() => _currentColor = _colors),
+                onTap: () {
+                  setState(() => _currentColor = _colors);
+                  widget.onPrimaryChanged(_colors[0]);
+                },
                 child: Container(
                   color: Color(0),
                   padding: _isPortrait
@@ -181,7 +185,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
             return GestureDetector(
               onTap: () {
                 setState(() => _currentShading = _color);
-                widget.onColorChanged(_currentShading);
+                widget.onSecondaryChanged(_currentShading);
               },
               child: Container(
                 color: Color(0),
