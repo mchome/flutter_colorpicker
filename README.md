@@ -46,6 +46,11 @@ showDialog(
       //   pickerColor: currentColor,
       //   onColorChanged: changeColor,
       // ),
+      //
+      // child: MultipleChoiceBlockPicker(
+      //   pickerColors: currentColors,
+      //   onColorsChanged: changeColors,
+      // ),
     ),
     actions: <Widget>[
       FlatButton(
