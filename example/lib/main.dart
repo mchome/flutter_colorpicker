@@ -17,8 +17,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool lightTheme = true;
   Color currentColor = Colors.limeAccent;
+  List<Color> currentColors = [Colors.limeAccent, Colors.green];
 
   void changeColor(Color color) => setState(() => currentColor = color);
+  void changeColors(List<Color> colors) => setState(() => currentColors = colors);
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +105,7 @@ class _MyAppState extends State<MyApp> {
                                 showLabel: false,
                                 showIndicator: true,
                                 indicatorBorderRadius:
-                                    const BorderRadius.vertical(
+                                const BorderRadius.vertical(
                                   top: const Radius.circular(25.0),
                                 ),
                               ),
@@ -149,29 +151,58 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
               Center(
-                child: RaisedButton(
-                  elevation: 3.0,
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Select a color'),
-                          content: SingleChildScrollView(
-                            child: BlockPicker(
-                              pickerColor: currentColor,
-                              onColorChanged: changeColor,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: const Text('Change me'),
-                  color: currentColor,
-                  textColor: useWhiteForeground(currentColor)
-                      ? const Color(0xffffffff)
-                      : const Color(0xff000000),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        elevation: 3.0,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Select a color'),
+                                content: SingleChildScrollView(
+                                  child: BlockPicker(
+                                    pickerColor: currentColor,
+                                    onColorChanged: changeColor,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: const Text('Change me'),
+                        color: currentColor,
+                        textColor: useWhiteForeground(currentColor)
+                            ? const Color(0xffffffff)
+                            : const Color(0xff000000),
+                      ),
+                      RaisedButton(
+                        elevation: 3.0,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Select colors'),
+                                content: SingleChildScrollView(
+                                  child: MultipleChoiceBlockPicker(
+                                    pickerColors: currentColors,
+                                    onColorsChanged: changeColors,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: const Text('Change me again'),
+                        color: currentColor,
+                        textColor: useWhiteForeground(currentColor)
+                            ? const Color(0xffffffff)
+                            : const Color(0xff000000),
+                      )
+                    ]
                 ),
               ),
             ],
