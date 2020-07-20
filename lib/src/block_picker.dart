@@ -127,3 +127,54 @@ class _BlockPickerState extends State<BlockPicker> {
     );
   }
 }
+
+class MultipleChoiceBlockPicker extends StatefulWidget {
+  const MultipleChoiceBlockPicker({
+    @required this.pickerColors,
+    @required this.onColorsChanged,
+    this.availableColors = _defaultColors,
+    this.layoutBuilder = BlockPicker.defaultLayoutBuilder,
+    this.itemBuilder = BlockPicker.defaultItemBuilder,
+  });
+
+  final List<Color> pickerColors;
+  final ValueChanged<List<Color>> onColorsChanged;
+  final List<Color> availableColors;
+  final PickerLayoutBuilder layoutBuilder;
+  final PickerItemBuilder itemBuilder;
+
+  @override
+  State<StatefulWidget> createState() => _MultipleChoiceBlockPickerState();
+}
+
+class _MultipleChoiceBlockPickerState extends State<MultipleChoiceBlockPicker> {
+  List<Color> _currentColors;
+
+  @override
+  void initState() {
+    _currentColors = widget.pickerColors;
+    super.initState();
+  }
+
+  void toggleColor(Color color) {
+    setState(() {
+      _currentColors.contains(color)
+          ? _currentColors.remove(color)
+          : _currentColors.add(color);
+    });
+    widget.onColorsChanged(_currentColors);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.layoutBuilder(
+      context,
+      widget.availableColors,
+      (Color color, [bool _, Function __]) => widget.itemBuilder(
+        color,
+        _currentColors.contains(color),
+        () => toggleColor(color),
+      ),
+    );
+  }
+}
