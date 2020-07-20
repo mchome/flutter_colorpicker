@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.3.5]
+
+* [#25](https://github.com/mchome/flutter_colorpicker/pull/25) Add MultipleChoiceBlockPicker.
+    (Thanks [rostIvan](https://github.com/rostIvan))
+
 ## [0.3.4]
 
 * [#20](https://github.com/mchome/flutter_colorpicker/pull/20) Added null control for availableColors parameter.
