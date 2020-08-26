@@ -249,6 +249,7 @@ class _SlidePickerState extends State<SlidePicker> {
   Widget indicator() {
     return ClipRRect(
       borderRadius: widget.indicatorBorderRadius,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Container(
         width: widget.indicatorSize.width,
         height: widget.indicatorSize.height,
