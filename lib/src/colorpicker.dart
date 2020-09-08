@@ -17,6 +17,7 @@ class ColorPicker extends StatefulWidget {
     this.showLabel: true,
     this.labelTextStyle,
     this.displayThumbColor: false,
+    this.portraitOnly: false,
     this.colorPickerWidth: 300.0,
     this.pickerAreaHeightPercent: 1.0,
     this.pickerAreaBorderRadius: const BorderRadius.all(Radius.zero),
@@ -32,6 +33,7 @@ class ColorPicker extends StatefulWidget {
   final bool showLabel;
   final TextStyle labelTextStyle;
   final bool displayThumbColor;
+  final bool portraitOnly;
   final double colorPickerWidth;
   final double pickerAreaHeightPercent;
   final BorderRadius pickerAreaBorderRadius;
@@ -83,7 +85,7 @@ class _ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).orientation == Orientation.portrait) {
+    if (MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly) {
       return Column(
         children: <Widget>[
           SizedBox(
