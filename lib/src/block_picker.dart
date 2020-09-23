@@ -53,10 +53,15 @@ class BlockPicker extends StatefulWidget {
   static Widget defaultLayoutBuilder(
       BuildContext context, List<Color> colors, PickerItem child) {
     Orientation orientation = MediaQuery.of(context).orientation;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final containerWidth = 300.0;
+    final containerHeight = orientation == Orientation.portrait
+        ? screenHeight < 1000 ? 360.0 : 460.0
+        : 200.0;
 
     return Container(
-      width: orientation == Orientation.portrait ? 300.0 : 300.0,
-      height: orientation == Orientation.portrait ? 360.0 : 200.0,
+      width: containerWidth,
+      height: containerHeight,
       child: GridView.count(
         crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
         crossAxisSpacing: 5.0,
@@ -121,7 +126,7 @@ class _BlockPickerState extends State<BlockPicker> {
   Widget build(BuildContext context) {
     return widget.layoutBuilder(
       context,
-      widget.availableColors??_defaultColors,
+      widget.availableColors ?? _defaultColors,
       (Color color, [bool _, Function __]) => widget.itemBuilder(
           color, _currentColor.value == color.value, () => changeColor(color)),
     );
