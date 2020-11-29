@@ -120,10 +120,12 @@ class _ColorPickerState extends State<ColorPicker> {
             ),
           ),
           if (widget.showLabel)
+          FittedBox(child:
             ColorPickerLabel(
               currentHsvColor,
               enableAlpha: widget.enableAlpha,
               textStyle: widget.labelTextStyle,
+             ),
             ),
           SizedBox(height: 20.0),
         ],
