@@ -162,11 +162,13 @@ class _HsvColorPickerState extends State<HsvColorPicker> {
               ),
               SizedBox(height: 20.0),
               if (widget.showLabel)
-                ColorPickerLabel(
-                  currentHsvColor,
-                  enableAlpha: widget.enableAlpha,
-                  textStyle: widget.labelTextStyle,
-                ),
+             FittedBox(
+              child: ColorPickerLabel(
+                currentHsvColor,
+                enableAlpha: widget.enableAlpha,
+                textStyle: widget.labelTextStyle,
+              ),
+            ),
             ],
           ),
         ],
