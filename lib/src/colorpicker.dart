@@ -10,8 +10,8 @@ import 'package:flutter_colorpicker/src/hsv_picker.dart';
 
 class ColorPicker extends StatefulWidget {
   const ColorPicker({
-    @required this.pickerColor,
-    @required this.onColorChanged,
+    required this.pickerColor,
+    required this.onColorChanged,
     this.paletteType: PaletteType.hsv,
     this.enableAlpha: true,
     this.showLabel: true,
@@ -21,17 +21,14 @@ class ColorPicker extends StatefulWidget {
     this.colorPickerWidth: 300.0,
     this.pickerAreaHeightPercent: 1.0,
     this.pickerAreaBorderRadius: const BorderRadius.all(Radius.zero),
-  })  : assert(paletteType != null),
-        assert(enableAlpha != null),
-        assert(showLabel != null),
-        assert(pickerAreaBorderRadius != null);
+  });
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final PaletteType paletteType;
   final bool enableAlpha;
   final bool showLabel;
-  final TextStyle labelTextStyle;
+  final TextStyle? labelTextStyle;
   final bool displayThumbColor;
   final bool portraitOnly;
   final double colorPickerWidth;
@@ -85,7 +82,8 @@ class _ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly) {
+    if (MediaQuery.of(context).orientation == Orientation.portrait ||
+        widget.portraitOnly) {
       return Column(
         children: <Widget>[
           SizedBox(
@@ -179,8 +177,8 @@ class _ColorPickerState extends State<ColorPicker> {
 
 class SlidePicker extends StatefulWidget {
   const SlidePicker({
-    @required this.pickerColor,
-    @required this.onColorChanged,
+    required this.pickerColor,
+    required this.onColorChanged,
     this.paletteType: PaletteType.hsv,
     this.enableAlpha: true,
     this.sliderSize: const Size(260, 40),
@@ -194,11 +192,7 @@ class SlidePicker extends StatefulWidget {
     this.indicatorAlignmentEnd: const Alignment(1.0, 3.0),
     this.displayThumbColor: false,
     this.indicatorBorderRadius: const BorderRadius.all(Radius.zero),
-  })  : assert(paletteType != null),
-        assert(showSliderText != null),
-        assert(enableAlpha != null),
-        assert(showLabel != null),
-        assert(indicatorBorderRadius != null);
+  });
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
@@ -206,9 +200,9 @@ class SlidePicker extends StatefulWidget {
   final bool enableAlpha;
   final Size sliderSize;
   final bool showSliderText;
-  final TextStyle sliderTextStyle;
+  final TextStyle? sliderTextStyle;
   final bool showLabel;
-  final TextStyle labelTextStyle;
+  final TextStyle? labelTextStyle;
   final bool showIndicator;
   final Size indicatorSize;
   final AlignmentGeometry indicatorAlignmentBegin;
@@ -305,7 +299,7 @@ class _SlidePickerState extends State<SlidePicker> {
                   child: Text(
                     palette.toString().split('.').last[0].toUpperCase(),
                     style: widget.sliderTextStyle ??
-                        Theme.of(context).textTheme.bodyText1.copyWith(
+                        Theme.of(context).textTheme.bodyText1?.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
                 ),

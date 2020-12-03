@@ -33,12 +33,12 @@ typedef PickerLayoutBuilder = Widget Function(
     BuildContext context, List<Color> colors, PickerItem child);
 typedef PickerItem = Widget Function(Color color);
 typedef PickerItemBuilder = Widget Function(
-    Color color, bool isCurrentColor, Function changeColor);
+    Color color, bool isCurrentColor, void Function() changeColor);
 
 class BlockPicker extends StatefulWidget {
   const BlockPicker({
-    @required this.pickerColor,
-    @required this.onColorChanged,
+    required this.pickerColor,
+    required this.onColorChanged,
     this.availableColors = _defaultColors,
     this.layoutBuilder = defaultLayoutBuilder,
     this.itemBuilder = defaultItemBuilder,
@@ -67,7 +67,7 @@ class BlockPicker extends StatefulWidget {
   }
 
   static Widget defaultItemBuilder(
-      Color color, bool isCurrentColor, Function changeColor) {
+      Color color, bool isCurrentColor, void Function() changeColor) {
     return Container(
       margin: EdgeInsets.all(5.0),
       decoration: BoxDecoration(
@@ -104,7 +104,7 @@ class BlockPicker extends StatefulWidget {
 }
 
 class _BlockPickerState extends State<BlockPicker> {
-  Color _currentColor;
+  late Color _currentColor;
 
   @override
   void initState() {
@@ -121,8 +121,8 @@ class _BlockPickerState extends State<BlockPicker> {
   Widget build(BuildContext context) {
     return widget.layoutBuilder(
       context,
-      widget.availableColors??_defaultColors,
-      (Color color, [bool _, Function __]) => widget.itemBuilder(
+      widget.availableColors,
+      (Color color, [bool? _, Function? __]) => widget.itemBuilder(
           color, _currentColor.value == color.value, () => changeColor(color)),
     );
   }
@@ -130,8 +130,8 @@ class _BlockPickerState extends State<BlockPicker> {
 
 class MultipleChoiceBlockPicker extends StatefulWidget {
   const MultipleChoiceBlockPicker({
-    @required this.pickerColors,
-    @required this.onColorsChanged,
+    required this.pickerColors,
+    required this.onColorsChanged,
     this.availableColors = _defaultColors,
     this.layoutBuilder = BlockPicker.defaultLayoutBuilder,
     this.itemBuilder = BlockPicker.defaultItemBuilder,
@@ -148,7 +148,7 @@ class MultipleChoiceBlockPicker extends StatefulWidget {
 }
 
 class _MultipleChoiceBlockPickerState extends State<MultipleChoiceBlockPicker> {
-  List<Color> _currentColors;
+  late List<Color> _currentColors;
 
   @override
   void initState() {
@@ -170,7 +170,7 @@ class _MultipleChoiceBlockPickerState extends State<MultipleChoiceBlockPicker> {
     return widget.layoutBuilder(
       context,
       widget.availableColors,
-      (Color color, [bool _, Function __]) => widget.itemBuilder(
+      (Color color, [bool? _, Function? __]) => widget.itemBuilder(
         color,
         _currentColors.contains(color),
         () => toggleColor(color),
