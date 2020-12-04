@@ -8,8 +8,8 @@ import 'package:flutter_colorpicker/src/utils.dart';
 
 class MaterialPicker extends StatefulWidget {
   MaterialPicker({
-    @required this.pickerColor,
-    @required this.onColorChanged,
+    required this.pickerColor,
+    required this.onColorChanged,
     this.enableLabel: false,
   });
 
@@ -46,7 +46,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
   ];
 
   List<Color> _currentColor = [Colors.red, Colors.redAccent];
-  Color _currentShading;
+  Color? _currentShading;
 
   List<Color> _shadingTypes(List<Color> colors) {
     List<Color> result = [];
@@ -67,18 +67,18 @@ class _MaterialPickerState extends State<MaterialPicker> {
           850,
           900
         ].map((int shade) {
-          return Colors.grey[shade];
+          return Colors.grey[shade]!;
         }).toList());
       } else if (colorType == Colors.black || colorType == Colors.white) {
         result.addAll([Colors.black, Colors.white]);
       } else if (colorType is MaterialAccentColor) {
         result.addAll([100, 200, 400, 700].map((int shade) {
-          return colorType[shade];
+          return colorType[shade]!;
         }).toList());
       } else if (colorType is MaterialColor) {
         result.addAll(
             [50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((int shade) {
-          return colorType[shade];
+          return colorType[shade]!;
         }).toList());
       } else {
         result.add(Color(0));
@@ -114,8 +114,8 @@ class _MaterialPickerState extends State<MaterialPicker> {
         height: _isPortrait ? null : 60.0,
         decoration: BoxDecoration(
           border: _isPortrait
-              ? Border(right: BorderSide(color: Colors.grey[300], width: 1.0))
-              : Border(top: BorderSide(color: Colors.grey[300], width: 1.0)),
+              ? Border(right: BorderSide(color: Colors.grey[300]!, width: 1.0))
+              : Border(top: BorderSide(color: Colors.grey[300]!, width: 1.0)),
         ),
         child: ListView(
           scrollDirection: _isPortrait ? Axis.vertical : Axis.horizontal,
@@ -144,7 +144,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                             ? [
                                 _colorType == Theme.of(context).cardColor
                                     ? BoxShadow(
-                                        color: Colors.grey[300],
+                                        color: Colors.grey[300]!,
                                         blurRadius: 5.0,
                                       )
                                     : BoxShadow(
@@ -154,7 +154,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                               ]
                             : null,
                         border: _colorType == Theme.of(context).cardColor
-                            ? Border.all(color: Colors.grey[300], width: 1.0)
+                            ? Border.all(color: Colors.grey[300]!, width: 1.0)
                             : null,
                       ),
                     ),
@@ -181,7 +181,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
             return GestureDetector(
               onTap: () {
                 setState(() => _currentShading = _color);
-                widget.onColorChanged(_currentShading);
+                widget.onColorChanged(_color);
               },
               child: Container(
                 color: Color(0),
@@ -199,17 +199,17 @@ class _MaterialPickerState extends State<MaterialPicker> {
                           ? [
                               _color == Theme.of(context).cardColor
                                   ? BoxShadow(
-                                      color: Colors.grey[300],
+                                      color: Colors.grey[300]!,
                                       blurRadius: 5.0,
                                     )
                                   : BoxShadow(
-                                      color: _currentShading,
+                                      color: _color,
                                       blurRadius: 5.0,
                                     ),
                             ]
                           : null,
                       border: _color == Theme.of(context).cardColor
-                          ? Border.all(color: Colors.grey[300], width: 1.0)
+                          ? Border.all(color: Colors.grey[300]!, width: 1.0)
                           : null,
                     ),
                     child: (_isPortrait && widget.enableLabel)

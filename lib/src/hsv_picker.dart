@@ -21,7 +21,7 @@ class HSVColorPainter extends CustomPainter {
   const HSVColorPainter(this.hsvColor, {this.pointerColor});
 
   final HSVColor hsvColor;
-  final Color pointerColor;
+  final Color? pointerColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -50,9 +50,10 @@ class HSVColorPainter extends CustomPainter {
           size.width * hsvColor.saturation, size.height * (1 - hsvColor.value)),
       size.height * 0.04,
       Paint()
-        ..color = pointerColor ?? useWhiteForeground(hsvColor.toColor())
-            ? Colors.white
-            : Colors.black
+        ..color = pointerColor ??
+            (useWhiteForeground(hsvColor.toColor())
+                ? Colors.white
+                : Colors.black)
         ..strokeWidth = 1.5
         ..style = PaintingStyle.stroke,
     );
@@ -66,7 +67,7 @@ class HSLColorPainter extends CustomPainter {
   const HSLColorPainter(this.hslColor, {this.pointerColor});
 
   final HSLColor hslColor;
-  final Color pointerColor;
+  final Color? pointerColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -96,9 +97,10 @@ class HSLColorPainter extends CustomPainter {
           size.height * (1 - hslColor.lightness)),
       size.height * 0.04,
       Paint()
-        ..color = pointerColor ?? useWhiteForeground(hslColor.toColor())
-            ? Colors.white
-            : Colors.black
+        ..color = pointerColor ??
+            (useWhiteForeground(hslColor.toColor())
+                ? Colors.white
+                : Colors.black)
         ..strokeWidth = 1.5
         ..style = PaintingStyle.stroke,
     );
@@ -251,7 +253,7 @@ class TrackPainter extends CustomPainter {
 class ThumbPainter extends CustomPainter {
   const ThumbPainter({this.thumbColor, this.fullThumbColor: false});
 
-  final Color thumbColor;
+  final Color? thumbColor;
   final bool fullThumbColor;
 
   @override
@@ -276,7 +278,7 @@ class ThumbPainter extends CustomPainter {
           Offset(0.0, size.height * 0.4),
           size.height * (fullThumbColor ? 1.0 : 0.65),
           Paint()
-            ..color = thumbColor
+            ..color = thumbColor!
             ..style = PaintingStyle.fill);
     }
   }
@@ -345,14 +347,13 @@ class ColorPickerLabel extends StatefulWidget {
     this.textStyle,
     this.editable: false, // TODO: TBD
     this.onColorChanged, // TODO: TBD
-  })  : assert(enableAlpha != null),
-        assert(editable != null);
+  });
 
   final HSVColor hsvColor;
   final bool enableAlpha;
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
   final bool editable;
-  final ValueChanged<HSVColor> onColorChanged;
+  final ValueChanged<HSVColor>? onColorChanged;
 
   @override
   _ColorPickerLabelState createState() => _ColorPickerLabelState();
@@ -406,7 +407,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
 
   List<Widget> colorValueLabels() {
     return [
-      for (String item in _colorTypes[_colorType])
+      for (String item in _colorTypes[_colorType] ?? [])
         if (widget.enableAlpha || item != 'A')
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 7.0),
@@ -416,14 +417,14 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                   Text(
                     item,
                     style: widget.textStyle ??
-                        Theme.of(context).textTheme.bodyText2.copyWith(
+                        Theme.of(context).textTheme.bodyText2?.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
                   SizedBox(height: 10.0),
                   Expanded(
                     child: Text(
                       colorValue(widget.hsvColor, _colorType)[
-                          _colorTypes[_colorType].indexOf(item)],
+                          _colorTypes[_colorType]!.indexOf(item)],
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -439,7 +440,11 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       DropdownButton(
         value: _colorType,
-        onChanged: (ColorModel type) => setState(() => _colorType = type),
+        onChanged: (ColorModel? type) {
+          if (type != null) {
+            setState(() => _colorType = type);
+          }
+        },
         items: [
           for (ColorModel type in _colorTypes.keys)
             DropdownMenuItem(
@@ -592,12 +597,14 @@ class ColorPickerSlider extends StatelessWidget {
             id: _SliderLayout.gestureContainer,
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints box) {
-                RenderBox getBox = context.findRenderObject();
+                RenderBox? getBox = context.findRenderObject() as RenderBox?;
                 return GestureDetector(
-                  onPanDown: (DragDownDetails details) =>
-                      slideEvent(getBox, box, details.globalPosition),
-                  onPanUpdate: (DragUpdateDetails details) =>
-                      slideEvent(getBox, box, details.globalPosition),
+                  onPanDown: (DragDownDetails details) => getBox != null
+                      ? slideEvent(getBox, box, details.globalPosition)
+                      : null,
+                  onPanUpdate: (DragUpdateDetails details) => getBox != null
+                      ? slideEvent(getBox, box, details.globalPosition)
+                      : null,
                 );
               },
             ),
@@ -664,7 +671,10 @@ class ColorPickerArea extends StatelessWidget {
 
   void _handleGesture(
       Offset position, BuildContext context, double height, double width) {
-    RenderBox getBox = context.findRenderObject();
+    RenderBox? getBox = context.findRenderObject() as RenderBox?;
+    if (getBox == null) {
+      return;
+    }
     Offset localOffset = getBox.globalToLocal(position);
     double horizontal = localOffset.dx.clamp(0.0, width) / width;
     double vertical = 1 - localOffset.dy.clamp(0.0, height) / height;
