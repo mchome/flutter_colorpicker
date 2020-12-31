@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.4.0-nullsafety.0]
+
+* [#36](https://github.com/mchome/flutter_colorpicker/pull/36) Support null safety.
+
 ## [0.3.5]
 
 * [#25](https://github.com/mchome/flutter_colorpicker/pull/25) Add MultipleChoiceBlockPicker.
