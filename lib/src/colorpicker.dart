@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/src/hsv_picker.dart';
 
+// The default layout of Color Picker.
 class ColorPicker extends StatefulWidget {
   const ColorPicker({
     required this.pickerColor,
@@ -175,6 +176,7 @@ class _ColorPickerState extends State<ColorPicker> {
   }
 }
 
+// The Color Picker with three sliders only. Support HSV, HSL and RGB color model.
 class SlidePicker extends StatefulWidget {
   const SlidePicker({
     required this.pickerColor,

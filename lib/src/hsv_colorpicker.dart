@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/src/hsv_picker.dart';
 
+// The default layout of Color Picker but with [HSVColor] as input.
 class HsvColorPicker extends StatefulWidget {
   const HsvColorPicker({
     required this.pickerColor,
