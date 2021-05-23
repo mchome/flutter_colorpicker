@@ -727,7 +727,7 @@ class ColorPickerArea extends StatelessWidget {
 
 class AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
   @override
-  void addAllowedPointer(PointerEvent event) {
+  void addAllowedPointer(PointerDownEvent event) {
     super.addAllowedPointer(event);
     resolve(GestureDisposition.accepted);
   }
