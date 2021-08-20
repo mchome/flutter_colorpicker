@@ -1,5 +1,5 @@
 /// The components of HSV Color Picker
-/// 
+///
 /// Try to create a Color Picker with other layout on your own :)
 
 import 'package:flutter/gestures.dart';
@@ -727,7 +727,7 @@ class ColorPickerArea extends StatelessWidget {
 
 class AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
   @override
-  void addAllowedPointer(PointerDownEvent event) {
+  void addAllowedPointer(PointerEvent event) {
     super.addAllowedPointer(event);
     resolve(GestureDisposition.accepted);
   }

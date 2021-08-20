@@ -20,7 +20,8 @@ class _MyAppState extends State<MyApp> {
   List<Color> currentColors = [Colors.limeAccent, Colors.green];
 
   void changeColor(Color color) => setState(() => currentColor = color);
-  void changeColors(List<Color> colors) => setState(() => currentColors = colors);
+  void changeColors(List<Color> colors) =>
+      setState(() => currentColors = colors);
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +106,7 @@ class _MyAppState extends State<MyApp> {
                                 showLabel: false,
                                 showIndicator: true,
                                 indicatorBorderRadius:
-                                const BorderRadius.vertical(
+                                    const BorderRadius.vertical(
                                   top: const Radius.circular(25.0),
                                 ),
                               ),
@@ -202,8 +203,7 @@ class _MyAppState extends State<MyApp> {
                             ? const Color(0xffffffff)
                             : const Color(0xff000000),
                       )
-                    ]
-                ),
+                    ]),
               ),
             ],
           ),
