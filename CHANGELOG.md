@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.6.0]
+
+- Added ***hexInputController*** for Manual Hex Input [#31](https://github.com/mchome/flutter_colorpicker/issues/31).
+- Added 122 tests and documentation for colorToHex() and colorFromHex().
+- Update example app.
+
 ## [0.5.0]
 
 - [#45](https://github.com/mchome/flutter_colorpicker/pull/36) GestureRecognizer Cleanup.
