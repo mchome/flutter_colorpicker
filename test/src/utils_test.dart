@@ -6,11 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Test colorFromHex:', () {
     group('Valid formats test:', () {
-      const Set<String> valid6digits = {'aaBBcc', '#aaBBcc'},
+      const Set<String> valid6digits = {'aBc', '#aBc', 'aaBBcc', '#aaBBcc'},
           valid8digits = {'00aaBBcc', '#00aaBBcc'};
 
-      const expectedColor = Color(0xffaabbcc),
+      const Color expectedColor = Color(0xffaabbcc),
           expectedColorTransparent = Color(0x00aabbcc);
+
       valid6digits.forEach(
         (format) => test(
           'It should accept text input with a format: $format, with disabled alpha',
@@ -127,25 +128,25 @@ void main() {
         '#00аaBBcc',
       };
       test(
-        'It should return null if text length is not 6 or 8',
+        'It should return null if text length is not 3, 6 or 8',
         () {
           final StringBuffer buffer = StringBuffer();
           for (int i = 0; i <= 9; i++) {
             buffer.write(i.toString());
             expect(colorFromHex(buffer.toString()),
-                (i == 7 || i == 5) ? isNot(null) : null);
+                (i == 7 || i == 5 || i == 2) ? isNot(null) : null);
           }
         },
       );
 
       test(
-        'It should return null if text length is not 6 or 8, with alpha disabled',
+        'It should return null if text length is not 3, 6 or 8, with alpha disabled',
         () {
           final StringBuffer buffer = StringBuffer();
           for (int i = 0; i <= 9; i++) {
             buffer.write(i.toString());
             expect(colorFromHex(buffer.toString(), enableAlpha: false),
-                (i == 7 || i == 5) ? isNot(null) : null);
+                (i == 7 || i == 5 || i == 2) ? isNot(null) : null);
           }
         },
       );
@@ -212,7 +213,7 @@ void main() {
     colorsMap.forEach((color, string) {
       final String transparency = string.substring(4);
       test(
-        'It should convert $color: to #${transparency + string} with  hash',
+        'It should convert $color: to #${transparency + string} with hash',
         () => expect(colorToHex(color, includeHashSign: true),
             '#' + transparency + string),
       );
@@ -236,7 +237,6 @@ void main() {
       );
     });
 
-    //
     colorsMap.forEach((color, string) => test(
           'It should convert $color: to $string, with alpha disabled',
           () => expect(colorToHex(color, enableAlpha: false), string),

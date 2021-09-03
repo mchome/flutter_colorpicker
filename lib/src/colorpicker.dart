@@ -44,13 +44,15 @@ class ColorPicker extends StatefulWidget {
   /// Contains basic validator, that requires final input to be provided
   /// in one of those formats:
   ///
+  /// * RGB
+  /// * #RGB
   /// * RRGGBB
   /// * #RRGGBB
   /// * AARRGGBB
   /// * #AARRGGBB
   ///
-  /// Where: AA stands for Alpha, RR for Red, GG for Green, and BB for blue color.
-  /// It will only accept 6/8 long HEXs with an optional hash (`#`) at the beginning.
+  /// Where: A stands for Alpha, R for Red, G for Green, and B for blue color.
+  /// It will only accept 3/6/8 long HEXs with an optional hash (`#`) at the beginning.
   /// Allowed characters are Latin A-F case insensitive and numbers 0-9.
   /// It does respect the [enableAlpha] flag, so if alpha is disabled, all inputs
   /// with transparency are also converted to non-transparent color values.
@@ -139,6 +141,7 @@ class ColorPicker extends StatefulWidget {
   ///
   /// Do not forget to `dispose()` your [TextEditingController] if you creating
   /// it inside any kind of [StatefulWidget]'s [State].
+  /// Reference: https://en.wikipedia.org/wiki/Web_colors#Hex_triplet
   final TextEditingController? hexInputController;
 
   @override
