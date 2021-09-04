@@ -64,6 +64,7 @@ HSVColor hslToHsv(HSLColor color) {
 /// final RegExp hexInputValidator = RegExp(kValidHexPattern);
 /// if (hexInputValidator.hasMatch(hex)) print('$hex might be a valid HEX color');
 /// ```
+/// Reference: https://en.wikipedia.org/wiki/Web_colors#Hex_triplet
 const String kValidHexPattern = r'^#?[0-9a-fA-F]{1,8}';
 
 /// [RegExp] pattern for validation complete HEX color [String], allows only:
@@ -77,22 +78,33 @@ const String kValidHexPattern = r'^#?[0-9a-fA-F]{1,8}';
 /// final RegExp hexCompleteValidator = RegExp(kCompleteValidHexPattern);
 /// if (hexCompleteValidator.hasMatch(hex)) print('$hex is valid HEX color');
 /// ```
-const String kCompleteValidHexPattern = r'^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$';
+/// Reference: https://en.wikipedia.org/wiki/Web_colors#Hex_triplet
+const String kCompleteValidHexPattern =
+    r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$';
 
 /// Try to convert text input or any [String] to valid [Color].
 /// The [String] must be provided in one of those formats:
 ///
+/// * RGB
+/// * #RGB
 /// * RRGGBB
 /// * #RRGGBB
 /// * AARRGGBB
 /// * #AARRGGBB
 ///
-/// Where: AA stands for Alpha, RR for Red, GG for Green, and BB for blue color.
-/// It will only accept 6/8 long HEXs with an optional hash (`#`) at the beginning.
+/// Where: A stands for Alpha, R for Red, G for Green, and B for blue color.
+/// It will only accept 3/6/8 long HEXs with an optional hash (`#`) at the beginning.
 /// Allowed characters are Latin A-F case insensitive and numbers 0-9.
 /// Optional [enableAlpha] can be provided (it's `true` by default). If it's set
 /// to `false` transparency information (alpha channel) will be removed.
 /// ```dart
+/// /// // Valid 3 digit HEXs:
+/// colorFromHex('abc') == Color(0xffaabbcc)
+/// colorFromHex('ABc') == Color(0xffaabbcc)
+/// colorFromHex('ABC') == Color(0xffaabbcc)
+/// colorFromHex('#Abc') == Color(0xffaabbcc)
+/// colorFromHex('#abc') == Color(0xffaabbcc)
+/// colorFromHex('#ABC') == Color(0xffaabbcc)
 /// // Valid 6 digit HEXs:
 /// colorFromHex('aabbcc') == Color(0xffaabbcc)
 /// colorFromHex('AABbcc') == Color(0xffaabbcc)
@@ -116,12 +128,14 @@ const String kCompleteValidHexPattern = r'^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$';
 /// colorFromHex('#ffAABBCC', enableAlpha: true) == Color(0xffaabbcc)
 /// colorFromHex('#FFaabbcc', enableAlpha: true) == Color(0xffaabbcc)
 /// // Invalid HEXs:
+/// colorFromHex('bc') == null // length 2
 /// colorFromHex('aabbc') == null // length 5
 /// colorFromHex('#ffaabbccd') == null // length 9 (+#)
 /// colorFromHex('aabbcx') == null // x character
 /// colorFromHex('#aabbвв') == null // в non-latin character
 /// colorFromHex('') == null // empty
 /// ```
+/// Reference: https://en.wikipedia.org/wiki/Web_colors#Hex_triplet
 Color? colorFromHex(String inputString, {bool enableAlpha = true}) {
   // Registers validator for exactly 6 or 8 digits long HEX (with optional #).
   final RegExp hexValidator = RegExp(kCompleteValidHexPattern);
@@ -133,6 +147,10 @@ Color? colorFromHex(String inputString, {bool enableAlpha = true}) {
   if (!enableAlpha && hexToParse.length == 8) {
     // but it will replace this info with 100% non-transparent value (FF).
     hexToParse = 'FF${hexToParse.substring(2)}';
+  }
+  // HEX may be provided in 3-digits format, let's just duplicate each letter.
+  if (hexToParse.length == 3) {
+    hexToParse = hexToParse.split('').expand((i) => [i * 2]).join();
   }
   // We will need 8 digits to parse the color, let's add missing digits.
   if (hexToParse.length == 6) hexToParse = 'FF$hexToParse';
@@ -146,17 +164,9 @@ Color? colorFromHex(String inputString, {bool enableAlpha = true}) {
   return enableAlpha ? color : color.withAlpha(255);
 }
 
-/// Converts `dart:ui` [Color] to the HEX (CSS like) [String].
-/// * exactly 6 or 8 digits in HEX format,
-/// * only Latin A-F characters, case insensitive,
-/// * and integer numbers 0,1,2,3,4,5,6,7,8,9,
-/// * with optional hash (`#`) symbol at the beginning (not calculated in length).
+/// Converts `dart:ui` [Color] to the 6/8 digits HEX [String].
 ///
-/// ```dart
-/// final RegExp hexCompleteValidator = RegExp(kCompleteValidHexPattern);
-/// if (hexCompleteValidator.hasMatch(hex)) print('$hex is valid HEX color');
-/// ```
-/// Prefixes a hash sign if [includeHashSign] is set to `true` (default is `false`).
+/// Prefixes a hash (`#`) sign if [includeHashSign] is set to `true`.
 /// The result will be provided as UPPER CASE, it can be changed via [toUpperCase]
 /// flag set to `false` (default is `true`). Hex can be returned without alpha
 /// channel information (transparency), with the [enableAlpha] flag set to `false`.
