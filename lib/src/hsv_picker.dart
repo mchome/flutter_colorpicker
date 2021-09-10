@@ -1,5 +1,5 @@
 /// The components of HSV Color Picker
-/// 
+///
 /// Try to create a Color Picker with other layout on your own :)
 
 import 'package:flutter/gestures.dart';

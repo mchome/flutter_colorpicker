@@ -2,11 +2,16 @@ name: flutter_colorpicker_example
 description: A flutter_colorpicker example Flutter project.
 version: 1.0.0+1
 
+publish_to: none
+
 dependencies:
   flutter:
     sdk: flutter
   flutter_colorpicker:
     path: ../
+
+dev_dependencies:
+  flutter_lints: ^1.0.0
 
 flutter:
   uses-material-design: true
