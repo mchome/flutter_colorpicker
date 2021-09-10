@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart' show CupertinoTextField;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter/foundation.dart'
-//     show debugDefaultTargetPlatformOverride;
 
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
-  // debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
   runApp(MaterialApp(home: MyApp()));
 }
 
@@ -22,7 +19,8 @@ class _MyAppState extends State<MyApp> {
   List<Color> currentColors = [Colors.limeAccent, Colors.green];
 
   void changeColor(Color color) => setState(() => currentColor = color);
-  void changeColors(List<Color> colors) => setState(() => currentColors = colors);
+  void changeColors(List<Color> colors) =>
+      setState(() => currentColors = colors);
 
   // Just an example of how to use/interpret/format text input's result.
   Future<void> copyToClipboard(String input) async {
@@ -159,7 +157,8 @@ class _MyAppState extends State<MyApp> {
                                   displayThumbColor: true,
                                   showLabel: true,
                                   paletteType: PaletteType.hsv,
-                                  pickerAreaBorderRadius: const BorderRadius.only(
+                                  pickerAreaBorderRadius:
+                                      const BorderRadius.only(
                                     topLeft: const Radius.circular(2.0),
                                     topRight: const Radius.circular(2.0),
                                   ),
@@ -188,8 +187,8 @@ class _MyAppState extends State<MyApp> {
                                       child: const Icon(Icons.tag),
                                     ),
                                     suffix: IconButton(
-                                      icon:
-                                          const Icon(Icons.content_paste_rounded),
+                                      icon: const Icon(
+                                          Icons.content_paste_rounded),
                                       onPressed: () async =>
                                           copyToClipboard(textController.text),
                                     ),
