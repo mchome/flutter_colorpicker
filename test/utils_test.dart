@@ -12,101 +12,101 @@ void main() {
       const Color expectedColor = Color(0xffaabbcc),
           expectedColorTransparent = Color(0x00aabbcc);
 
-      valid6digits.forEach(
-        (format) => test(
+      for (var format in valid6digits) {
+        test(
           'It should accept text input with a format: $format, with disabled alpha',
           () => expect(colorFromHex(format, enableAlpha: false), expectedColor),
-        ),
-      );
+        );
+      }
 
-      valid6digits.forEach((format) {
+      for (var format in valid6digits) {
         final upperCaseFormat = format.toUpperCase();
         test(
           'It should accept text input with a format: $upperCaseFormat, with disabled alpha',
           () => expect(
               colorFromHex(upperCaseFormat, enableAlpha: false), expectedColor),
         );
-      });
+      }
 
-      valid6digits.forEach((format) {
+      for (var format in valid6digits) {
         final lowerCaseFormat = format.toLowerCase();
         test(
           'It should accept text input with a format: $lowerCaseFormat, with disabled alpha',
           () => expect(
               colorFromHex(lowerCaseFormat, enableAlpha: false), expectedColor),
         );
-      });
+      }
 
-      valid6digits.forEach(
-        (format) => test(
+      for (var format in valid6digits) {
+        test(
           'It should accept text input with a format: $format',
           () => expect(colorFromHex(format), expectedColor),
-        ),
-      );
+        );
+      }
 
-      valid6digits.forEach((format) {
+      for (var format in valid6digits) {
         final upperCaseFormat = format.toUpperCase();
         test(
           'It should accept text input with a format: $upperCaseFormat',
           () => expect(colorFromHex(upperCaseFormat), expectedColor),
         );
-      });
+      }
 
-      valid6digits.forEach((format) {
+      for (var format in valid6digits) {
         final lowerCaseFormat = format.toLowerCase();
         test(
           'It should accept text input with a format: $lowerCaseFormat',
           () => expect(colorFromHex(lowerCaseFormat), expectedColor),
         );
-      });
+      }
 
-      valid8digits.forEach(
-        (format) => test(
+      for (var format in valid8digits) {
+        test(
           'It should accept text input with a format: $format, with disabled alpha',
           () => expect(colorFromHex(format, enableAlpha: false), expectedColor),
-        ),
-      );
+        );
+      }
 
-      valid8digits.forEach((format) {
+      for (var format in valid8digits) {
         final upperCaseFormat = format.toUpperCase();
         test(
           'It should accept text input with a format: $upperCaseFormat, with disabled alpha',
           () => expect(
               colorFromHex(upperCaseFormat, enableAlpha: false), expectedColor),
         );
-      });
+      }
 
-      valid8digits.forEach((format) {
+      for (var format in valid8digits) {
         final lowerCaseFormat = format.toLowerCase();
         test(
           'It should accept text input with a format: $lowerCaseFormat, with disabled alpha',
           () => expect(
               colorFromHex(lowerCaseFormat, enableAlpha: false), expectedColor),
         );
-      });
+      }
 
-      valid8digits.forEach(
-        (format) => test(
+      for (var format in valid8digits) {
+        test(
           'It should accept text input with a format: $format',
           () => expect(colorFromHex(format), expectedColorTransparent),
-        ),
-      );
+        );
+      }
 
-      valid8digits.forEach((format) {
+      for (var format in valid8digits) {
         final upperCaseFormat = format.toUpperCase();
         test(
           'It should accept text input with a format: $upperCaseFormat',
           () => expect(colorFromHex(upperCaseFormat), expectedColorTransparent),
         );
-      });
+      }
 
-      valid8digits.forEach((format) {
+      for (var format in valid8digits) {
         final lowerCaseFormat = format.toLowerCase();
         test(
           'It should accept text input with a format: $lowerCaseFormat',
           () => expect(colorFromHex(lowerCaseFormat), expectedColorTransparent),
         );
-      });
+      }
     });
 
     group('Invalid formats test:', () {
@@ -151,55 +151,59 @@ void main() {
         },
       );
 
-      invalidFormats.forEach((format) {
+      for (var format in invalidFormats) {
         final lowerCaseFormat = format.toLowerCase();
         test(
           'It should return null if format is: $lowerCaseFormat',
           () => expect(colorFromHex(lowerCaseFormat), null),
         );
-      });
+      }
 
-      invalidFormats.forEach((format) {
+      for (var format in invalidFormats) {
         final upperCaseFormat = format.toUpperCase();
         test(
           'It should return null if format is: $upperCaseFormat',
           () => expect(colorFromHex(upperCaseFormat), null),
         );
-      });
+      }
 
-      invalidFormats.forEach((format) => test(
-            'It should return null if format is: $format',
-            () => expect(colorFromHex(format), null),
-          ));
+      for (var format in invalidFormats) {
+        test(
+          'It should return null if format is: $format',
+          () => expect(colorFromHex(format), null),
+        );
+      }
 
-      invalidFormats.forEach((format) {
+      for (var format in invalidFormats) {
         final lowerCaseFormat = format.toLowerCase();
         test(
           'It should return null if format is: $lowerCaseFormat, with alpha disabled',
           () => expect(colorFromHex(lowerCaseFormat, enableAlpha: false), null),
         );
-      });
+      }
 
-      invalidFormats.forEach((format) {
+      for (var format in invalidFormats) {
         final upperCaseFormat = format.toUpperCase();
         test(
           'It should return null if format is: $upperCaseFormat, with alpha disabled',
           () => expect(colorFromHex(upperCaseFormat, enableAlpha: false), null),
         );
-      });
+      }
 
-      invalidFormats.forEach((format) => test(
-            'It should return null if format is: $format, with alpha disabled',
-            () => expect(colorFromHex(format, enableAlpha: false), null),
-          ));
+      for (var format in invalidFormats) {
+        test(
+          'It should return null if format is: $format, with alpha disabled',
+          () => expect(colorFromHex(format, enableAlpha: false), null),
+        );
+      }
     });
   });
 
   group('Test colorToHex:', () {
     final Map<Color, String> colorsMap = {
-      Color(0xffffffff): 'FFFFFF',
-      Color(0x00000000): '000000',
-      Color(0xF0F0F0F0): 'F0F0F0'
+      const Color(0xffffffff): 'FFFFFF',
+      const Color(0x00000000): '000000',
+      const Color(0xF0F0F0F0): 'F0F0F0'
     };
 
     colorsMap.forEach((color, string) {
@@ -223,7 +227,8 @@ void main() {
       final String transparency = string.substring(4).toLowerCase();
       test(
         'It should convert $color: to #${transparency + string.toLowerCase()}, with hash, to lower case',
-        () => expect(colorToHex(color, includeHashSign: true, toUpperCase: false),
+        () => expect(
+            colorToHex(color, includeHashSign: true, toUpperCase: false),
             '#' + transparency + string.toLowerCase()),
       );
     });
@@ -253,13 +258,16 @@ void main() {
           'It should convert $color: to #${string.toLowerCase()}, with alpha disabled and hash, to lower case',
           () => expect(
               colorToHex(color,
-                  enableAlpha: false, includeHashSign: true, toUpperCase: false),
+                  enableAlpha: false,
+                  includeHashSign: true,
+                  toUpperCase: false),
               '#$string'.toLowerCase()),
         ));
 
     colorsMap.forEach((color, string) => test(
           'It should convert $color to ${string.toLowerCase()}, with alpha disabled, to lower case',
-          () => expect(colorToHex(color, enableAlpha: false, toUpperCase: false),
+          () => expect(
+              colorToHex(color, enableAlpha: false, toUpperCase: false),
               string.toLowerCase()),
         ));
   });

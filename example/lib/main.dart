@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-void main() {
-  runApp(MaterialApp(home: MyApp()));
-}
+void main() => runApp(const MaterialApp(home: MyApp()));
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _MyAppState();
 }
@@ -43,14 +43,14 @@ class _MyAppState extends State<MyApp> {
         child: Scaffold(
           appBar: AppBar(
             title: GestureDetector(
-              child: Text('Flutter Color Picker Example'),
+              child: const Text('Flutter Color Picker Example'),
               onDoubleTap: () => setState(() => lightTheme = !lightTheme),
             ),
-            bottom: TabBar(
+            bottom: const TabBar(
               tabs: <Widget>[
-                const Tab(text: 'HSV'),
-                const Tab(text: 'Material'),
-                const Tab(text: 'Block'),
+                Tab(text: 'HSV'),
+                Tab(text: 'Material'),
+                Tab(text: 'Block'),
               ],
             ),
           ),
@@ -60,8 +60,7 @@ class _MyAppState extends State<MyApp> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  RaisedButton(
-                    elevation: 3.0,
+                  ElevatedButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -80,8 +79,8 @@ class _MyAppState extends State<MyApp> {
                                 showLabel: true,
                                 paletteType: PaletteType.hsv,
                                 pickerAreaBorderRadius: const BorderRadius.only(
-                                  topLeft: const Radius.circular(2.0),
-                                  topRight: const Radius.circular(2.0),
+                                  topLeft: Radius.circular(2.0),
+                                  topRight: Radius.circular(2.0),
                                 ),
                               ),
                             ),
@@ -89,14 +88,21 @@ class _MyAppState extends State<MyApp> {
                         },
                       );
                     },
-                    child: const Text('Change me'),
-                    color: currentColor,
-                    textColor: useWhiteForeground(currentColor)
-                        ? const Color(0xffffffff)
-                        : const Color(0xff000000),
+                    child: Text(
+                      'Change me',
+                      style: TextStyle(
+                        color: useWhiteForeground(currentColor)
+                            ? const Color(0xffffffff)
+                            : const Color(0xff000000),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: currentColor,
+                      elevation: 3,
+                    ),
                   ),
-                  RaisedButton(
-                    elevation: 3.0,
+                  const SizedBox(height: 15),
+                  ElevatedButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -118,7 +124,7 @@ class _MyAppState extends State<MyApp> {
                                 showIndicator: true,
                                 indicatorBorderRadius:
                                     const BorderRadius.vertical(
-                                  top: const Radius.circular(25.0),
+                                  top: Radius.circular(25.0),
                                 ),
                               ),
                             ),
@@ -126,14 +132,21 @@ class _MyAppState extends State<MyApp> {
                         },
                       );
                     },
-                    child: const Text('Change me again'),
-                    color: currentColor,
-                    textColor: useWhiteForeground(currentColor)
-                        ? const Color(0xffffffff)
-                        : const Color(0xff000000),
+                    child: Text(
+                      'Change me again',
+                      style: TextStyle(
+                        color: useWhiteForeground(currentColor)
+                            ? const Color(0xffffffff)
+                            : const Color(0xff000000),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: currentColor,
+                      elevation: 3,
+                    ),
                   ),
-                  MaterialButton(
-                    elevation: 3.0,
+                  const SizedBox(height: 15),
+                  ElevatedButton(
                     onPressed: () {
                       // The initial value can be provided directly to the controller.
                       final textController =
@@ -159,8 +172,8 @@ class _MyAppState extends State<MyApp> {
                                   paletteType: PaletteType.hsv,
                                   pickerAreaBorderRadius:
                                       const BorderRadius.only(
-                                    topLeft: const Radius.circular(2.0),
-                                    topRight: const Radius.circular(2.0),
+                                    topLeft: Radius.circular(2.0),
+                                    topRight: Radius.circular(2.0),
                                   ),
                                   hexInputController: textController, // <- here
                                   portraitOnly: true,
@@ -182,9 +195,9 @@ class _MyAppState extends State<MyApp> {
                                   child: CupertinoTextField(
                                     controller: textController,
                                     // Everything below is purely optional.
-                                    prefix: Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: const Icon(Icons.tag),
+                                    prefix: const Padding(
+                                      padding: EdgeInsets.only(left: 8),
+                                      child: Icon(Icons.tag),
                                     ),
                                     suffix: IconButton(
                                       icon: const Icon(
@@ -209,17 +222,23 @@ class _MyAppState extends State<MyApp> {
                         },
                       );
                     },
-                    child: const Text('Change me via text input'),
-                    color: currentColor,
-                    textColor: useWhiteForeground(currentColor)
-                        ? const Color(0xffffffff)
-                        : const Color(0xff000000),
+                    child: Text(
+                      'Change me via text input',
+                      style: TextStyle(
+                        color: useWhiteForeground(currentColor)
+                            ? const Color(0xffffffff)
+                            : const Color(0xff000000),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: currentColor,
+                      elevation: 3,
+                    ),
                   ),
                 ],
               ),
               Center(
-                child: RaisedButton(
-                  elevation: 3.0,
+                child: ElevatedButton(
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -238,25 +257,31 @@ class _MyAppState extends State<MyApp> {
                       },
                     );
                   },
-                  child: const Text('Change me'),
-                  color: currentColor,
-                  textColor: useWhiteForeground(currentColor)
-                      ? const Color(0xffffffff)
-                      : const Color(0xff000000),
+                  child: Text(
+                    'Change me',
+                    style: TextStyle(
+                      color: useWhiteForeground(currentColor)
+                          ? const Color(0xffffffff)
+                          : const Color(0xff000000),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: currentColor,
+                    elevation: 3,
+                  ),
                 ),
               ),
               Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        elevation: 3.0,
+                      ElevatedButton(
                         onPressed: () {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Select a color'),
+                                title: const Text('Select a color'),
                                 content: SingleChildScrollView(
                                   child: BlockPicker(
                                     pickerColor: currentColor,
@@ -267,20 +292,27 @@ class _MyAppState extends State<MyApp> {
                             },
                           );
                         },
-                        child: const Text('Change me'),
-                        color: currentColor,
-                        textColor: useWhiteForeground(currentColor)
-                            ? const Color(0xffffffff)
-                            : const Color(0xff000000),
+                        child: Text(
+                          'Change me',
+                          style: TextStyle(
+                            color: useWhiteForeground(currentColor)
+                                ? const Color(0xffffffff)
+                                : const Color(0xff000000),
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: currentColor,
+                          elevation: 3,
+                        ),
                       ),
-                      RaisedButton(
-                        elevation: 3.0,
+                      const SizedBox(height: 15),
+                      ElevatedButton(
                         onPressed: () {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Select colors'),
+                                title: const Text('Select colors'),
                                 content: SingleChildScrollView(
                                   child: MultipleChoiceBlockPicker(
                                     pickerColors: currentColors,
@@ -291,11 +323,18 @@ class _MyAppState extends State<MyApp> {
                             },
                           );
                         },
-                        child: const Text('Change me again'),
-                        color: currentColor,
-                        textColor: useWhiteForeground(currentColor)
-                            ? const Color(0xffffffff)
-                            : const Color(0xff000000),
+                        child: Text(
+                          'Change me again',
+                          style: TextStyle(
+                            color: useWhiteForeground(currentColor)
+                                ? const Color(0xffffffff)
+                                : const Color(0xff000000),
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: currentColor,
+                          elevation: 3,
+                        ),
                       )
                     ]),
               ),
@@ -309,6 +348,7 @@ class _MyAppState extends State<MyApp> {
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(_, TextEditingValue nv) =>
-      TextEditingValue(text: nv.text.toUpperCase(), selection: nv.selection);
+  TextEditingValue formatEditUpdate(oldValue, TextEditingValue newValue) =>
+      TextEditingValue(
+          text: newValue.text.toUpperCase(), selection: newValue.selection);
 }

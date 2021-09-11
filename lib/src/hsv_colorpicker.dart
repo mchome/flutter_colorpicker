@@ -11,17 +11,18 @@ import 'package:flutter_colorpicker/src/hsv_picker.dart';
 // The default layout of Color Picker but with [HSVColor] as input.
 class HsvColorPicker extends StatefulWidget {
   const HsvColorPicker({
+    Key? key,
     required this.pickerColor,
     required this.onColorChanged,
-    this.paletteType: PaletteType.hsv,
-    this.enableAlpha: true,
-    this.showLabel: true,
+    this.paletteType = PaletteType.hsv,
+    this.enableAlpha = true,
+    this.showLabel = true,
     this.labelTextStyle,
-    this.displayThumbColor: false,
-    this.colorPickerWidth: 300.0,
-    this.pickerAreaHeightPercent: 1.0,
-    this.pickerAreaBorderRadius: const BorderRadius.all(Radius.zero),
-  });
+    this.displayThumbColor = false,
+    this.colorPickerWidth = 300.0,
+    this.pickerAreaHeightPercent = 1.0,
+    this.pickerAreaBorderRadius = const BorderRadius.all(Radius.zero),
+  }) : super(key: key);
 
   final HSVColor pickerColor;
   final ValueChanged<HSVColor> onColorChanged;
@@ -121,7 +122,7 @@ class _HsvColorPickerState extends State<HsvColorPicker> {
               enableAlpha: widget.enableAlpha,
               textStyle: widget.labelTextStyle,
             ),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
         ],
       );
     } else {
@@ -138,7 +139,7 @@ class _HsvColorPickerState extends State<HsvColorPicker> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  SizedBox(width: 20.0),
+                  const SizedBox(width: 20.0),
                   ColorIndicator(currentHsvColor),
                   Column(
                     children: <Widget>[
@@ -155,10 +156,10 @@ class _HsvColorPickerState extends State<HsvColorPicker> {
                         ),
                     ],
                   ),
-                  SizedBox(width: 10.0),
+                  const SizedBox(width: 10.0),
                 ],
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               if (widget.showLabel)
                 ColorPickerLabel(
                   currentHsvColor,

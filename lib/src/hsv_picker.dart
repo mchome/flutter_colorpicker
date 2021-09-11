@@ -30,7 +30,7 @@ class HSVColorPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Rect rect = Offset.zero & size;
-    final Gradient gradientV = LinearGradient(
+    const Gradient gradientV = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [Colors.white, Colors.black],
@@ -82,13 +82,13 @@ class HSLColorPainter extends CustomPainter {
         HSLColor.fromAHSL(1.0, hslColor.hue, 1.0, 0.5).toColor(),
       ],
     );
-    final Gradient gradientV = LinearGradient(
+    const Gradient gradientV = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       stops: [0.0, 0.5, 0.5, 1],
       colors: [
         Colors.white,
-        const Color(0x00ffffff),
+        Color(0x00ffffff),
         Colors.transparent,
         Colors.black,
       ],
@@ -115,9 +115,9 @@ class HSLColorPainter extends CustomPainter {
 }
 
 class _SliderLayout extends MultiChildLayoutDelegate {
-  static final String track = 'track';
-  static final String thumb = 'thumb';
-  static final String gestureContainer = 'gesturecontainer';
+  static const String track = 'track';
+  static const String thumb = 'thumb';
+  static const String gestureContainer = 'gesturecontainer';
 
   @override
   void performLayout(Size size) {
@@ -255,7 +255,7 @@ class TrackPainter extends CustomPainter {
 }
 
 class ThumbPainter extends CustomPainter {
-  const ThumbPainter({this.thumbColor, this.fullThumbColor: false});
+  const ThumbPainter({this.thumbColor, this.fullThumbColor = false});
 
   final Color? thumbColor;
   final bool fullThumbColor;
@@ -265,7 +265,8 @@ class ThumbPainter extends CustomPainter {
     canvas.drawShadow(
       Path()
         ..addOval(
-          Rect.fromCircle(center: Offset(0.5, 2.0), radius: size.width * 1.8),
+          Rect.fromCircle(
+              center: const Offset(0.5, 2.0), radius: size.width * 1.8),
         ),
       Colors.black,
       3.0,
@@ -347,11 +348,12 @@ class CheckerPainter extends CustomPainter {
 class ColorPickerLabel extends StatefulWidget {
   const ColorPickerLabel(
     this.hsvColor, {
-    this.enableAlpha: true,
+    Key? key,
+    this.enableAlpha = true,
     this.textStyle,
-    this.editable: false, // TODO: TBD
+    this.editable = false, // TODO: TBD
     this.onColorChanged, // TODO: TBD
-  });
+  }) : super(key: key);
 
   final HSVColor hsvColor;
   final bool enableAlpha;
@@ -424,7 +426,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                         Theme.of(context).textTheme.bodyText2?.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   Expanded(
                     child: Text(
                       colorValue(widget.hsvColor, _colorType)[
@@ -457,7 +459,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
             )
         ],
       ),
-      SizedBox(width: 10.0),
+      const SizedBox(width: 10.0),
       ...colorValueLabels(),
     ]);
   }
@@ -468,9 +470,10 @@ class ColorPickerSlider extends StatelessWidget {
     this.trackType,
     this.hsvColor,
     this.onColorChanged, {
+    Key? key,
     this.displayThumbColor = false,
     this.fullThumbColor = false,
-  });
+  }) : super(key: key);
 
   final TrackType trackType;
   final HSVColor hsvColor;
@@ -577,7 +580,7 @@ class ColorPickerSlider extends StatelessWidget {
           LayoutId(
             id: _SliderLayout.track,
             child: ClipRRect(
-              borderRadius: const BorderRadius.all(const Radius.circular(50.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(50.0)),
               child: CustomPaint(
                   painter: TrackPainter(
                 trackType,
@@ -622,9 +625,10 @@ class ColorPickerSlider extends StatelessWidget {
 class ColorIndicator extends StatelessWidget {
   const ColorIndicator(
     this.hsvColor, {
-    this.width: 50.0,
-    this.height: 50.0,
-  });
+    Key? key,
+    this.width = 50.0,
+    this.height = 50.0,
+  }) : super(key: key);
 
   final HSVColor hsvColor;
   final double width;
@@ -636,11 +640,11 @@ class ColorIndicator extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(const Radius.circular(1000.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(1000.0)),
         border: Border.all(color: const Color(0xffdddddd)),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(1000.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(1000.0)),
         child: CustomPaint(painter: IndicatorPainter(hsvColor.toColor())),
       ),
     );
@@ -651,8 +655,9 @@ class ColorPickerArea extends StatelessWidget {
   const ColorPickerArea(
     this.hsvColor,
     this.onColorChanged,
-    this.paletteType,
-  );
+    this.paletteType, {
+    Key? key,
+  }) : super(key: key);
 
   final HSVColor hsvColor;
   final ValueChanged<HSVColor> onColorChanged;
@@ -715,7 +720,7 @@ class ColorPickerArea extends StatelessWidget {
                   return CustomPaint(
                       painter: HSLColorPainter(hsvToHsl(hsvColor)));
                 default:
-                  return CustomPaint();
+                  return const CustomPaint();
               }
             },
           ),

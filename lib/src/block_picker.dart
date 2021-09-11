@@ -37,12 +37,13 @@ typedef PickerItemBuilder = Widget Function(
 
 class BlockPicker extends StatefulWidget {
   const BlockPicker({
+    Key? key,
     required this.pickerColor,
     required this.onColorChanged,
     this.availableColors = _defaultColors,
     this.layoutBuilder = defaultLayoutBuilder,
     this.itemBuilder = defaultItemBuilder,
-  });
+  }) : super(key: key);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
@@ -54,7 +55,7 @@ class BlockPicker extends StatefulWidget {
       BuildContext context, List<Color> colors, PickerItem child) {
     Orientation orientation = MediaQuery.of(context).orientation;
 
-    return Container(
+    return SizedBox(
       width: orientation == Orientation.portrait ? 300.0 : 300.0,
       height: orientation == Orientation.portrait ? 360.0 : 200.0,
       child: GridView.count(
@@ -69,14 +70,14 @@ class BlockPicker extends StatefulWidget {
   static Widget defaultItemBuilder(
       Color color, bool isCurrentColor, void Function() changeColor) {
     return Container(
-      margin: EdgeInsets.all(5.0),
+      margin: const EdgeInsets.all(5.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50.0),
         color: color,
         boxShadow: [
           BoxShadow(
             color: color.withOpacity(0.8),
-            offset: Offset(1.0, 2.0),
+            offset: const Offset(1.0, 2.0),
             blurRadius: 3.0,
           ),
         ],
@@ -130,12 +131,13 @@ class _BlockPickerState extends State<BlockPicker> {
 
 class MultipleChoiceBlockPicker extends StatefulWidget {
   const MultipleChoiceBlockPicker({
+    Key? key,
     required this.pickerColors,
     required this.onColorsChanged,
     this.availableColors = _defaultColors,
     this.layoutBuilder = BlockPicker.defaultLayoutBuilder,
     this.itemBuilder = BlockPicker.defaultItemBuilder,
-  });
+  }) : super(key: key);
 
   final List<Color> pickerColors;
   final ValueChanged<List<Color>> onColorsChanged;

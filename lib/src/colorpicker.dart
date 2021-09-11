@@ -12,19 +12,20 @@ import 'package:flutter_colorpicker/src/utils.dart';
 // The default layout of Color Picker.
 class ColorPicker extends StatefulWidget {
   const ColorPicker({
+    Key? key,
     required this.pickerColor,
     required this.onColorChanged,
-    this.paletteType: PaletteType.hsv,
-    this.enableAlpha: true,
-    this.showLabel: true,
+    this.paletteType = PaletteType.hsv,
+    this.enableAlpha = true,
+    this.showLabel = true,
     this.labelTextStyle,
-    this.displayThumbColor: false,
-    this.portraitOnly: false,
-    this.colorPickerWidth: 300.0,
-    this.pickerAreaHeightPercent: 1.0,
-    this.pickerAreaBorderRadius: const BorderRadius.all(Radius.zero),
+    this.displayThumbColor = false,
+    this.portraitOnly = false,
+    this.colorPickerWidth = 300.0,
+    this.pickerAreaHeightPercent = 1.0,
+    this.pickerAreaBorderRadius = const BorderRadius.all(Radius.zero),
     this.hexInputController,
-  });
+  }) : super(key: key);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
@@ -265,7 +266,7 @@ class _ColorPickerState extends State<ColorPicker> {
               enableAlpha: widget.enableAlpha,
               textStyle: widget.labelTextStyle,
             ),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
         ],
       );
     } else {
@@ -282,7 +283,7 @@ class _ColorPickerState extends State<ColorPicker> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  SizedBox(width: 20.0),
+                  const SizedBox(width: 20.0),
                   ColorIndicator(currentHsvColor),
                   Column(
                     children: <Widget>[
@@ -299,10 +300,10 @@ class _ColorPickerState extends State<ColorPicker> {
                         ),
                     ],
                   ),
-                  SizedBox(width: 10.0),
+                  const SizedBox(width: 10.0),
                 ],
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               if (widget.showLabel)
                 ColorPickerLabel(
                   currentHsvColor,
@@ -320,22 +321,23 @@ class _ColorPickerState extends State<ColorPicker> {
 // The Color Picker with three sliders only. Support HSV, HSL and RGB color model.
 class SlidePicker extends StatefulWidget {
   const SlidePicker({
+    Key? key,
     required this.pickerColor,
     required this.onColorChanged,
-    this.paletteType: PaletteType.hsv,
-    this.enableAlpha: true,
-    this.sliderSize: const Size(260, 40),
-    this.showSliderText: true,
+    this.paletteType = PaletteType.hsv,
+    this.enableAlpha = true,
+    this.sliderSize = const Size(260, 40),
+    this.showSliderText = true,
     this.sliderTextStyle,
-    this.showLabel: true,
+    this.showLabel = true,
     this.labelTextStyle,
-    this.showIndicator: true,
-    this.indicatorSize: const Size(280, 50),
-    this.indicatorAlignmentBegin: const Alignment(-1.0, -3.0),
-    this.indicatorAlignmentEnd: const Alignment(1.0, 3.0),
-    this.displayThumbColor: false,
-    this.indicatorBorderRadius: const BorderRadius.all(Radius.zero),
-  });
+    this.showIndicator = true,
+    this.indicatorSize = const Size(280, 50),
+    this.indicatorAlignmentBegin = const Alignment(-1.0, -3.0),
+    this.indicatorAlignmentEnd = const Alignment(1.0, 3.0),
+    this.displayThumbColor = false,
+    this.indicatorBorderRadius = const BorderRadius.all(Radius.zero),
+  }) : super(key: key);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
@@ -403,10 +405,10 @@ class _SlidePickerState extends State<SlidePicker> {
             ],
             begin: widget.indicatorAlignmentBegin,
             end: widget.indicatorAlignmentEnd,
-            stops: [0.0, 0.5, 0.5, 1.0],
+            stops: const [0.0, 0.5, 0.5, 1.0],
           ),
         ),
-        child: const CustomPaint(painter: const CheckerPainter()),
+        child: const CustomPaint(painter: CheckerPainter()),
       ),
     );
   }
@@ -463,7 +465,7 @@ class _SlidePickerState extends State<SlidePicker> {
             width: 260.0,
             child: colorPickerSlider(TrackType.alpha),
           ),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         if (widget.showLabel)
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
