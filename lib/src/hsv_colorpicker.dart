@@ -2,6 +2,8 @@
 ///
 /// You can create your own layout by importing `hsv_picker.dart`.
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 library hsv_colorpicker;
 
 import 'package:flutter/material.dart';
@@ -9,6 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/src/hsv_picker.dart';
 
 // The default layout of Color Picker but with [HSVColor] as input.
+@Deprecated(
+  'Use ColorPicker with pickerHsvColor & onHsvColorchanged instead.'
+  'This feature was deprecated after v1.0.',
+)
 class HsvColorPicker extends StatefulWidget {
   const HsvColorPicker({
     Key? key,

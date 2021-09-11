@@ -201,7 +201,8 @@ class _MyAppState extends State<MyApp> {
                                     ),
                                     suffix: IconButton(
                                       icon: const Icon(
-                                          Icons.content_paste_rounded),
+                                        Icons.content_paste_rounded,
+                                      ),
                                       onPressed: () async =>
                                           copyToClipboard(textController.text),
                                     ),
@@ -212,7 +213,8 @@ class _MyAppState extends State<MyApp> {
                                       // here or use any Form validator you want.
                                       UpperCaseTextFormatter(),
                                       FilteringTextInputFormatter.allow(
-                                          RegExp(kValidHexPattern)),
+                                        RegExp(kValidHexPattern),
+                                      ),
                                     ],
                                   ),
                                 )

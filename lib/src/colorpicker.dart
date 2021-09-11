@@ -15,6 +15,8 @@ class ColorPicker extends StatefulWidget {
     Key? key,
     required this.pickerColor,
     required this.onColorChanged,
+    this.pickerHsvColor,
+    this.onHsvColorChanged,
     this.paletteType = PaletteType.hsv,
     this.enableAlpha = true,
     this.showLabel = true,
@@ -29,6 +31,8 @@ class ColorPicker extends StatefulWidget {
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
+  final HSVColor? pickerHsvColor;
+  final ValueChanged<HSVColor>? onHsvColorChanged;
   final PaletteType paletteType;
   final bool enableAlpha;
   final bool showLabel;
@@ -155,7 +159,9 @@ class _ColorPickerState extends State<ColorPicker> {
   @override
   void initState() {
     super.initState();
-    currentHsvColor = HSVColor.fromColor(widget.pickerColor);
+    currentHsvColor = (widget.pickerHsvColor != null)
+        ? widget.pickerHsvColor as HSVColor
+        : HSVColor.fromColor(widget.pickerColor);
     // If there's no initial text in `hexInputController`,
     if (widget.hexInputController?.text.isEmpty == true) {
       // set it to the current's color HEX value.
@@ -188,6 +194,7 @@ class _ColorPickerState extends State<ColorPicker> {
       setState(() => currentHsvColor = HSVColor.fromColor(color));
       // notify with a callback.
       widget.onColorChanged(color);
+      widget.onHsvColorChanged!(currentHsvColor);
     }
   }
 
@@ -201,6 +208,7 @@ class _ColorPickerState extends State<ColorPicker> {
             colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
         setState(() => currentHsvColor = color);
         widget.onColorChanged(currentHsvColor.toColor());
+        widget.onHsvColorChanged!(currentHsvColor);
       },
       displayThumbColor: widget.displayThumbColor,
     );
@@ -217,6 +225,7 @@ class _ColorPickerState extends State<ColorPicker> {
               colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
           setState(() => currentHsvColor = color);
           widget.onColorChanged(currentHsvColor.toColor());
+          widget.onHsvColorChanged!(currentHsvColor);
         },
         widget.paletteType,
       ),
