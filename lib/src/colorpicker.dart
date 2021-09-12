@@ -177,7 +177,9 @@ class _ColorPickerState extends State<ColorPicker> {
   @override
   void didUpdateWidget(ColorPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    currentHsvColor = HSVColor.fromColor(widget.pickerColor);
+    currentHsvColor = (widget.pickerHsvColor != null)
+        ? widget.pickerHsvColor as HSVColor
+        : HSVColor.fromColor(widget.pickerColor);
   }
 
   void colorPickerTextInputListener() {
@@ -194,7 +196,9 @@ class _ColorPickerState extends State<ColorPicker> {
       setState(() => currentHsvColor = HSVColor.fromColor(color));
       // notify with a callback.
       widget.onColorChanged(color);
-      widget.onHsvColorChanged!(currentHsvColor);
+      if (widget.onHsvColorChanged != null) {
+        widget.onHsvColorChanged!(currentHsvColor);
+      }
     }
   }
 
@@ -208,7 +212,9 @@ class _ColorPickerState extends State<ColorPicker> {
             colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
         setState(() => currentHsvColor = color);
         widget.onColorChanged(currentHsvColor.toColor());
-        widget.onHsvColorChanged!(currentHsvColor);
+        if (widget.onHsvColorChanged != null) {
+          widget.onHsvColorChanged!(currentHsvColor);
+        }
       },
       displayThumbColor: widget.displayThumbColor,
     );
@@ -225,7 +231,9 @@ class _ColorPickerState extends State<ColorPicker> {
               colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
           setState(() => currentHsvColor = color);
           widget.onColorChanged(currentHsvColor.toColor());
-          widget.onHsvColorChanged!(currentHsvColor);
+          if (widget.onHsvColorChanged != null) {
+            widget.onHsvColorChanged!(currentHsvColor);
+          }
         },
         widget.paletteType,
       ),
