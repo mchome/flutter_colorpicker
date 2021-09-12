@@ -13,11 +13,13 @@ class MaterialPicker extends StatefulWidget {
     required this.pickerColor,
     required this.onColorChanged,
     this.enableLabel = false,
+    this.orientation,
   }) : super(key: key);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final bool enableLabel;
+  final Orientation? orientation;
 
   @override
   State<StatefulWidget> createState() => _MaterialPickerState();
@@ -108,7 +110,9 @@ class _MaterialPickerState extends State<MaterialPicker> {
   @override
   Widget build(BuildContext context) {
     Orientation _orientation = MediaQuery.of(context).orientation;
-    bool _isPortrait = _orientation == Orientation.portrait;
+    bool _isPortrait = (widget.orientation != null)
+        ? widget.orientation == Orientation.portrait
+        : _orientation == Orientation.portrait;
 
     Widget _colorList() {
       return Container(
@@ -246,41 +250,48 @@ class _MaterialPickerState extends State<MaterialPicker> {
       );
     }
 
+    var _portraitPicker = SizedBox(
+      width: 350.0,
+      height: 500.0,
+      child: Row(
+        children: <Widget>[
+          _colorList(),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: _shadingList(),
+            ),
+          ),
+        ],
+      ),
+    );
+    var _landscapePixker = SizedBox(
+      width: 500.0,
+      height: 300.0,
+      child: Column(
+        children: <Widget>[
+          _colorList(),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: _shadingList(),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (widget.orientation != null) {
+      if (widget.orientation == Orientation.portrait) {
+        return _portraitPicker;
+      } else if (widget.orientation == Orientation.landscape) {
+        return _landscapePixker;
+      }
+    }
     switch (_orientation) {
       case Orientation.portrait:
-        return SizedBox(
-          height: 500.0,
-          width: 350.0,
-          child: Row(
-            children: <Widget>[
-              _colorList(),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: _shadingList(),
-                ),
-              ),
-            ],
-          ),
-        );
+        return _portraitPicker;
       case Orientation.landscape:
-        return SizedBox(
-          width: 500.0,
-          height: 300.0,
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: _shadingList(),
-                ),
-              ),
-              _colorList(),
-            ],
-          ),
-        );
-      default:
-        return Container();
+        return _landscapePixker;
     }
   }
 }
