@@ -432,6 +432,8 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                       colorValue(widget.hsvColor, _colorType)[
                           _colorTypes[_colorType]!.indexOf(item)],
                       overflow: TextOverflow.ellipsis,
+                      style: widget.textStyle ??
+                        Theme.of(context).textTheme.bodyText2,
                     ),
                   ),
                 ],
