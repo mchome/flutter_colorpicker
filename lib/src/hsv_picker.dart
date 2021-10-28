@@ -6,7 +6,17 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
-enum PaletteType { hsv, hsv2, hsv3, hsl, hsl2, hsl3, rgb, rgb2, rgb3 }
+enum PaletteType {
+  hsvWithHue,
+  hsvWithValue,
+  hsvWithSaturation,
+  hslWithHue,
+  hslWithLightness,
+  hslWithSaturation,
+  rgbWithBlue,
+  rgbWithGreen,
+  rgbWithRed,
+}
 enum TrackType {
   hue,
   saturation,
@@ -20,10 +30,10 @@ enum TrackType {
 }
 enum ColorLabelType { hex, rgb, hsv, hsl }
 enum ColorModel { rgb, hsv, hsl }
-// enum ColorModel { rgb, hsv, hsl, lab, cmyk }
+// enum ColorModel { rgb, hsv, hsl, hsp, okhsv, okhsl, lab, lch, cmyk }
 
-class HSVColorPainter extends CustomPainter {
-  const HSVColorPainter(this.hsvColor, {this.pointerColor});
+class HSVWithHueColorPainter extends CustomPainter {
+  const HSVWithHueColorPainter(this.hsvColor, {this.pointerColor});
 
   final HSVColor hsvColor;
   final Color? pointerColor;
@@ -68,8 +78,55 @@ class HSVColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-class HSV2ColorPainter extends CustomPainter {
-  const HSV2ColorPainter(this.hsvColor, {this.pointerColor});
+class HSVWithSaturationColorPainter extends CustomPainter {
+  const HSVWithSaturationColorPainter(this.hsvColor, {this.pointerColor});
+
+  final HSVColor hsvColor;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    const Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Colors.transparent, Colors.black],
+    );
+    final List<Color> colors = [
+      HSVColor.fromAHSV(1.0, 0.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 60.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 120.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 180.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 240.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 300.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 360.0, hsvColor.saturation, 1.0).toColor(),
+    ];
+    final Gradient gradientH = LinearGradient(colors: colors);
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
+
+    canvas.drawCircle(
+      Offset(
+        size.width * hsvColor.hue / 360,
+        size.height * (1 - hsvColor.value),
+      ),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ??
+            (useWhiteForeground(hsvColor.toColor())
+                ? Colors.white
+                : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class HSVWithValueColorPainter extends CustomPainter {
+  const HSVWithValueColorPainter(this.hsvColor, {this.pointerColor});
 
   final HSVColor hsvColor;
   final Color? pointerColor;
@@ -119,55 +176,8 @@ class HSV2ColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-class HSV3ColorPainter extends CustomPainter {
-  const HSV3ColorPainter(this.hsvColor, {this.pointerColor});
-
-  final HSVColor hsvColor;
-  final Color? pointerColor;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Rect rect = Offset.zero & size;
-    const Gradient gradientV = LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Colors.transparent, Colors.black],
-    );
-    final List<Color> colors = [
-      HSVColor.fromAHSV(1.0, 0.0, hsvColor.saturation, 1.0).toColor(),
-      HSVColor.fromAHSV(1.0, 60.0, hsvColor.saturation, 1.0).toColor(),
-      HSVColor.fromAHSV(1.0, 120.0, hsvColor.saturation, 1.0).toColor(),
-      HSVColor.fromAHSV(1.0, 180.0, hsvColor.saturation, 1.0).toColor(),
-      HSVColor.fromAHSV(1.0, 240.0, hsvColor.saturation, 1.0).toColor(),
-      HSVColor.fromAHSV(1.0, 300.0, hsvColor.saturation, 1.0).toColor(),
-      HSVColor.fromAHSV(1.0, 360.0, hsvColor.saturation, 1.0).toColor(),
-    ];
-    final Gradient gradientH = LinearGradient(colors: colors);
-    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
-    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
-
-    canvas.drawCircle(
-      Offset(
-        size.width * hsvColor.hue / 360,
-        size.height * (1 - hsvColor.value),
-      ),
-      size.height * 0.04,
-      Paint()
-        ..color = pointerColor ??
-            (useWhiteForeground(hsvColor.toColor())
-                ? Colors.white
-                : Colors.black)
-        ..strokeWidth = 1.5
-        ..style = PaintingStyle.stroke,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
-
-class HSLColorPainter extends CustomPainter {
-  const HSLColorPainter(this.hslColor, {this.pointerColor});
+class HSLWithHueColorPainter extends CustomPainter {
+  const HSLWithHueColorPainter(this.hslColor, {this.pointerColor});
 
   final HSLColor hslColor;
   final Color? pointerColor;
@@ -213,8 +223,59 @@ class HSLColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-class HSL2ColorPainter extends CustomPainter {
-  const HSL2ColorPainter(this.hslColor, {this.pointerColor});
+class HSLWithSaturationColorPainter extends CustomPainter {
+  const HSLWithSaturationColorPainter(this.hslColor, {this.pointerColor});
+
+  final HSLColor hslColor;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final List<Color> colors = [
+      HSLColor.fromAHSL(1.0, 0.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 60.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 120.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 180.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 240.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 300.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 360.0, hslColor.saturation, 0.5).toColor(),
+    ];
+    final Gradient gradientH = LinearGradient(colors: colors);
+    const Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [0.0, 0.5, 0.5, 1],
+      colors: [
+        Colors.white,
+        Color(0x00ffffff),
+        Colors.transparent,
+        Colors.black,
+      ],
+    );
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
+
+    canvas.drawCircle(
+      Offset(size.width * hslColor.hue / 360,
+          size.height * (1 - hslColor.lightness)),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ??
+            (useWhiteForeground(hslColor.toColor())
+                ? Colors.white
+                : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class HSLWithLightnessColorPainter extends CustomPainter {
+  const HSLWithLightnessColorPainter(this.hslColor, {this.pointerColor});
 
   final HSLColor hslColor;
   final Color? pointerColor;
@@ -273,48 +334,138 @@ class HSL2ColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-class HSL3ColorPainter extends CustomPainter {
-  const HSL3ColorPainter(this.hslColor, {this.pointerColor});
+class RGBWithRedColorPainter extends CustomPainter {
+  const RGBWithRedColorPainter(this.color, {this.pointerColor});
 
-  final HSLColor hslColor;
+  final Color color;
   final Color? pointerColor;
 
   @override
   void paint(Canvas canvas, Size size) {
     final Rect rect = Offset.zero & size;
-    final List<Color> colors = [
-      HSLColor.fromAHSL(1.0, 0.0, hslColor.saturation, 0.5).toColor(),
-      HSLColor.fromAHSL(1.0, 60.0, hslColor.saturation, 0.5).toColor(),
-      HSLColor.fromAHSL(1.0, 120.0, hslColor.saturation, 0.5).toColor(),
-      HSLColor.fromAHSL(1.0, 180.0, hslColor.saturation, 0.5).toColor(),
-      HSLColor.fromAHSL(1.0, 240.0, hslColor.saturation, 0.5).toColor(),
-      HSLColor.fromAHSL(1.0, 300.0, hslColor.saturation, 0.5).toColor(),
-      HSLColor.fromAHSL(1.0, 360.0, hslColor.saturation, 0.5).toColor(),
-    ];
-    final Gradient gradientH = LinearGradient(colors: colors);
-    const Gradient gradientV = LinearGradient(
+    final Gradient gradientH = LinearGradient(
+      colors: [
+        Color.fromRGBO(color.red, 255, 0, 1.0),
+        Color.fromRGBO(color.red, 255, 255, 1.0),
+      ],
+    );
+    final Gradient gradientV = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      stops: [0.0, 0.5, 0.5, 1],
       colors: [
-        Colors.white,
-        Color(0x00ffffff),
-        Colors.transparent,
-        Colors.black,
+        Color.fromRGBO(color.red, 255, 255, 1.0),
+        Color.fromRGBO(color.red, 0, 255, 1.0),
       ],
     );
     canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
-    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = gradientV.createShader(rect)
+        ..blendMode = BlendMode.multiply,
+    );
 
     canvas.drawCircle(
-      Offset(size.width * hslColor.hue / 360,
-          size.height * (1 - hslColor.lightness)),
+      Offset(
+          size.width * color.blue / 255, size.height * (1 - color.green / 255)),
       size.height * 0.04,
       Paint()
         ..color = pointerColor ??
-            (useWhiteForeground(hslColor.toColor())
-                ? Colors.white
-                : Colors.black)
+            (useWhiteForeground(color) ? Colors.white : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class RGBWithGreenColorPainter extends CustomPainter {
+  const RGBWithGreenColorPainter(this.color, {this.pointerColor});
+
+  final Color color;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final Gradient gradientH = LinearGradient(
+      colors: [
+        Color.fromRGBO(255, color.green, 0, 1.0),
+        Color.fromRGBO(255, color.green, 255, 1.0),
+      ],
+    );
+    final Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color.fromRGBO(255, color.green, 255, 1.0),
+        Color.fromRGBO(0, color.green, 255, 1.0),
+      ],
+    );
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = gradientV.createShader(rect)
+        ..blendMode = BlendMode.multiply,
+    );
+
+    canvas.drawCircle(
+      Offset(
+          size.width * color.blue / 255, size.height * (1 - color.red / 255)),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ??
+            (useWhiteForeground(color) ? Colors.white : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class RGBWithBlueColorPainter extends CustomPainter {
+  const RGBWithBlueColorPainter(this.color, {this.pointerColor});
+
+  final Color color;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final Gradient gradientH = LinearGradient(
+      colors: [
+        Color.fromRGBO(0, 255, color.blue, 1.0),
+        Color.fromRGBO(255, 255, color.blue, 1.0),
+      ],
+    );
+    final Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color.fromRGBO(255, 255, color.blue, 1.0),
+        Color.fromRGBO(255, 0, color.blue, 1.0),
+      ],
+    );
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = gradientV.createShader(rect)
+        ..blendMode = BlendMode.multiply,
+    );
+
+    canvas.drawCircle(
+      Offset(
+          size.width * color.red / 255, size.height * (1 - color.green / 255)),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ??
+            (useWhiteForeground(color) ? Colors.white : Colors.black)
         ..strokeWidth = 1.5
         ..style = PaintingStyle.stroke,
     );
@@ -877,29 +1028,53 @@ class ColorPickerRect extends StatelessWidget {
 
   void _handleColorChange(double horizontal, double vertical) {
     switch (paletteType) {
-      case PaletteType.hsv:
+      case PaletteType.hsvWithHue:
         onColorChanged(hsvColor.withSaturation(horizontal).withValue(vertical));
         break;
-      case PaletteType.hsv2:
+      case PaletteType.hsvWithSaturation:
+        onColorChanged(hsvColor.withHue(horizontal * 360).withValue(vertical));
+        break;
+      case PaletteType.hsvWithValue:
         onColorChanged(
             hsvColor.withHue(horizontal * 360).withSaturation(vertical));
         break;
-      case PaletteType.hsv3:
-        onColorChanged(hsvColor.withHue(horizontal * 360).withValue(vertical));
-        break;
-      case PaletteType.hsl:
+      case PaletteType.hslWithHue:
         onColorChanged(hslToHsv(
           hsvToHsl(hsvColor).withSaturation(horizontal).withLightness(vertical),
         ));
         break;
-      case PaletteType.hsl2:
+      case PaletteType.hslWithSaturation:
+        onColorChanged(hslToHsv(
+          hsvToHsl(hsvColor).withHue(horizontal * 360).withLightness(vertical),
+        ));
+        break;
+      case PaletteType.hslWithLightness:
         onColorChanged(hslToHsv(
           hsvToHsl(hsvColor).withHue(horizontal * 360).withSaturation(vertical),
         ));
         break;
-      case PaletteType.hsl3:
-        onColorChanged(hslToHsv(
-          hsvToHsl(hsvColor).withHue(horizontal * 360).withLightness(vertical),
+      case PaletteType.rgbWithRed:
+        onColorChanged(HSVColor.fromColor(
+          hsvColor
+              .toColor()
+              .withBlue((horizontal * 255).round())
+              .withGreen((vertical * 255).round()),
+        ));
+        break;
+      case PaletteType.rgbWithGreen:
+        onColorChanged(HSVColor.fromColor(
+          hsvColor
+              .toColor()
+              .withBlue((horizontal * 255).round())
+              .withRed((vertical * 255).round()),
+        ));
+        break;
+      case PaletteType.rgbWithBlue:
+        onColorChanged(HSVColor.fromColor(
+          hsvColor
+              .toColor()
+              .withRed((horizontal * 255).round())
+              .withGreen((vertical * 255).round()),
         ));
         break;
       default:
@@ -943,21 +1118,34 @@ class ColorPickerRect extends StatelessWidget {
           child: Builder(
             builder: (BuildContext _) {
               switch (paletteType) {
-                case PaletteType.hsv:
-                  return CustomPaint(painter: HSVColorPainter(hsvColor));
-                case PaletteType.hsv2:
-                  return CustomPaint(painter: HSV2ColorPainter(hsvColor));
-                case PaletteType.hsv3:
-                  return CustomPaint(painter: HSV3ColorPainter(hsvColor));
-                case PaletteType.hsl:
+                case PaletteType.hsvWithHue:
+                  return CustomPaint(painter: HSVWithHueColorPainter(hsvColor));
+                case PaletteType.hsvWithSaturation:
                   return CustomPaint(
-                      painter: HSLColorPainter(hsvToHsl(hsvColor)));
-                case PaletteType.hsl2:
+                      painter: HSVWithSaturationColorPainter(hsvColor));
+                case PaletteType.hsvWithValue:
                   return CustomPaint(
-                      painter: HSL2ColorPainter(hsvToHsl(hsvColor)));
-                case PaletteType.hsl3:
+                      painter: HSVWithValueColorPainter(hsvColor));
+                case PaletteType.hslWithHue:
                   return CustomPaint(
-                      painter: HSL3ColorPainter(hsvToHsl(hsvColor)));
+                      painter: HSLWithHueColorPainter(hsvToHsl(hsvColor)));
+                case PaletteType.hslWithSaturation:
+                  return CustomPaint(
+                      painter:
+                          HSLWithSaturationColorPainter(hsvToHsl(hsvColor)));
+                case PaletteType.hslWithLightness:
+                  return CustomPaint(
+                      painter:
+                          HSLWithLightnessColorPainter(hsvToHsl(hsvColor)));
+                case PaletteType.rgbWithRed:
+                  return CustomPaint(
+                      painter: RGBWithRedColorPainter(hsvColor.toColor()));
+                case PaletteType.rgbWithGreen:
+                  return CustomPaint(
+                      painter: RGBWithGreenColorPainter(hsvColor.toColor()));
+                case PaletteType.rgbWithBlue:
+                  return CustomPaint(
+                      painter: RGBWithBlueColorPainter(hsvColor.toColor()));
                 default:
                   return const CustomPaint();
               }

@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
                                   enableAlpha: true,
                                   displayThumbColor: true,
                                   showLabel: true,
-                                  paletteType: PaletteType.hsl3,
+                                  paletteType: PaletteType.hsvWithHue,
                                   pickerAreaBorderRadius:
                                       const BorderRadius.only(
                                     topLeft: Radius.circular(2.0),
@@ -183,7 +183,7 @@ class _MyAppState extends State<MyApp> {
                                         true, // hexInputController will respect it too.
                                     displayThumbColor: true,
                                     showLabel: true,
-                                    paletteType: PaletteType.hsv,
+                                    paletteType: PaletteType.hsvWithHue,
                                     pickerAreaBorderRadius:
                                         const BorderRadius.only(
                                       topLeft: Radius.circular(2.0),

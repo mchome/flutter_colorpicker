@@ -16,7 +16,7 @@ class ColorPicker extends StatefulWidget {
     required this.onColorChanged,
     this.pickerHsvColor,
     this.onHsvColorChanged,
-    this.paletteType = PaletteType.hsv,
+    this.paletteType = PaletteType.hsvWithHue,
     this.enableAlpha = true,
     this.showLabel = true,
     this.labelTextStyle,
@@ -241,16 +241,25 @@ class _ColorPickerState extends State<ColorPicker> {
 
   Widget sliderByPaletteType() {
     switch (widget.paletteType) {
-      case PaletteType.hsv2:
-        return colorPickerSlider(TrackType.value);
-      case PaletteType.hsv3:
-        return colorPickerSlider(TrackType.saturation);
-      case PaletteType.hsl2:
-        return colorPickerSlider(TrackType.lightness);
-      case PaletteType.hsl3:
-        return colorPickerSlider(TrackType.saturationForHSL);
-      default:
+      case PaletteType.hsvWithHue:
+      case PaletteType.hslWithHue:
         return colorPickerSlider(TrackType.hue);
+      case PaletteType.hsvWithValue:
+        return colorPickerSlider(TrackType.value);
+      case PaletteType.hsvWithSaturation:
+        return colorPickerSlider(TrackType.saturation);
+      case PaletteType.hslWithLightness:
+        return colorPickerSlider(TrackType.lightness);
+      case PaletteType.hslWithSaturation:
+        return colorPickerSlider(TrackType.saturationForHSL);
+      case PaletteType.rgbWithBlue:
+        return colorPickerSlider(TrackType.blue);
+      case PaletteType.rgbWithGreen:
+        return colorPickerSlider(TrackType.green);
+      case PaletteType.rgbWithRed:
+        return colorPickerSlider(TrackType.red);
+      default:
+        return const SizedBox();
     }
   }
 
