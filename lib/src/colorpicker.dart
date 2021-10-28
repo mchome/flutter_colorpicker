@@ -239,6 +239,21 @@ class _ColorPickerState extends State<ColorPicker> {
     );
   }
 
+  Widget sliderByPaletteType() {
+    switch (widget.paletteType) {
+      case PaletteType.hsv2:
+        return colorPickerSlider(TrackType.value);
+      case PaletteType.hsv3:
+        return colorPickerSlider(TrackType.saturation);
+      case PaletteType.hsl2:
+        return colorPickerSlider(TrackType.lightness);
+      case PaletteType.hsl3:
+        return colorPickerSlider(TrackType.saturationForHSL);
+      default:
+        return colorPickerSlider(TrackType.hue);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.portrait ||
@@ -262,11 +277,7 @@ class _ColorPickerState extends State<ColorPicker> {
                       SizedBox(
                         height: 40.0,
                         width: widget.colorPickerWidth - 75.0,
-                        child: (widget.paletteType == PaletteType.hsv2)
-                            ? colorPickerSlider(TrackType.value)
-                            : (widget.paletteType == PaletteType.hsv3)
-                                ? colorPickerSlider(TrackType.saturation)
-                                : colorPickerSlider(TrackType.hue),
+                        child: sliderByPaletteType(),
                       ),
                       if (widget.enableAlpha)
                         SizedBox(
@@ -344,7 +355,7 @@ class SlidePicker extends StatefulWidget {
     Key? key,
     required this.pickerColor,
     required this.onColorChanged,
-    this.paletteType = PaletteType.hsv,
+    this.colorModel = ColorModel.hsv,
     this.enableAlpha = true,
     this.sliderSize = const Size(260, 40),
     this.showSliderText = true,
@@ -361,7 +372,7 @@ class SlidePicker extends StatefulWidget {
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
-  final PaletteType paletteType;
+  final ColorModel colorModel;
   final bool enableAlpha;
   final Size sliderSize;
   final bool showSliderText;
@@ -436,18 +447,18 @@ class _SlidePickerState extends State<SlidePicker> {
   @override
   Widget build(BuildContext context) {
     List<SizedBox> sliders = [
-      for (TrackType palette in [
-        if (widget.paletteType == PaletteType.hsv) ...[
+      for (TrackType trackType in [
+        if (widget.colorModel == ColorModel.hsv) ...[
           TrackType.hue,
           TrackType.saturation,
           TrackType.value,
         ],
-        if (widget.paletteType == PaletteType.hsl) ...[
+        if (widget.colorModel == ColorModel.hsl) ...[
           TrackType.hue,
           TrackType.saturationForHSL,
           TrackType.lightness,
         ],
-        if (widget.paletteType == PaletteType.rgb) ...[
+        if (widget.colorModel == ColorModel.rgb) ...[
           TrackType.red,
           TrackType.green,
           TrackType.blue,
@@ -462,13 +473,13 @@ class _SlidePickerState extends State<SlidePicker> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: Text(
-                    palette.toString().split('.').last[0].toUpperCase(),
+                    trackType.toString().split('.').last[0].toUpperCase(),
                     style: widget.sliderTextStyle ??
                         Theme.of(context).textTheme.bodyText1?.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
                 ),
-              Expanded(child: colorPickerSlider(palette)),
+              Expanded(child: colorPickerSlider(trackType)),
             ],
           ),
         ),

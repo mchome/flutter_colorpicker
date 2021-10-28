@@ -19,7 +19,8 @@ enum TrackType {
   alpha,
 }
 enum ColorLabelType { hex, rgb, hsv, hsl }
-enum ColorModel { rgb, hsv, hsl, lab, cmyk }
+enum ColorModel { rgb, hsv, hsl }
+// enum ColorModel { rgb, hsv, hsl, lab, cmyk }
 
 class HSVColorPainter extends CustomPainter {
   const HSVColorPainter(this.hsvColor, {this.pointerColor});
@@ -196,6 +197,117 @@ class HSLColorPainter extends CustomPainter {
 
     canvas.drawCircle(
       Offset(size.width * hslColor.saturation,
+          size.height * (1 - hslColor.lightness)),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ??
+            (useWhiteForeground(hslColor.toColor())
+                ? Colors.white
+                : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class HSL2ColorPainter extends CustomPainter {
+  const HSL2ColorPainter(this.hslColor, {this.pointerColor});
+
+  final HSLColor hslColor;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final List<Color> colors = [
+      const HSLColor.fromAHSL(1.0, 0.0, 1.0, 0.5).toColor(),
+      const HSLColor.fromAHSL(1.0, 60.0, 1.0, 0.5).toColor(),
+      const HSLColor.fromAHSL(1.0, 120.0, 1.0, 0.5).toColor(),
+      const HSLColor.fromAHSL(1.0, 180.0, 1.0, 0.5).toColor(),
+      const HSLColor.fromAHSL(1.0, 240.0, 1.0, 0.5).toColor(),
+      const HSLColor.fromAHSL(1.0, 300.0, 1.0, 0.5).toColor(),
+      const HSLColor.fromAHSL(1.0, 360.0, 1.0, 0.5).toColor(),
+    ];
+    final Gradient gradientH = LinearGradient(colors: colors);
+    const Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Colors.transparent,
+        Color(0xFF808080),
+      ],
+    );
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..color =
+            Colors.black.withOpacity((1 - hslColor.lightness * 2).clamp(0, 1)),
+    );
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..color = Colors.white
+            .withOpacity(((hslColor.lightness - 0.5) * 2).clamp(0, 1)),
+    );
+
+    canvas.drawCircle(
+      Offset(size.width * hslColor.hue / 360,
+          size.height * (1 - hslColor.saturation)),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ??
+            (useWhiteForeground(hslColor.toColor())
+                ? Colors.white
+                : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class HSL3ColorPainter extends CustomPainter {
+  const HSL3ColorPainter(this.hslColor, {this.pointerColor});
+
+  final HSLColor hslColor;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final List<Color> colors = [
+      HSLColor.fromAHSL(1.0, 0.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 60.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 120.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 180.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 240.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 300.0, hslColor.saturation, 0.5).toColor(),
+      HSLColor.fromAHSL(1.0, 360.0, hslColor.saturation, 0.5).toColor(),
+    ];
+    final Gradient gradientH = LinearGradient(colors: colors);
+    const Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [0.0, 0.5, 0.5, 1],
+      colors: [
+        Colors.white,
+        Color(0x00ffffff),
+        Colors.transparent,
+        Colors.black,
+      ],
+    );
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
+
+    canvas.drawCircle(
+      Offset(size.width * hslColor.hue / 360,
           size.height * (1 - hslColor.lightness)),
       size.height * 0.04,
       Paint()
@@ -776,9 +888,19 @@ class ColorPickerRect extends StatelessWidget {
         onColorChanged(hsvColor.withHue(horizontal * 360).withValue(vertical));
         break;
       case PaletteType.hsl:
-        onColorChanged(hslToHsv(hsvToHsl(hsvColor)
-            .withSaturation(horizontal)
-            .withLightness(vertical)));
+        onColorChanged(hslToHsv(
+          hsvToHsl(hsvColor).withSaturation(horizontal).withLightness(vertical),
+        ));
+        break;
+      case PaletteType.hsl2:
+        onColorChanged(hslToHsv(
+          hsvToHsl(hsvColor).withHue(horizontal * 360).withSaturation(vertical),
+        ));
+        break;
+      case PaletteType.hsl3:
+        onColorChanged(hslToHsv(
+          hsvToHsl(hsvColor).withHue(horizontal * 360).withLightness(vertical),
+        ));
         break;
       default:
         break;
@@ -832,10 +954,10 @@ class ColorPickerRect extends StatelessWidget {
                       painter: HSLColorPainter(hsvToHsl(hsvColor)));
                 case PaletteType.hsl2:
                   return CustomPaint(
-                      painter: HSLColorPainter(hsvToHsl(hsvColor))); // TODO
+                      painter: HSL2ColorPainter(hsvToHsl(hsvColor)));
                 case PaletteType.hsl3:
                   return CustomPaint(
-                      painter: HSLColorPainter(hsvToHsl(hsvColor))); // TODO
+                      painter: HSL3ColorPainter(hsvToHsl(hsvColor)));
                 default:
                   return const CustomPaint();
               }

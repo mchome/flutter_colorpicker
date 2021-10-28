@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
                                   enableAlpha: true,
                                   displayThumbColor: true,
                                   showLabel: true,
-                                  paletteType: PaletteType.hsl2,
+                                  paletteType: PaletteType.hsl3,
                                   pickerAreaBorderRadius:
                                       const BorderRadius.only(
                                     topLeft: Radius.circular(2.0),
@@ -131,7 +131,7 @@ class _MyAppState extends State<MyApp> {
                                 child: SlidePicker(
                                   pickerColor: currentColor,
                                   onColorChanged: changeColor,
-                                  paletteType: PaletteType.rgb,
+                                  colorModel: ColorModel.rgb,
                                   enableAlpha: false,
                                   displayThumbColor: true,
                                   showLabel: false,
