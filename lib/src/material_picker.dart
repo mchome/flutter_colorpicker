@@ -3,7 +3,6 @@
 library material_colorpicker;
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter_colorpicker/src/utils.dart';
 
 // The Color Picker which contains Material Design Color Palette.

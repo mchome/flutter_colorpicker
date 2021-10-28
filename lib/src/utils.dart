@@ -1,20 +1,29 @@
-import 'dart:math';
+/// Common function lib
 
+import 'dart:math';
 import 'package:flutter/painting.dart';
 
-bool useWhiteForeground(Color color, {double bias = 1.0}) {
+/// Check if is good condition to use white foreground color by passing
+/// the background color, and optional bias.
+///
+/// Reference:
+/// Old: https://www.w3.org/TR/WCAG20-TECHS/G18.html
+/// new: https://github.com/mchome/flutter_statusbarcolor/issues/40
+bool useWhiteForeground(Color backgroundColor, {double bias = 0.0}) {
   // Old:
   // return 1.05 / (color.computeLuminance() + 0.05) > 4.5;
 
   // New:
-  int v = sqrt(pow(color.red, 2) * 0.299 +
-          pow(color.green, 2) * 0.587 +
-          pow(color.blue, 2) * 0.114)
+  int v = sqrt(pow(backgroundColor.red, 2) * 0.299 +
+          pow(backgroundColor.green, 2) * 0.587 +
+          pow(backgroundColor.blue, 2) * 0.114)
       .round();
-  return v < 130 * bias ? true : false;
+  return v < 130 + bias ? true : false;
 }
 
-/// reference: https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_HSL
+/// Convert HSV to HSL
+///
+/// Reference: https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_HSL
 HSLColor hsvToHsl(HSVColor color) {
   double s = 0.0;
   double l = 0.0;
@@ -36,7 +45,9 @@ HSLColor hsvToHsl(HSVColor color) {
   );
 }
 
-/// reference: https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_HSV
+/// Convert HSL to HSV
+///
+/// Reference: https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_HSV
 HSVColor hslToHsv(HSLColor color) {
   double s = 0.0;
   double v = 0.0;

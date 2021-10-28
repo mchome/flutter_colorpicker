@@ -1,11 +1,25 @@
-/// Block Color Picker
+/// Blocky Color Picker
 
 library block_colorpicker;
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter_colorpicker/src/utils.dart';
 
+typedef PickerItem = Widget Function(
+  Color color,
+);
+typedef PickerLayoutBuilder = Widget Function(
+  BuildContext context,
+  List<Color> colors,
+  PickerItem child,
+);
+typedef PickerItemBuilder = Widget Function(
+  Color color,
+  bool isCurrentColor,
+  void Function() changeColor,
+);
+
+// Provide a list of colors for block color picker.
 const List<Color> _defaultColors = [
   Colors.red,
   Colors.pink,
@@ -29,20 +43,72 @@ const List<Color> _defaultColors = [
   Colors.black,
 ];
 
-typedef PickerLayoutBuilder = Widget Function(
-    BuildContext context, List<Color> colors, PickerItem child);
-typedef PickerItem = Widget Function(Color color);
-typedef PickerItemBuilder = Widget Function(
-    Color color, bool isCurrentColor, void Function() changeColor);
+// Provide a layout for BlockPicker.
+Widget _defaultLayoutBuilder(
+  BuildContext context,
+  List<Color> colors,
+  PickerItem child,
+) {
+  Orientation orientation = MediaQuery.of(context).orientation;
 
+  return SizedBox(
+    width: orientation == Orientation.portrait ? 300.0 : 300.0,
+    height: orientation == Orientation.portrait ? 360.0 : 200.0,
+    child: GridView.count(
+      crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
+      crossAxisSpacing: 5.0,
+      mainAxisSpacing: 5.0,
+      children: colors.map((Color color) => child(color)).toList(),
+    ),
+  );
+}
+
+// Provide a shape for BlockPicker.
+Widget _defaultItemBuilder(
+  Color color,
+  bool isCurrentColor,
+  void Function() changeColor,
+) {
+  return Container(
+    margin: const EdgeInsets.all(5.0),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(50.0),
+      color: color,
+      boxShadow: [
+        BoxShadow(
+          color: color.withOpacity(0.8),
+          offset: const Offset(1.0, 2.0),
+          blurRadius: 3.0,
+        ),
+      ],
+    ),
+    child: Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: changeColor,
+        borderRadius: BorderRadius.circular(50.0),
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 210),
+          opacity: isCurrentColor ? 1.0 : 0.0,
+          child: Icon(
+            Icons.done,
+            color: useWhiteForeground(color) ? Colors.white : Colors.black,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+// The blocky color picker you can alter the layout and shape.
 class BlockPicker extends StatefulWidget {
   const BlockPicker({
     Key? key,
     required this.pickerColor,
     required this.onColorChanged,
     this.availableColors = _defaultColors,
-    this.layoutBuilder = defaultLayoutBuilder,
-    this.itemBuilder = defaultItemBuilder,
+    this.layoutBuilder = _defaultLayoutBuilder,
+    this.itemBuilder = _defaultItemBuilder,
   }) : super(key: key);
 
   final Color pickerColor;
@@ -50,55 +116,6 @@ class BlockPicker extends StatefulWidget {
   final List<Color> availableColors;
   final PickerLayoutBuilder layoutBuilder;
   final PickerItemBuilder itemBuilder;
-
-  static Widget defaultLayoutBuilder(
-      BuildContext context, List<Color> colors, PickerItem child) {
-    Orientation orientation = MediaQuery.of(context).orientation;
-
-    return SizedBox(
-      width: orientation == Orientation.portrait ? 300.0 : 300.0,
-      height: orientation == Orientation.portrait ? 360.0 : 200.0,
-      child: GridView.count(
-        crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 5.0,
-        children: colors.map((Color color) => child(color)).toList(),
-      ),
-    );
-  }
-
-  static Widget defaultItemBuilder(
-      Color color, bool isCurrentColor, void Function() changeColor) {
-    return Container(
-      margin: const EdgeInsets.all(5.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50.0),
-        color: color,
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.8),
-            offset: const Offset(1.0, 2.0),
-            blurRadius: 3.0,
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: changeColor,
-          borderRadius: BorderRadius.circular(50.0),
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 210),
-            opacity: isCurrentColor ? 1.0 : 0.0,
-            child: Icon(
-              Icons.done,
-              color: useWhiteForeground(color) ? Colors.white : Colors.black,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   State<StatefulWidget> createState() => _BlockPickerState();
@@ -129,14 +146,15 @@ class _BlockPickerState extends State<BlockPicker> {
   }
 }
 
+// The blocky color picker you can alter the layout and shape with multiple choice.
 class MultipleChoiceBlockPicker extends StatefulWidget {
   const MultipleChoiceBlockPicker({
     Key? key,
     required this.pickerColors,
     required this.onColorsChanged,
     this.availableColors = _defaultColors,
-    this.layoutBuilder = BlockPicker.defaultLayoutBuilder,
-    this.itemBuilder = BlockPicker.defaultItemBuilder,
+    this.layoutBuilder = _defaultLayoutBuilder,
+    this.itemBuilder = _defaultItemBuilder,
   }) : super(key: key);
 
   final List<Color> pickerColors;

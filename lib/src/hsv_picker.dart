@@ -4,10 +4,9 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_colorpicker/src/utils.dart';
 
-enum PaletteType { hsv, hsl, rgb }
+enum PaletteType { hsv, hsv2, hsv3, hsl, hsl2, hsl3, rgb, rgb2, rgb3 }
 enum TrackType {
   hue,
   saturation,
@@ -19,7 +18,8 @@ enum TrackType {
   blue,
   alpha,
 }
-enum ColorModel { hex, rgb, hsv, hsl }
+enum ColorLabelType { hex, rgb, hsv, hsl }
+enum ColorModel { rgb, hsv, hsl, lab, cmyk }
 
 class HSVColorPainter extends CustomPainter {
   const HSVColorPainter(this.hsvColor, {this.pointerColor});
@@ -52,6 +52,104 @@ class HSVColorPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(
           size.width * hsvColor.saturation, size.height * (1 - hsvColor.value)),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ??
+            (useWhiteForeground(hsvColor.toColor())
+                ? Colors.white
+                : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class HSV2ColorPainter extends CustomPainter {
+  const HSV2ColorPainter(this.hsvColor, {this.pointerColor});
+
+  final HSVColor hsvColor;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    const Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Colors.transparent, Colors.white],
+    );
+    final List<Color> colors = [
+      const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 60.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 120.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 180.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 240.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 300.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
+    ];
+    final Gradient gradientH = LinearGradient(colors: colors);
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
+    canvas.drawRect(
+      rect,
+      Paint()..color = Colors.black.withOpacity(1 - hsvColor.value),
+    );
+
+    canvas.drawCircle(
+      Offset(
+        size.width * hsvColor.hue / 360,
+        size.height * (1 - hsvColor.saturation),
+      ),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ??
+            (useWhiteForeground(hsvColor.toColor())
+                ? Colors.white
+                : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class HSV3ColorPainter extends CustomPainter {
+  const HSV3ColorPainter(this.hsvColor, {this.pointerColor});
+
+  final HSVColor hsvColor;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    const Gradient gradientV = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Colors.transparent, Colors.black],
+    );
+    final List<Color> colors = [
+      HSVColor.fromAHSV(1.0, 0.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 60.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 120.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 180.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 240.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 300.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 360.0, hsvColor.saturation, 1.0).toColor(),
+    ];
+    final Gradient gradientH = LinearGradient(colors: colors);
+    canvas.drawRect(rect, Paint()..shader = gradientH.createShader(rect));
+    canvas.drawRect(rect, Paint()..shader = gradientV.createShader(rect));
+
+    canvas.drawCircle(
+      Offset(
+        size.width * hsvColor.hue / 360,
+        size.height * (1 - hsvColor.value),
+      ),
       size.height * 0.04,
       Paint()
         ..color = pointerColor ??
@@ -366,39 +464,39 @@ class ColorPickerLabel extends StatefulWidget {
 }
 
 class _ColorPickerLabelState extends State<ColorPickerLabel> {
-  final Map<ColorModel, List<String>> _colorTypes = {
-    ColorModel.hex: ['R', 'G', 'B', 'A'],
-    ColorModel.rgb: ['R', 'G', 'B', 'A'],
-    ColorModel.hsv: ['H', 'S', 'V', 'A'],
-    ColorModel.hsl: ['H', 'S', 'L', 'A'],
+  final Map<ColorLabelType, List<String>> _colorTypes = {
+    ColorLabelType.hex: ['R', 'G', 'B', 'A'],
+    ColorLabelType.rgb: ['R', 'G', 'B', 'A'],
+    ColorLabelType.hsv: ['H', 'S', 'V', 'A'],
+    ColorLabelType.hsl: ['H', 'S', 'L', 'A'],
   };
 
-  ColorModel _colorType = ColorModel.hex;
+  ColorLabelType _colorType = ColorLabelType.hex;
 
-  List<String> colorValue(HSVColor hsvColor, ColorModel colorModel) {
+  List<String> colorValue(HSVColor hsvColor, ColorLabelType colorLabelType) {
     final Color color = hsvColor.toColor();
-    if (colorModel == ColorModel.hex) {
+    if (colorLabelType == ColorLabelType.hex) {
       return [
         color.red.toRadixString(16).toUpperCase().padLeft(2, '0'),
         color.green.toRadixString(16).toUpperCase().padLeft(2, '0'),
         color.blue.toRadixString(16).toUpperCase().padLeft(2, '0'),
         '${(color.opacity * 100).round()}%',
       ];
-    } else if (colorModel == ColorModel.rgb) {
+    } else if (colorLabelType == ColorLabelType.rgb) {
       return [
         color.red.toString(),
         color.green.toString(),
         color.blue.toString(),
         '${(color.opacity * 100).round()}%',
       ];
-    } else if (colorModel == ColorModel.hsv) {
+    } else if (colorLabelType == ColorLabelType.hsv) {
       return [
         '${hsvColor.hue.round()}°',
         '${(hsvColor.saturation * 100).round()}%',
         '${(hsvColor.value * 100).round()}%',
         '${(hsvColor.alpha * 100).round()}%',
       ];
-    } else if (colorModel == ColorModel.hsl) {
+    } else if (colorLabelType == ColorLabelType.hsl) {
       HSLColor hslColor = hsvToHsl(hsvColor);
       return [
         '${hslColor.hue.round()}°',
@@ -433,7 +531,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                           _colorTypes[_colorType]!.indexOf(item)],
                       overflow: TextOverflow.ellipsis,
                       style: widget.textStyle ??
-                        Theme.of(context).textTheme.bodyText2,
+                          Theme.of(context).textTheme.bodyText2,
                     ),
                   ),
                 ],
@@ -448,13 +546,13 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       DropdownButton(
         value: _colorType,
-        onChanged: (ColorModel? type) {
+        onChanged: (ColorLabelType? type) {
           if (type != null) {
             setState(() => _colorType = type);
           }
         },
         items: [
-          for (ColorModel type in _colorTypes.keys)
+          for (ColorLabelType type in _colorTypes.keys)
             DropdownMenuItem(
               value: type,
               child: Text(type.toString().split('.').last.toUpperCase()),
@@ -653,8 +751,8 @@ class ColorIndicator extends StatelessWidget {
   }
 }
 
-class ColorPickerArea extends StatelessWidget {
-  const ColorPickerArea(
+class ColorPickerRect extends StatelessWidget {
+  const ColorPickerRect(
     this.hsvColor,
     this.onColorChanged,
     this.paletteType, {
@@ -669,6 +767,13 @@ class ColorPickerArea extends StatelessWidget {
     switch (paletteType) {
       case PaletteType.hsv:
         onColorChanged(hsvColor.withSaturation(horizontal).withValue(vertical));
+        break;
+      case PaletteType.hsv2:
+        onColorChanged(
+            hsvColor.withHue(horizontal * 360).withSaturation(vertical));
+        break;
+      case PaletteType.hsv3:
+        onColorChanged(hsvColor.withHue(horizontal * 360).withValue(vertical));
         break;
       case PaletteType.hsl:
         onColorChanged(hslToHsv(hsvToHsl(hsvColor)
@@ -718,9 +823,19 @@ class ColorPickerArea extends StatelessWidget {
               switch (paletteType) {
                 case PaletteType.hsv:
                   return CustomPaint(painter: HSVColorPainter(hsvColor));
+                case PaletteType.hsv2:
+                  return CustomPaint(painter: HSV2ColorPainter(hsvColor));
+                case PaletteType.hsv3:
+                  return CustomPaint(painter: HSV3ColorPainter(hsvColor));
                 case PaletteType.hsl:
                   return CustomPaint(
                       painter: HSLColorPainter(hsvToHsl(hsvColor)));
+                case PaletteType.hsl2:
+                  return CustomPaint(
+                      painter: HSLColorPainter(hsvToHsl(hsvColor))); // TODO
+                case PaletteType.hsl3:
+                  return CustomPaint(
+                      painter: HSLColorPainter(hsvToHsl(hsvColor))); // TODO
                 default:
                   return const CustomPaint();
               }

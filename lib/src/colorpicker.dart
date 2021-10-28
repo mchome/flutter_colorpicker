@@ -5,7 +5,6 @@
 library hsv_picker;
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter_colorpicker/src/hsv_picker.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
@@ -220,10 +219,10 @@ class _ColorPickerState extends State<ColorPicker> {
     );
   }
 
-  Widget colorPickerArea() {
+  Widget colorPickerRect() {
     return ClipRRect(
       borderRadius: widget.pickerAreaBorderRadius,
-      child: ColorPickerArea(
+      child: ColorPickerRect(
         currentHsvColor,
         (HSVColor color) {
           // Update text in `hexInputController` if provided.
@@ -249,7 +248,7 @@ class _ColorPickerState extends State<ColorPicker> {
           SizedBox(
             width: widget.colorPickerWidth,
             height: widget.colorPickerWidth * widget.pickerAreaHeightPercent,
-            child: colorPickerArea(),
+            child: colorPickerRect(),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15.0, 5.0, 10.0, 5.0),
@@ -263,7 +262,11 @@ class _ColorPickerState extends State<ColorPicker> {
                       SizedBox(
                         height: 40.0,
                         width: widget.colorPickerWidth - 75.0,
-                        child: colorPickerSlider(TrackType.hue),
+                        child: (widget.paletteType == PaletteType.hsv2)
+                            ? colorPickerSlider(TrackType.value)
+                            : (widget.paletteType == PaletteType.hsv3)
+                                ? colorPickerSlider(TrackType.saturation)
+                                : colorPickerSlider(TrackType.hue),
                       ),
                       if (widget.enableAlpha)
                         SizedBox(
@@ -293,7 +296,7 @@ class _ColorPickerState extends State<ColorPicker> {
             child: SizedBox(
               width: 300.0,
               height: 200.0,
-              child: colorPickerArea(),
+              child: colorPickerRect(),
             ),
           ),
           Column(
