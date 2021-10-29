@@ -158,9 +158,8 @@ class _ColorPickerState extends State<ColorPicker> {
   @override
   void initState() {
     super.initState();
-    currentHsvColor = (widget.pickerHsvColor != null)
-        ? widget.pickerHsvColor as HSVColor
-        : HSVColor.fromColor(widget.pickerColor);
+    currentHsvColor =
+        (widget.pickerHsvColor != null) ? widget.pickerHsvColor as HSVColor : HSVColor.fromColor(widget.pickerColor);
     // If there's no initial text in `hexInputController`,
     if (widget.hexInputController?.text.isEmpty == true) {
       // set it to the current's color HEX value.
@@ -176,9 +175,8 @@ class _ColorPickerState extends State<ColorPicker> {
   @override
   void didUpdateWidget(ColorPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    currentHsvColor = (widget.pickerHsvColor != null)
-        ? widget.pickerHsvColor as HSVColor
-        : HSVColor.fromColor(widget.pickerColor);
+    currentHsvColor =
+        (widget.pickerHsvColor != null) ? widget.pickerHsvColor as HSVColor : HSVColor.fromColor(widget.pickerColor);
   }
 
   void colorPickerTextInputListener() {
@@ -207,8 +205,7 @@ class _ColorPickerState extends State<ColorPicker> {
       currentHsvColor,
       (HSVColor color) {
         // Update text in `hexInputController` if provided.
-        widget.hexInputController?.text =
-            colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
+        widget.hexInputController?.text = colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
         setState(() => currentHsvColor = color);
         widget.onColorChanged(currentHsvColor.toColor());
         if (widget.onHsvColorChanged != null) {
@@ -226,8 +223,7 @@ class _ColorPickerState extends State<ColorPicker> {
         currentHsvColor,
         (HSVColor color) {
           // Update text in `hexInputController` if provided.
-          widget.hexInputController?.text =
-              colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
+          widget.hexInputController?.text = colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
           setState(() => currentHsvColor = color);
           widget.onColorChanged(currentHsvColor.toColor());
           if (widget.onHsvColorChanged != null) {
@@ -265,8 +261,7 @@ class _ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).orientation == Orientation.portrait ||
-        widget.portraitOnly) {
+    if (MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly) {
       return Column(
         children: <Widget>[
           SizedBox(
@@ -484,8 +479,7 @@ class _SlidePickerState extends State<SlidePicker> {
                   child: Text(
                     trackType.toString().split('.').last[0].toUpperCase(),
                     style: widget.sliderTextStyle ??
-                        Theme.of(context).textTheme.bodyText1?.copyWith(
-                            fontWeight: FontWeight.bold, fontSize: 16.0),
+                        Theme.of(context).textTheme.bodyText1?.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
                   ),
                 ),
               Expanded(child: colorPickerSlider(trackType)),

@@ -140,8 +140,8 @@ class _BlockPickerState extends State<BlockPicker> {
     return widget.layoutBuilder(
       context,
       widget.availableColors,
-      (Color color, [bool? _, Function? __]) => widget.itemBuilder(
-          color, _currentColor.value == color.value, () => changeColor(color)),
+      (Color color, [bool? _, Function? __]) =>
+          widget.itemBuilder(color, _currentColor.value == color.value, () => changeColor(color)),
     );
   }
 }
@@ -177,11 +177,7 @@ class _MultipleChoiceBlockPickerState extends State<MultipleChoiceBlockPicker> {
   }
 
   void toggleColor(Color color) {
-    setState(() {
-      _currentColors.contains(color)
-          ? _currentColors.remove(color)
-          : _currentColors.add(color);
-    });
+    setState(() => _currentColors.contains(color) ? _currentColors.remove(color) : _currentColors.add(color));
     widget.onColorsChanged(_currentColors);
   }
 

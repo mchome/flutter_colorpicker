@@ -56,20 +56,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
 
     for (var colorType in colors) {
       if (colorType == Colors.grey) {
-        result.addAll([
-          50,
-          100,
-          200,
-          300,
-          350,
-          400,
-          500,
-          600,
-          700,
-          800,
-          850,
-          900
-        ].map((int shade) {
+        result.addAll([50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900].map((int shade) {
           return Colors.grey[shade]!;
         }).toList());
       } else if (colorType == Colors.black || colorType == Colors.white) {
@@ -79,8 +66,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
           return colorType[shade]!;
         }).toList());
       } else if (colorType is MaterialColor) {
-        result.addAll(
-            [50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((int shade) {
+        result.addAll([50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((int shade) {
           return colorType[shade]!;
         }).toList());
       } else {
@@ -222,16 +208,11 @@ class _MaterialPickerState extends State<MaterialPicker> {
                             alignment: Alignment.centerRight,
                             child: Text(
                               '#' +
-                                  (_color
-                                          .toString()
-                                          .replaceFirst('Color(0xff', '')
-                                          .replaceFirst(')', ''))
+                                  (_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', ''))
                                       .toUpperCase() +
                                   '  ',
                               style: TextStyle(
-                                color: useWhiteForeground(_color)
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: useWhiteForeground(_color) ? Colors.white : Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

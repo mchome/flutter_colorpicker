@@ -52,9 +52,7 @@ HSVColor hslToHsv(HSLColor color) {
   double s = 0.0;
   double v = 0.0;
 
-  v = color.lightness +
-      color.saturation *
-          (color.lightness < 0.5 ? color.lightness : 1 - color.lightness);
+  v = color.lightness + color.saturation * (color.lightness < 0.5 ? color.lightness : 1 - color.lightness);
   if (v != 0) s = 2 - 2 * color.lightness / v;
 
   return HSVColor.fromAHSV(
@@ -91,8 +89,7 @@ const String kValidHexPattern = r'^#?[0-9a-fA-F]{1,8}';
 /// if (hexCompleteValidator.hasMatch(hex)) print('$hex is valid HEX color');
 /// ```
 /// Reference: https://en.wikipedia.org/wiki/Web_colors#Hex_triplet
-const String kCompleteValidHexPattern =
-    r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$';
+const String kCompleteValidHexPattern = r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$';
 
 /// Try to convert text input or any [String] to valid [Color].
 /// The [String] must be provided in one of those formats:
