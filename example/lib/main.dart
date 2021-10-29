@@ -82,13 +82,12 @@ class _MyAppState extends State<MyApp> {
                                 child: ColorPicker(
                                   pickerColor: currentColor,
                                   onColorChanged: changeColor,
-                                  useColorWheel: true,
                                   colorPickerWidth: 300.0,
                                   pickerAreaHeightPercent: 0.7,
                                   enableAlpha: true,
                                   displayThumbColor: true,
                                   showLabel: true,
-                                  paletteType: PaletteType.hsvWithHue,
+                                  paletteType: PaletteType.hslWithLightness,
                                   pickerAreaBorderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(2.0),
                                     topRight: Radius.circular(2.0),

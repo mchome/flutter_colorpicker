@@ -17,7 +17,6 @@ class ColorPicker extends StatefulWidget {
     this.pickerHsvColor,
     this.onHsvColorChanged,
     this.paletteType = PaletteType.hsvWithHue,
-    this.useColorWheel = false,
     this.enableAlpha = true,
     this.showLabel = true,
     this.labelTextStyle,
@@ -34,7 +33,6 @@ class ColorPicker extends StatefulWidget {
   final HSVColor? pickerHsvColor;
   final ValueChanged<HSVColor>? onHsvColorChanged;
   final PaletteType paletteType;
-  final bool useColorWheel;
   final bool enableAlpha;
   final bool showLabel;
   final TextStyle? labelTextStyle;
@@ -225,18 +223,22 @@ class _ColorPickerState extends State<ColorPicker> {
 
     return ClipRRect(
       borderRadius: widget.pickerAreaBorderRadius,
-      child: widget.useColorWheel
-          ? ColorPickerCircle(currentHsvColor, onColorChanging, widget.paletteType)
-          : ColorPickerRect(currentHsvColor, onColorChanging, widget.paletteType),
+      child: Padding(
+        padding: EdgeInsets.all(widget.paletteType == PaletteType.hueWheel ? 10 : 0),
+        child: ColorPickerArea(currentHsvColor, onColorChanging, widget.paletteType),
+      ),
     );
   }
 
   Widget sliderByPaletteType() {
     switch (widget.paletteType) {
+      case PaletteType.hsv:
       case PaletteType.hsvWithHue:
+      case PaletteType.hsl:
       case PaletteType.hslWithHue:
         return colorPickerSlider(TrackType.hue);
       case PaletteType.hsvWithValue:
+      case PaletteType.hueWheel:
         return colorPickerSlider(TrackType.value);
       case PaletteType.hsvWithSaturation:
         return colorPickerSlider(TrackType.saturation);
