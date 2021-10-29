@@ -1,11 +1,11 @@
 /// HSV(HSB)/HSL Color Picker example
 ///
-/// You can create your own layout by importing `hsv_picker.dart`.
+/// You can create your own layout by importing `picker.dart`.
 
 library hsv_picker;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/src/hsv_picker.dart';
+import 'package:flutter_colorpicker/src/picker.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
 // The default layout of Color Picker.
@@ -17,6 +17,7 @@ class ColorPicker extends StatefulWidget {
     this.pickerHsvColor,
     this.onHsvColorChanged,
     this.paletteType = PaletteType.hsvWithHue,
+    this.useColorWheel = false,
     this.enableAlpha = true,
     this.showLabel = true,
     this.labelTextStyle,
@@ -33,6 +34,7 @@ class ColorPicker extends StatefulWidget {
   final HSVColor? pickerHsvColor;
   final ValueChanged<HSVColor>? onHsvColorChanged;
   final PaletteType paletteType;
+  final bool useColorWheel;
   final bool enableAlpha;
   final bool showLabel;
   final TextStyle? labelTextStyle;
@@ -193,9 +195,7 @@ class _ColorPickerState extends State<ColorPicker> {
       setState(() => currentHsvColor = HSVColor.fromColor(color));
       // notify with a callback.
       widget.onColorChanged(color);
-      if (widget.onHsvColorChanged != null) {
-        widget.onHsvColorChanged!(currentHsvColor);
-      }
+      if (widget.onHsvColorChanged != null) widget.onHsvColorChanged!(currentHsvColor);
     }
   }
 
@@ -208,30 +208,26 @@ class _ColorPickerState extends State<ColorPicker> {
         widget.hexInputController?.text = colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
         setState(() => currentHsvColor = color);
         widget.onColorChanged(currentHsvColor.toColor());
-        if (widget.onHsvColorChanged != null) {
-          widget.onHsvColorChanged!(currentHsvColor);
-        }
+        if (widget.onHsvColorChanged != null) widget.onHsvColorChanged!(currentHsvColor);
       },
       displayThumbColor: widget.displayThumbColor,
     );
   }
 
-  Widget colorPickerRect() {
+  Widget colorPicker() {
+    void onColorChanging(HSVColor color) {
+      // Update text in `hexInputController` if provided.
+      widget.hexInputController?.text = colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
+      setState(() => currentHsvColor = color);
+      widget.onColorChanged(currentHsvColor.toColor());
+      if (widget.onHsvColorChanged != null) widget.onHsvColorChanged!(currentHsvColor);
+    }
+
     return ClipRRect(
       borderRadius: widget.pickerAreaBorderRadius,
-      child: ColorPickerRect(
-        currentHsvColor,
-        (HSVColor color) {
-          // Update text in `hexInputController` if provided.
-          widget.hexInputController?.text = colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
-          setState(() => currentHsvColor = color);
-          widget.onColorChanged(currentHsvColor.toColor());
-          if (widget.onHsvColorChanged != null) {
-            widget.onHsvColorChanged!(currentHsvColor);
-          }
-        },
-        widget.paletteType,
-      ),
+      child: widget.useColorWheel
+          ? ColorPickerCircle(currentHsvColor, onColorChanging, widget.paletteType)
+          : ColorPickerRect(currentHsvColor, onColorChanging, widget.paletteType),
     );
   }
 
@@ -267,7 +263,7 @@ class _ColorPickerState extends State<ColorPicker> {
           SizedBox(
             width: widget.colorPickerWidth,
             height: widget.colorPickerWidth * widget.pickerAreaHeightPercent,
-            child: colorPickerRect(),
+            child: colorPicker(),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15.0, 5.0, 10.0, 5.0),
@@ -278,11 +274,7 @@ class _ColorPickerState extends State<ColorPicker> {
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      SizedBox(
-                        height: 40.0,
-                        width: widget.colorPickerWidth - 75.0,
-                        child: sliderByPaletteType(),
-                      ),
+                      SizedBox(height: 40.0, width: widget.colorPickerWidth - 75.0, child: sliderByPaletteType()),
                       if (widget.enableAlpha)
                         SizedBox(
                           height: 40.0,
@@ -296,11 +288,7 @@ class _ColorPickerState extends State<ColorPicker> {
             ),
           ),
           if (widget.showLabel)
-            ColorPickerLabel(
-              currentHsvColor,
-              enableAlpha: widget.enableAlpha,
-              textStyle: widget.labelTextStyle,
-            ),
+            ColorPickerLabel(currentHsvColor, enableAlpha: widget.enableAlpha, textStyle: widget.labelTextStyle),
           const SizedBox(height: 20.0),
         ],
       );
@@ -308,11 +296,7 @@ class _ColorPickerState extends State<ColorPicker> {
       return Row(
         children: <Widget>[
           Expanded(
-            child: SizedBox(
-              width: 300.0,
-              height: 200.0,
-              child: colorPickerRect(),
-            ),
+            child: SizedBox(width: 300.0, height: 200.0, child: colorPicker()),
           ),
           Column(
             children: <Widget>[
@@ -322,17 +306,9 @@ class _ColorPickerState extends State<ColorPicker> {
                   ColorIndicator(currentHsvColor),
                   Column(
                     children: <Widget>[
-                      SizedBox(
-                        height: 40.0,
-                        width: 260.0,
-                        child: colorPickerSlider(TrackType.hue),
-                      ),
+                      SizedBox(height: 40.0, width: 260.0, child: colorPickerSlider(TrackType.hue)),
                       if (widget.enableAlpha)
-                        SizedBox(
-                          height: 40.0,
-                          width: 260.0,
-                          child: colorPickerSlider(TrackType.alpha),
-                        ),
+                        SizedBox(height: 40.0, width: 260.0, child: colorPickerSlider(TrackType.alpha)),
                     ],
                   ),
                   const SizedBox(width: 10.0),
@@ -340,11 +316,7 @@ class _ColorPickerState extends State<ColorPicker> {
               ),
               const SizedBox(height: 20.0),
               if (widget.showLabel)
-                ColorPickerLabel(
-                  currentHsvColor,
-                  enableAlpha: widget.enableAlpha,
-                  textStyle: widget.labelTextStyle,
-                ),
+                ColorPickerLabel(currentHsvColor, enableAlpha: widget.enableAlpha, textStyle: widget.labelTextStyle),
             ],
           ),
         ],
@@ -452,21 +424,9 @@ class _SlidePickerState extends State<SlidePicker> {
   Widget build(BuildContext context) {
     List<SizedBox> sliders = [
       for (TrackType trackType in [
-        if (widget.colorModel == ColorModel.hsv) ...[
-          TrackType.hue,
-          TrackType.saturation,
-          TrackType.value,
-        ],
-        if (widget.colorModel == ColorModel.hsl) ...[
-          TrackType.hue,
-          TrackType.saturationForHSL,
-          TrackType.lightness,
-        ],
-        if (widget.colorModel == ColorModel.rgb) ...[
-          TrackType.red,
-          TrackType.green,
-          TrackType.blue,
-        ],
+        if (widget.colorModel == ColorModel.hsv) ...[TrackType.hue, TrackType.saturation, TrackType.value],
+        if (widget.colorModel == ColorModel.hsl) ...[TrackType.hue, TrackType.saturationForHSL, TrackType.lightness],
+        if (widget.colorModel == ColorModel.rgb) ...[TrackType.red, TrackType.green, TrackType.blue],
       ])
         SizedBox(
           width: widget.sliderSize.width,
@@ -493,21 +453,12 @@ class _SlidePickerState extends State<SlidePicker> {
       children: <Widget>[
         if (widget.showIndicator) indicator(),
         ...sliders,
-        if (widget.enableAlpha)
-          SizedBox(
-            height: 40.0,
-            width: 260.0,
-            child: colorPickerSlider(TrackType.alpha),
-          ),
+        if (widget.enableAlpha) SizedBox(height: 40.0, width: 260.0, child: colorPickerSlider(TrackType.alpha)),
         const SizedBox(height: 20.0),
         if (widget.showLabel)
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
-            child: ColorPickerLabel(
-              currentHsvColor,
-              enableAlpha: widget.enableAlpha,
-              textStyle: widget.labelTextStyle,
-            ),
+            child: ColorPickerLabel(currentHsvColor, enableAlpha: widget.enableAlpha, textStyle: widget.labelTextStyle),
           ),
       ],
     );

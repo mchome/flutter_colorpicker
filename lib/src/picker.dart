@@ -443,6 +443,53 @@ class RGBWithBlueColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+class HSVWithSaturationColorWheelPainter extends CustomPainter {
+  const HSVWithSaturationColorWheelPainter(this.hsvColor, {this.pointerColor});
+
+  final HSVColor hsvColor;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final List<Color> colors = [
+      HSVColor.fromAHSV(1.0, 0.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 60.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 120.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 180.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 240.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 300.0, hsvColor.saturation, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 360.0, hsvColor.saturation, 1.0).toColor(),
+    ];
+    final Gradient gradientS = SweepGradient(colors: colors);
+    final Gradient gradientR = RadialGradient(
+      colors: [
+        Colors.white,
+        HSVColor.fromAHSV(1.0, hsvColor.hue, 1.0, 1.0).toColor(),
+      ],
+    );
+    canvas.drawRect(rect, Paint()..shader = gradientS.createShader(rect));
+    // canvas.drawRect(
+    //   rect,
+    //   Paint()
+    //     ..blendMode = BlendMode.multiply
+    //     ..shader = gradientR.createShader(rect),
+    // );
+
+    canvas.drawCircle(
+      Offset(size.width * hsvColor.saturation, size.height * (1 - hsvColor.value)),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ?? (useWhiteForeground(hsvColor.toColor()) ? Colors.white : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
 class _SliderLayout extends MultiChildLayoutDelegate {
   static const String track = 'track';
   static const String thumb = 'thumb';
@@ -965,6 +1012,125 @@ class ColorIndicator extends StatelessWidget {
 
 class ColorPickerRect extends StatelessWidget {
   const ColorPickerRect(
+    this.hsvColor,
+    this.onColorChanged,
+    this.paletteType, {
+    Key? key,
+  }) : super(key: key);
+
+  final HSVColor hsvColor;
+  final ValueChanged<HSVColor> onColorChanged;
+  final PaletteType paletteType;
+
+  void _handleColorChange(double horizontal, double vertical) {
+    switch (paletteType) {
+      case PaletteType.hsvWithHue:
+        onColorChanged(hsvColor.withSaturation(horizontal).withValue(vertical));
+        break;
+      case PaletteType.hsvWithSaturation:
+        onColorChanged(hsvColor.withHue(horizontal * 360).withValue(vertical));
+        break;
+      case PaletteType.hsvWithValue:
+        onColorChanged(hsvColor.withHue(horizontal * 360).withSaturation(vertical));
+        break;
+      case PaletteType.hslWithHue:
+        onColorChanged(hslToHsv(
+          hsvToHsl(hsvColor).withSaturation(horizontal).withLightness(vertical),
+        ));
+        break;
+      case PaletteType.hslWithSaturation:
+        onColorChanged(hslToHsv(
+          hsvToHsl(hsvColor).withHue(horizontal * 360).withLightness(vertical),
+        ));
+        break;
+      case PaletteType.hslWithLightness:
+        onColorChanged(hslToHsv(
+          hsvToHsl(hsvColor).withHue(horizontal * 360).withSaturation(vertical),
+        ));
+        break;
+      case PaletteType.rgbWithRed:
+        onColorChanged(HSVColor.fromColor(
+          hsvColor.toColor().withBlue((horizontal * 255).round()).withGreen((vertical * 255).round()),
+        ));
+        break;
+      case PaletteType.rgbWithGreen:
+        onColorChanged(HSVColor.fromColor(
+          hsvColor.toColor().withBlue((horizontal * 255).round()).withRed((vertical * 255).round()),
+        ));
+        break;
+      case PaletteType.rgbWithBlue:
+        onColorChanged(HSVColor.fromColor(
+          hsvColor.toColor().withRed((horizontal * 255).round()).withGreen((vertical * 255).round()),
+        ));
+        break;
+      default:
+        break;
+    }
+  }
+
+  void _handleGesture(Offset position, BuildContext context, double height, double width) {
+    RenderBox? getBox = context.findRenderObject() as RenderBox?;
+    if (getBox == null) {
+      return;
+    }
+    Offset localOffset = getBox.globalToLocal(position);
+    double horizontal = localOffset.dx.clamp(0.0, width) / width;
+    double vertical = 1 - localOffset.dy.clamp(0.0, height) / height;
+    _handleColorChange(horizontal, vertical);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        double width = constraints.maxWidth;
+        double height = constraints.maxHeight;
+
+        return RawGestureDetector(
+          gestures: {
+            AlwaysWinPanGestureRecognizer: GestureRecognizerFactoryWithHandlers<AlwaysWinPanGestureRecognizer>(
+              () => AlwaysWinPanGestureRecognizer(),
+              (AlwaysWinPanGestureRecognizer instance) {
+                instance
+                  ..onDown = ((details) => _handleGesture(details.globalPosition, context, height, width))
+                  ..onUpdate = ((details) => _handleGesture(details.globalPosition, context, height, width));
+              },
+            ),
+          },
+          child: Builder(
+            builder: (BuildContext _) {
+              switch (paletteType) {
+                case PaletteType.hsvWithHue:
+                  return CustomPaint(painter: HSVWithHueColorPainter(hsvColor));
+                case PaletteType.hsvWithSaturation:
+                  return CustomPaint(painter: HSVWithSaturationColorPainter(hsvColor));
+                case PaletteType.hsvWithValue:
+                  return CustomPaint(painter: HSVWithValueColorPainter(hsvColor));
+                case PaletteType.hslWithHue:
+                  return CustomPaint(painter: HSLWithHueColorPainter(hsvToHsl(hsvColor)));
+                case PaletteType.hslWithSaturation:
+                  return CustomPaint(painter: HSLWithSaturationColorPainter(hsvToHsl(hsvColor)));
+                case PaletteType.hslWithLightness:
+                  return CustomPaint(painter: HSLWithLightnessColorPainter(hsvToHsl(hsvColor)));
+                case PaletteType.rgbWithRed:
+                  return CustomPaint(painter: RGBWithRedColorPainter(hsvColor.toColor()));
+                case PaletteType.rgbWithGreen:
+                  return CustomPaint(painter: RGBWithGreenColorPainter(hsvColor.toColor()));
+                case PaletteType.rgbWithBlue:
+                  return CustomPaint(painter: RGBWithBlueColorPainter(hsvColor.toColor()));
+                default:
+                  return const CustomPaint();
+              }
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ColorPickerCircle extends StatelessWidget {
+  const ColorPickerCircle(
     this.hsvColor,
     this.onColorChanged,
     this.paletteType, {

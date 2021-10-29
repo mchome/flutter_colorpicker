@@ -2,7 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/flutter_colorpicker.svg)](https://pub.dev/packages/flutter_colorpicker)
 
-A HSV(HSB)/HSL color picker inspired by chrome devtools and a material color picker for your flutter app.
+HSV(HSB)/HSL/RGB/Material color picker inspired by all the good design for your amazing flutter apps.
 
 [Web Example](https://mchome.github.io/flutter_colorpicker)
 

@@ -82,6 +82,7 @@ class _MyAppState extends State<MyApp> {
                                 child: ColorPicker(
                                   pickerColor: currentColor,
                                   onColorChanged: changeColor,
+                                  useColorWheel: true,
                                   colorPickerWidth: 300.0,
                                   pickerAreaHeightPercent: 0.7,
                                   enableAlpha: true,
@@ -263,14 +264,9 @@ class _MyAppState extends State<MyApp> {
                     },
                     child: Text(
                       'Change me',
-                      style: TextStyle(
-                        color: useWhiteForeground(currentColor) ? Colors.white : Colors.black,
-                      ),
+                      style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      primary: currentColor,
-                      elevation: 3,
-                    ),
+                    style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
                   ),
                 ),
                 Center(
