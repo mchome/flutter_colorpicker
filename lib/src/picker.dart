@@ -732,30 +732,35 @@ class ColorPickerLabel extends StatefulWidget {
     this.hsvColor, {
     Key? key,
     this.enableAlpha = true,
+    this.colorLabelTypes = const [ColorLabelType.rgb, ColorLabelType.hsv, ColorLabelType.hsl],
     this.textStyle,
-    this.editable = false, // TODO: TBD
-    this.onColorChanged, // TODO: TBD
-  }) : super(key: key);
+  })  : assert(colorLabelTypes.length > 0),
+        super(key: key);
 
   final HSVColor hsvColor;
   final bool enableAlpha;
   final TextStyle? textStyle;
-  final bool editable;
-  final ValueChanged<HSVColor>? onColorChanged;
+  final List<ColorLabelType> colorLabelTypes;
 
   @override
   _ColorPickerLabelState createState() => _ColorPickerLabelState();
 }
 
 class _ColorPickerLabelState extends State<ColorPickerLabel> {
-  final Map<ColorLabelType, List<String>> _colorTypes = {
+  final Map<ColorLabelType, List<String>> _colorTypes = const {
     ColorLabelType.hex: ['R', 'G', 'B', 'A'],
     ColorLabelType.rgb: ['R', 'G', 'B', 'A'],
     ColorLabelType.hsv: ['H', 'S', 'V', 'A'],
     ColorLabelType.hsl: ['H', 'S', 'L', 'A'],
   };
 
-  ColorLabelType _colorType = ColorLabelType.hex;
+  late ColorLabelType _colorType;
+
+  @override
+  void initState() {
+    super.initState();
+    _colorType = widget.colorLabelTypes[0];
+  }
 
   List<String> colorValue(HSVColor hsvColor, ColorLabelType colorLabelType) {
     final Color color = hsvColor.toColor();
@@ -828,12 +833,10 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
       DropdownButton(
         value: _colorType,
         onChanged: (ColorLabelType? type) {
-          if (type != null) {
-            setState(() => _colorType = type);
-          }
+          if (type != null) setState(() => _colorType = type);
         },
         items: [
-          for (ColorLabelType type in _colorTypes.keys)
+          for (ColorLabelType type in widget.colorLabelTypes)
             DropdownMenuItem(
               value: type,
               child: Text(type.toString().split('.').last.toUpperCase()),

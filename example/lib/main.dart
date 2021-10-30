@@ -58,9 +58,9 @@ class _MyAppState extends State<MyApp> {
               ),
               bottom: const TabBar(
                 tabs: <Widget>[
-                  Tab(text: 'HSV'),
+                  Tab(text: 'HSV/HSL/RGB'),
                   Tab(text: 'Material'),
-                  Tab(text: 'Block'),
+                  Tab(text: 'Blocky'),
                 ],
               ),
             ),
@@ -85,9 +85,9 @@ class _MyAppState extends State<MyApp> {
                                   colorPickerWidth: 300.0,
                                   pickerAreaHeightPercent: 0.7,
                                   enableAlpha: true,
+                                  labelTypes: const [ColorLabelType.hsl, ColorLabelType.hsv],
                                   displayThumbColor: true,
-                                  showLabel: true,
-                                  paletteType: PaletteType.hslWithLightness,
+                                  paletteType: PaletteType.hsl,
                                   pickerAreaBorderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(2.0),
                                     topRight: Radius.circular(2.0),
@@ -100,14 +100,9 @@ class _MyAppState extends State<MyApp> {
                       },
                       child: Text(
                         'Change me',
-                        style: TextStyle(
-                          color: useWhiteForeground(currentColor) ? Colors.white : Colors.black,
-                        ),
+                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: currentColor,
-                        elevation: 3,
-                      ),
+                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
                     ),
                     const SizedBox(height: 15),
                     ElevatedButton(
@@ -118,9 +113,7 @@ class _MyAppState extends State<MyApp> {
                             return AlertDialog(
                               titlePadding: const EdgeInsets.all(0.0),
                               contentPadding: const EdgeInsets.all(0.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                              ),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
                               content: SingleChildScrollView(
                                 child: SlidePicker(
                                   pickerColor: currentColor,
@@ -130,9 +123,7 @@ class _MyAppState extends State<MyApp> {
                                   displayThumbColor: true,
                                   showLabel: false,
                                   showIndicator: true,
-                                  indicatorBorderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(25.0),
-                                  ),
+                                  indicatorBorderRadius: const BorderRadius.vertical(top: Radius.circular(25.0)),
                                 ),
                               ),
                             );
@@ -171,8 +162,8 @@ class _MyAppState extends State<MyApp> {
                                     pickerAreaHeightPercent: 0.7,
                                     enableAlpha: true, // hexInputController will respect it too.
                                     displayThumbColor: true,
-                                    showLabel: true,
                                     paletteType: PaletteType.hsvWithHue,
+                                    labelTypes: const [],
                                     pickerAreaBorderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(2.0),
                                       topRight: Radius.circular(2.0),

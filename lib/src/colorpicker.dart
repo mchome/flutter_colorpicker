@@ -18,7 +18,8 @@ class ColorPicker extends StatefulWidget {
     this.onHsvColorChanged,
     this.paletteType = PaletteType.hsvWithHue,
     this.enableAlpha = true,
-    this.showLabel = true,
+    @Deprecated('Use empty list in [labelTypes] to disable label.') this.showLabel = true,
+    this.labelTypes = const [ColorLabelType.rgb, ColorLabelType.hsv, ColorLabelType.hsl],
     this.labelTextStyle,
     this.displayThumbColor = false,
     this.portraitOnly = false,
@@ -35,6 +36,7 @@ class ColorPicker extends StatefulWidget {
   final PaletteType paletteType;
   final bool enableAlpha;
   final bool showLabel;
+  final List<ColorLabelType> labelTypes;
   final TextStyle? labelTextStyle;
   final bool displayThumbColor;
   final bool portraitOnly;
@@ -289,8 +291,13 @@ class _ColorPickerState extends State<ColorPicker> {
               ],
             ),
           ),
-          if (widget.showLabel)
-            ColorPickerLabel(currentHsvColor, enableAlpha: widget.enableAlpha, textStyle: widget.labelTextStyle),
+          if (widget.showLabel && widget.labelTypes.isNotEmpty)
+            ColorPickerLabel(
+              currentHsvColor,
+              enableAlpha: widget.enableAlpha,
+              textStyle: widget.labelTextStyle,
+              colorLabelTypes: widget.labelTypes,
+            ),
           const SizedBox(height: 20.0),
         ],
       );
@@ -317,8 +324,13 @@ class _ColorPickerState extends State<ColorPicker> {
                 ],
               ),
               const SizedBox(height: 20.0),
-              if (widget.showLabel)
-                ColorPickerLabel(currentHsvColor, enableAlpha: widget.enableAlpha, textStyle: widget.labelTextStyle),
+              if (widget.showLabel && widget.labelTypes.isNotEmpty)
+                ColorPickerLabel(
+                  currentHsvColor,
+                  enableAlpha: widget.enableAlpha,
+                  textStyle: widget.labelTextStyle,
+                  colorLabelTypes: widget.labelTypes,
+                ),
             ],
           ),
         ],
