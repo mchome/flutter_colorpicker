@@ -799,28 +799,34 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
   }
 
   List<Widget> colorValueLabels() {
+    double fontSize = 16;
+    if (widget.textStyle != null && widget.textStyle?.fontSize != null) fontSize = widget.textStyle?.fontSize ?? 16;
+
     return [
       for (String item in _colorTypes[_colorType] ?? [])
         if (widget.enableAlpha || item != 'A')
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 7.0),
-            child: IntrinsicHeight(
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    item,
-                    style: widget.textStyle ??
-                        Theme.of(context).textTheme.bodyText2?.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
-                  ),
-                  const SizedBox(height: 10.0),
-                  Expanded(
-                    child: Text(
-                      colorValue(widget.hsvColor, _colorType)[_colorTypes[_colorType]!.indexOf(item)],
-                      overflow: TextOverflow.ellipsis,
-                      style: widget.textStyle ?? Theme.of(context).textTheme.bodyText2,
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: fontSize * 2),
+              child: IntrinsicHeight(
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      item,
+                      style: widget.textStyle ??
+                          Theme.of(context).textTheme.bodyText2?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10.0),
+                    Expanded(
+                      child: Text(
+                        colorValue(widget.hsvColor, _colorType)[_colorTypes[_colorType]!.indexOf(item)],
+                        overflow: TextOverflow.ellipsis,
+                        style: widget.textStyle ?? Theme.of(context).textTheme.bodyText2,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           )
