@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp> {
                                     topLeft: Radius.circular(2.0),
                                     topRight: Radius.circular(2.0),
                                   ),
-                                  hexInput: true,
+                                  hexInputBar: true,
                                 ),
                               ),
                             );

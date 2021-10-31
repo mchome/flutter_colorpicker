@@ -763,8 +763,8 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
   }
 
   List<String> colorValue(HSVColor hsvColor, ColorLabelType colorLabelType) {
-    final Color color = hsvColor.toColor();
     if (colorLabelType == ColorLabelType.hex) {
+      final Color color = hsvColor.toColor();
       return [
         color.red.toRadixString(16).toUpperCase().padLeft(2, '0'),
         color.green.toRadixString(16).toUpperCase().padLeft(2, '0'),
@@ -772,6 +772,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
         '${(color.opacity * 100).round()}%',
       ];
     } else if (colorLabelType == ColorLabelType.rgb) {
+      final Color color = hsvColor.toColor();
       return [
         color.red.toString(),
         color.green.toString(),
@@ -814,8 +815,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
                   children: <Widget>[
                     Text(
                       item,
-                      style: widget.textStyle ??
-                          Theme.of(context).textTheme.bodyText2?.copyWith(fontWeight: FontWeight.bold),
+                      style: widget.textStyle ?? Theme.of(context).textTheme.bodyText1,
                     ),
                     const SizedBox(height: 10.0),
                     Expanded(
@@ -852,6 +852,23 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
       const SizedBox(width: 10.0),
       ...colorValueLabels(),
     ]);
+  }
+}
+
+class ColorPickerInput extends StatefulWidget {
+  const ColorPickerInput(this.color, this.onColorChanged, {Key? key}) : super(key: key);
+
+  final Color color;
+  final ValueChanged<Color> onColorChanged;
+
+  @override
+  _ColorPickerInputState createState() => _ColorPickerInputState();
+}
+
+class _ColorPickerInputState extends State<ColorPickerInput> {
+  @override
+  Widget build(BuildContext context) {
+    return TextField();
   }
 }
 

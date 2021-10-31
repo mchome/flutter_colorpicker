@@ -26,7 +26,7 @@ class ColorPicker extends StatefulWidget {
     this.colorPickerWidth = 300.0,
     this.pickerAreaHeightPercent = 1.0,
     this.pickerAreaBorderRadius = const BorderRadius.all(Radius.zero),
-    this.hexInput = false,
+    this.hexInputBar = false,
     this.hexInputController,
   }) : super(key: key);
 
@@ -44,7 +44,7 @@ class ColorPicker extends StatefulWidget {
   final double colorPickerWidth;
   final double pickerAreaHeightPercent;
   final BorderRadius pickerAreaBorderRadius;
-  final bool hexInput;
+  final bool hexInputBar;
 
   /// Allows setting the color using text input, via [TextEditingController].
   ///
@@ -300,6 +300,7 @@ class _ColorPickerState extends State<ColorPicker> {
               textStyle: widget.labelTextStyle,
               colorLabelTypes: widget.labelTypes,
             ),
+          if (widget.hexInputBar) ColorPickerInput(currentHsvColor.toColor(), (Color color) {}),
           const SizedBox(height: 20.0),
         ],
       );
