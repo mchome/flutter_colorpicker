@@ -20,12 +20,13 @@ class ColorPicker extends StatefulWidget {
     this.enableAlpha = true,
     @Deprecated('Use empty list in [labelTypes] to disable label.') this.showLabel = true,
     this.labelTypes = const [ColorLabelType.rgb, ColorLabelType.hsv, ColorLabelType.hsl],
-    this.labelTextStyle,
+    @Deprecated('Use Theme.of(context).textTheme.bodyText1 & 2 to alter text style.') this.labelTextStyle,
     this.displayThumbColor = false,
     this.portraitOnly = false,
     this.colorPickerWidth = 300.0,
     this.pickerAreaHeightPercent = 1.0,
     this.pickerAreaBorderRadius = const BorderRadius.all(Radius.zero),
+    this.hexInput = false,
     this.hexInputController,
   }) : super(key: key);
 
@@ -43,6 +44,7 @@ class ColorPicker extends StatefulWidget {
   final double colorPickerWidth;
   final double pickerAreaHeightPercent;
   final BorderRadius pickerAreaBorderRadius;
+  final bool hexInput;
 
   /// Allows setting the color using text input, via [TextEditingController].
   ///
@@ -339,19 +341,21 @@ class _ColorPickerState extends State<ColorPicker> {
   }
 }
 
-// The Color Picker with three sliders only. Support HSV, HSL and RGB color model.
+// The Color Picker with sliders only. Support HSV, HSL and RGB color model.
 class SlidePicker extends StatefulWidget {
   const SlidePicker({
     Key? key,
     required this.pickerColor,
     required this.onColorChanged,
-    this.colorModel = ColorModel.hsv,
+    this.colorModel = ColorModel.rgb,
     this.enableAlpha = true,
     this.sliderSize = const Size(260, 40),
     this.showSliderText = true,
-    this.sliderTextStyle,
-    this.showLabel = true,
-    this.labelTextStyle,
+    @Deprecated('Use Theme.of(context).textTheme.bodyText1 & 2 to alter text style.') this.sliderTextStyle,
+    this.showParams = false,
+    @Deprecated('Use empty list in [labelTypes] to disable label.') this.showLabel = true,
+    this.labelTypes = const [],
+    @Deprecated('Use Theme.of(context).textTheme.bodyText1 & 2 to alter text style.') this.labelTextStyle,
     this.showIndicator = true,
     this.indicatorSize = const Size(280, 50),
     this.indicatorAlignmentBegin = const Alignment(-1.0, -3.0),
@@ -368,6 +372,8 @@ class SlidePicker extends StatefulWidget {
   final bool showSliderText;
   final TextStyle? sliderTextStyle;
   final bool showLabel;
+  final bool showParams;
+  final List<ColorLabelType> labelTypes;
   final TextStyle? labelTextStyle;
   final bool showIndicator;
   final Size indicatorSize;
@@ -434,14 +440,50 @@ class _SlidePickerState extends State<SlidePicker> {
     );
   }
 
+  String getColorParams(int pos) {
+    assert(pos >= 0 && pos < 4);
+    if (widget.colorModel == ColorModel.rgb) {
+      final Color color = currentHsvColor.toColor();
+      return [
+        color.red.toString(),
+        color.green.toString(),
+        color.blue.toString(),
+        '${(color.opacity * 100).round()}',
+      ][pos];
+    } else if (widget.colorModel == ColorModel.hsv) {
+      return [
+        currentHsvColor.hue.round().toString(),
+        (currentHsvColor.saturation * 100).round().toString(),
+        (currentHsvColor.value * 100).round().toString(),
+        (currentHsvColor.alpha * 100).round().toString(),
+      ][pos];
+    } else if (widget.colorModel == ColorModel.hsl) {
+      HSLColor hslColor = hsvToHsl(currentHsvColor);
+      return [
+        hslColor.hue.round().toString(),
+        (hslColor.saturation * 100).round().toString(),
+        (hslColor.lightness * 100).round().toString(),
+        (currentHsvColor.alpha * 100).round().toString(),
+      ][pos];
+    } else {
+      return '??';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    double fontSize = 14;
+    if (widget.labelTextStyle != null && widget.labelTextStyle?.fontSize != null) {
+      fontSize = widget.labelTextStyle?.fontSize ?? 14;
+    }
+    final List<TrackType> trackTypes = [
+      if (widget.colorModel == ColorModel.hsv) ...[TrackType.hue, TrackType.saturation, TrackType.value],
+      if (widget.colorModel == ColorModel.hsl) ...[TrackType.hue, TrackType.saturationForHSL, TrackType.lightness],
+      if (widget.colorModel == ColorModel.rgb) ...[TrackType.red, TrackType.green, TrackType.blue],
+      if (widget.enableAlpha) ...[TrackType.alpha],
+    ];
     List<SizedBox> sliders = [
-      for (TrackType trackType in [
-        if (widget.colorModel == ColorModel.hsv) ...[TrackType.hue, TrackType.saturation, TrackType.value],
-        if (widget.colorModel == ColorModel.hsl) ...[TrackType.hue, TrackType.saturationForHSL, TrackType.lightness],
-        if (widget.colorModel == ColorModel.rgb) ...[TrackType.red, TrackType.green, TrackType.blue],
-      ])
+      for (TrackType trackType in trackTypes)
         SizedBox(
           width: widget.sliderSize.width,
           height: widget.sliderSize.height,
@@ -449,30 +491,43 @@ class _SlidePickerState extends State<SlidePicker> {
             children: <Widget>[
               if (widget.showSliderText)
                 Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(
                     trackType.toString().split('.').last[0].toUpperCase(),
-                    style: widget.sliderTextStyle ??
-                        Theme.of(context).textTheme.bodyText1?.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
+                    style: widget.sliderTextStyle ?? Theme.of(context).textTheme.bodyText1,
                   ),
                 ),
               Expanded(child: colorPickerSlider(trackType)),
+              if (widget.showParams)
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: fontSize * 2 + 5),
+                  child: Text(
+                    getColorParams(trackTypes.indexOf(trackType)),
+                    style: widget.sliderTextStyle ?? Theme.of(context).textTheme.bodyText2,
+                    textAlign: TextAlign.right,
+                  ),
+                ),
             ],
           ),
         ),
     ];
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         if (widget.showIndicator) indicator(),
         ...sliders,
-        if (widget.enableAlpha) SizedBox(height: 40.0, width: 260.0, child: colorPickerSlider(TrackType.alpha)),
         const SizedBox(height: 20.0),
-        if (widget.showLabel)
+        if (widget.showLabel && widget.labelTypes.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
-            child: ColorPickerLabel(currentHsvColor, enableAlpha: widget.enableAlpha, textStyle: widget.labelTextStyle),
+            child: ColorPickerLabel(
+              currentHsvColor,
+              enableAlpha: widget.enableAlpha,
+              textStyle: widget.labelTextStyle,
+              colorLabelTypes: widget.labelTypes,
+            ),
           ),
       ],
     );

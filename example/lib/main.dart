@@ -85,13 +85,15 @@ class _MyAppState extends State<MyApp> {
                                   colorPickerWidth: 300.0,
                                   pickerAreaHeightPercent: 0.7,
                                   enableAlpha: true,
-                                  labelTypes: const [ColorLabelType.hsl, ColorLabelType.hsv],
+                                  labelTypes: const [], // disable label
+                                  // labelTypes: const [ColorLabelType.hsl, ColorLabelType.hsv],
                                   displayThumbColor: true,
                                   paletteType: PaletteType.hsl,
                                   pickerAreaBorderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(2.0),
                                     topRight: Radius.circular(2.0),
                                   ),
+                                  hexInput: true,
                                 ),
                               ),
                             );
@@ -121,7 +123,7 @@ class _MyAppState extends State<MyApp> {
                                   colorModel: ColorModel.rgb,
                                   enableAlpha: false,
                                   displayThumbColor: true,
-                                  showLabel: false,
+                                  showParams: true,
                                   showIndicator: true,
                                   indicatorBorderRadius: const BorderRadius.vertical(top: Radius.circular(25.0)),
                                 ),
