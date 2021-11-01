@@ -350,6 +350,17 @@ class _ColorPickerState extends State<ColorPicker> {
                   textStyle: widget.labelTextStyle,
                   colorLabelTypes: widget.labelTypes,
                 ),
+              if (widget.hexInputBar)
+                ColorPickerInput(
+                  currentHsvColor.toColor(),
+                  (Color color) {
+                    setState(() => currentHsvColor = HSVColor.fromColor(color));
+                    widget.onColorChanged(currentHsvColor.toColor());
+                    if (widget.onHsvColorChanged != null) widget.onHsvColorChanged!(currentHsvColor);
+                  },
+                  enableAlpha: widget.enableAlpha,
+                  embeddedText: false,
+                ),
             ],
           ),
         ],
