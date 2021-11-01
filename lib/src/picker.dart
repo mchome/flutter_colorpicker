@@ -36,7 +36,7 @@ enum TrackType {
 }
 enum ColorLabelType { hex, rgb, hsv, hsl }
 enum ColorModel { rgb, hsv, hsl }
-// enum ColorSpace { rgb, hsv, hsl, hsp, okhsv, okhsl, xyz, lab, lch, cmyk }
+// enum ColorSpace { rgb, hsv, hsl, hsp, okhsv, okhsl, xyz, yuv, lab, lch, cmyk }
 
 class HSVWithHueColorPainter extends CustomPainter {
   const HSVWithHueColorPainter(this.hsvColor, {this.pointerColor});
@@ -485,6 +485,53 @@ class HUEColorWheelPainter extends CustomPainter {
       Offset(
         center.dx + hsvColor.saturation * radio * cos((hsvColor.hue * pi / 180)),
         center.dy - hsvColor.saturation * radio * sin((hsvColor.hue * pi / 180)),
+      ),
+      size.height * 0.04,
+      Paint()
+        ..color = pointerColor ?? (useWhiteForeground(hsvColor.toColor()) ? Colors.white : Colors.black)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class HueRingPainter extends CustomPainter {
+  const HueRingPainter(this.hsvColor, {this.pointerColor});
+
+  final HSVColor hsvColor;
+  final Color? pointerColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Rect rect = Offset.zero & size;
+    Offset center = Offset(size.width / 2, size.height / 2);
+    double radio = size.width <= size.height ? size.width / 2 : size.height / 2;
+
+    final List<Color> colors = [
+      const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 300.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 240.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 180.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 120.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 60.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
+    ];
+    canvas.drawCircle(
+      center,
+      radio,
+      Paint()
+        ..shader = SweepGradient(colors: colors).createShader(rect)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 5,
+    );
+
+    canvas.drawCircle(
+      Offset(
+        center.dx + radio * radio * cos((hsvColor.hue * pi / 180)),
+        center.dy - radio * radio * sin((hsvColor.hue * pi / 180)),
       ),
       size.height * 0.04,
       Paint()
