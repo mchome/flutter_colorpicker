@@ -300,7 +300,12 @@ class _ColorPickerState extends State<ColorPicker> {
               textStyle: widget.labelTextStyle,
               colorLabelTypes: widget.labelTypes,
             ),
-          if (widget.hexInputBar) ColorPickerInput(currentHsvColor.toColor(), (Color color) {}),
+          if (widget.hexInputBar)
+            ColorPickerInput(
+              currentHsvColor.toColor(),
+              (Color color) {},
+              enableAlpha: widget.enableAlpha,
+            ),
           const SizedBox(height: 20.0),
         ],
       );

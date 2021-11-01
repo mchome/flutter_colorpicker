@@ -195,9 +195,7 @@ class _MyAppState extends State<MyApp> {
                                         child: Icon(Icons.tag),
                                       ),
                                       suffix: IconButton(
-                                        icon: const Icon(
-                                          Icons.content_paste_rounded,
-                                        ),
+                                        icon: const Icon(Icons.content_paste_rounded),
                                         onPressed: () async => copyToClipboard(textController.text),
                                       ),
                                       autofocus: true,

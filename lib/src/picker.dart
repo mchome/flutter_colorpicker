@@ -769,7 +769,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
         color.red.toRadixString(16).toUpperCase().padLeft(2, '0'),
         color.green.toRadixString(16).toUpperCase().padLeft(2, '0'),
         color.blue.toRadixString(16).toUpperCase().padLeft(2, '0'),
-        '${(color.opacity * 100).round()}%',
+        color.alpha.toRadixString(16).toUpperCase().padLeft(2, '0'),
       ];
     } else if (colorLabelType == ColorLabelType.rgb) {
       final Color color = hsvColor.toColor();
@@ -800,8 +800,8 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
   }
 
   List<Widget> colorValueLabels() {
-    double fontSize = 16;
-    if (widget.textStyle != null && widget.textStyle?.fontSize != null) fontSize = widget.textStyle?.fontSize ?? 16;
+    double fontSize = 14;
+    if (widget.textStyle != null && widget.textStyle?.fontSize != null) fontSize = widget.textStyle?.fontSize ?? 14;
 
     return [
       for (String item in _colorTypes[_colorType] ?? [])
@@ -856,19 +856,55 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
 }
 
 class ColorPickerInput extends StatefulWidget {
-  const ColorPickerInput(this.color, this.onColorChanged, {Key? key}) : super(key: key);
+  const ColorPickerInput(
+    this.color,
+    this.onColorChanged, {
+    Key? key,
+    this.enableAlpha = true,
+  }) : super(key: key);
 
   final Color color;
   final ValueChanged<Color> onColorChanged;
+  final bool enableAlpha;
 
   @override
   _ColorPickerInputState createState() => _ColorPickerInputState();
 }
 
 class _ColorPickerInputState extends State<ColorPickerInput> {
+  TextEditingController textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TextField();
+    textEditingController.text = '#' +
+        widget.color.red.toRadixString(16).toUpperCase().padLeft(2, '0') +
+        widget.color.green.toRadixString(16).toUpperCase().padLeft(2, '0') +
+        widget.color.blue.toRadixString(16).toUpperCase().padLeft(2, '0') +
+        (widget.enableAlpha ? widget.color.alpha.toRadixString(16).toUpperCase().padLeft(2, '0') : '');
+    return Padding(
+      padding: const EdgeInsets.only(top: 5.0),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text('Hex', style: Theme.of(context).textTheme.bodyText1),
+        const SizedBox(width: 20),
+        SizedBox(
+          width: (Theme.of(context).textTheme.bodyText2?.fontSize ?? 14) * 10,
+          child: TextField(
+            controller: textEditingController,
+            decoration: const InputDecoration(
+              isDense: true,
+              // label: Text('Hex'),
+              contentPadding: EdgeInsets.symmetric(vertical: 5),
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 }
 
