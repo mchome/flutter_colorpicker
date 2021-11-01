@@ -85,15 +85,15 @@ class _MyAppState extends State<MyApp> {
                                   colorPickerWidth: 300.0,
                                   pickerAreaHeightPercent: 0.7,
                                   enableAlpha: true,
-                                  labelTypes: const [], // disable label
-                                  // labelTypes: const [ColorLabelType.hsl, ColorLabelType.hsv],
+                                  // labelTypes: const [], // disable label
+                                  labelTypes: const [ColorLabelType.hsl, ColorLabelType.hsv],
                                   displayThumbColor: true,
                                   paletteType: PaletteType.hsl,
                                   pickerAreaBorderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(2.0),
                                     topRight: Radius.circular(2.0),
                                   ),
-                                  hexInputBar: true,
+                                  hexInputBar: false,
                                 ),
                               ),
                             );
@@ -204,9 +204,7 @@ class _MyAppState extends State<MyApp> {
                                         // Any custom input formatter can be passed
                                         // here or use any Form validator you want.
                                         UpperCaseTextFormatter(),
-                                        FilteringTextInputFormatter.allow(
-                                          RegExp(kValidHexPattern),
-                                        ),
+                                        FilteringTextInputFormatter.allow(RegExp(kValidHexPattern)),
                                       ],
                                     ),
                                   )
@@ -327,10 +325,4 @@ class _MyAppState extends State<MyApp> {
       }),
     );
   }
-}
-
-class UpperCaseTextFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(oldValue, TextEditingValue newValue) =>
-      TextEditingValue(text: newValue.text.toUpperCase(), selection: newValue.selection);
 }

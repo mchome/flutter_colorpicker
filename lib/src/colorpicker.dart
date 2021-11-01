@@ -201,6 +201,12 @@ class _ColorPickerState extends State<ColorPicker> {
     }
   }
 
+  @override
+  void dispose() {
+    widget.hexInputController?.removeListener(colorPickerTextInputListener);
+    super.dispose();
+  }
+
   Widget colorPickerSlider(TrackType trackType) {
     return ColorPickerSlider(
       trackType,
@@ -303,8 +309,13 @@ class _ColorPickerState extends State<ColorPicker> {
           if (widget.hexInputBar)
             ColorPickerInput(
               currentHsvColor.toColor(),
-              (Color color) {},
+              (Color color) {
+                setState(() => currentHsvColor = HSVColor.fromColor(color));
+                widget.onColorChanged(currentHsvColor.toColor());
+                if (widget.onHsvColorChanged != null) widget.onHsvColorChanged!(currentHsvColor);
+              },
               enableAlpha: widget.enableAlpha,
+              embeddedText: false,
             ),
           const SizedBox(height: 20.0),
         ],

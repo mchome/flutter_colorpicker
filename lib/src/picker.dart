@@ -6,6 +6,7 @@ import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
 enum PaletteType {
@@ -861,11 +862,13 @@ class ColorPickerInput extends StatefulWidget {
     this.onColorChanged, {
     Key? key,
     this.enableAlpha = true,
+    this.embeddedText = false,
   }) : super(key: key);
 
   final Color color;
   final ValueChanged<Color> onColorChanged;
   final bool enableAlpha;
+  final bool embeddedText;
 
   @override
   _ColorPickerInputState createState() => _ColorPickerInputState();
@@ -873,6 +876,7 @@ class ColorPickerInput extends StatefulWidget {
 
 class _ColorPickerInputState extends State<ColorPickerInput> {
   TextEditingController textEditingController = TextEditingController();
+  int inputColor = 0;
 
   @override
   void dispose() {
@@ -882,25 +886,40 @@ class _ColorPickerInputState extends State<ColorPickerInput> {
 
   @override
   Widget build(BuildContext context) {
-    textEditingController.text = '#' +
-        widget.color.red.toRadixString(16).toUpperCase().padLeft(2, '0') +
-        widget.color.green.toRadixString(16).toUpperCase().padLeft(2, '0') +
-        widget.color.blue.toRadixString(16).toUpperCase().padLeft(2, '0') +
-        (widget.enableAlpha ? widget.color.alpha.toRadixString(16).toUpperCase().padLeft(2, '0') : '');
+    if (inputColor != widget.color.value) {
+      textEditingController.text = '#' +
+          widget.color.red.toRadixString(16).toUpperCase().padLeft(2, '0') +
+          widget.color.green.toRadixString(16).toUpperCase().padLeft(2, '0') +
+          widget.color.blue.toRadixString(16).toUpperCase().padLeft(2, '0') +
+          (widget.enableAlpha ? widget.color.alpha.toRadixString(16).toUpperCase().padLeft(2, '0') : '');
+    }
     return Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text('Hex', style: Theme.of(context).textTheme.bodyText1),
+        if (!widget.embeddedText) Text('Hex', style: Theme.of(context).textTheme.bodyText1),
         const SizedBox(width: 20),
         SizedBox(
           width: (Theme.of(context).textTheme.bodyText2?.fontSize ?? 14) * 10,
           child: TextField(
             controller: textEditingController,
-            decoration: const InputDecoration(
+            inputFormatters: [
+              UpperCaseTextFormatter(),
+              FilteringTextInputFormatter.allow(RegExp(kValidHexPattern)),
+            ],
+            decoration: InputDecoration(
               isDense: true,
-              // label: Text('Hex'),
-              contentPadding: EdgeInsets.symmetric(vertical: 5),
+              label: widget.embeddedText ? const Text('Hex') : null,
+              contentPadding: const EdgeInsets.symmetric(vertical: 5),
             ),
+            onChanged: (String value) {
+              String input = value;
+              if (value.length == 9) input = value.substring(7) + value.substring(1, 3);
+              final Color? color = colorFromHex(input);
+              if (color != null) {
+                widget.onColorChanged(color);
+                inputColor = color.value;
+              }
+            },
           ),
         ),
       ]),
@@ -1225,4 +1244,10 @@ class AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
 
   @override
   String get debugDescription => 'alwaysWin';
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(oldValue, TextEditingValue newValue) =>
+      TextEditingValue(text: newValue.text.toUpperCase(), selection: newValue.selection);
 }
