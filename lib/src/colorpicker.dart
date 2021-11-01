@@ -561,3 +561,30 @@ class _SlidePickerState extends State<SlidePicker> {
     );
   }
 }
+
+class HueRingPicker extends StatefulWidget {
+  const HueRingPicker({
+    Key? key,
+    required this.pickerColor,
+    required this.onColorChanged,
+    this.portraitOnly = false,
+  }) : super(key: key);
+
+  final Color pickerColor;
+  final ValueChanged<Color> onColorChanged;
+  final bool portraitOnly;
+
+  @override
+  _HueRingPickerState createState() => _HueRingPickerState();
+}
+
+class _HueRingPickerState extends State<HueRingPicker> {
+  @override
+  Widget build(BuildContext context) {
+    if (MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly) {
+      return Container();
+    } else {
+      return Container();
+    }
+  }
+}
