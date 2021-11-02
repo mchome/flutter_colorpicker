@@ -682,8 +682,8 @@ class TrackPainter extends CustomPainter {
         break;
       case TrackType.alpha:
         final List<Color> colors = [
-          Colors.black.withOpacity(0.0),
-          Colors.black.withOpacity(1.0),
+          hsvColor.toColor().withOpacity(0.0),
+          hsvColor.toColor().withOpacity(1.0),
         ];
         Gradient gradient = LinearGradient(colors: colors);
         canvas.drawRect(rect, Paint()..shader = gradient.createShader(rect));
@@ -920,12 +920,14 @@ class ColorPickerInput extends StatefulWidget {
     Key? key,
     this.enableAlpha = true,
     this.embeddedText = false,
+    this.disable = false,
   }) : super(key: key);
 
   final Color color;
   final ValueChanged<Color> onColorChanged;
   final bool enableAlpha;
   final bool embeddedText;
+  final bool disable;
 
   @override
   _ColorPickerInputState createState() => _ColorPickerInputState();
@@ -954,10 +956,11 @@ class _ColorPickerInputState extends State<ColorPickerInput> {
       padding: const EdgeInsets.only(top: 5.0),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         if (!widget.embeddedText) Text('Hex', style: Theme.of(context).textTheme.bodyText1),
-        const SizedBox(width: 20),
+        const SizedBox(width: 10),
         SizedBox(
           width: (Theme.of(context).textTheme.bodyText2?.fontSize ?? 14) * 10,
           child: TextField(
+            enabled: !widget.disable,
             controller: textEditingController,
             inputFormatters: [
               UpperCaseTextFormatter(),
@@ -1076,7 +1079,7 @@ class ColorPickerSlider extends StatelessWidget {
           break;
         case TrackType.alpha:
           thumbOffset += (box.maxWidth - 30.0) * hsvColor.toColor().opacity;
-          thumbColor = Colors.black.withOpacity(hsvColor.alpha);
+          thumbColor = hsvColor.toColor().withOpacity(hsvColor.alpha);
           break;
       }
 
@@ -1297,10 +1300,12 @@ class ColorPickerHueRing extends StatelessWidget {
     this.hsvColor,
     this.onColorChanged, {
     Key? key,
+    this.strokeWidth = 5.0,
   }) : super(key: key);
 
   final HSVColor hsvColor;
   final ValueChanged<HSVColor> onColorChanged;
+  final double strokeWidth;
 
   void _handleGesture(Offset position, BuildContext context, double height, double width) {
     RenderBox? getBox = context.findRenderObject() as RenderBox?;
@@ -1314,7 +1319,7 @@ class ColorPickerHueRing extends StatelessWidget {
     double radio = width <= height ? width / 2 : height / 2;
     double dist = sqrt(pow(horizontal - center.dx, 2) + pow(vertical - center.dy, 2)) / radio;
     double rad = (atan2(horizontal - center.dx, vertical - center.dy) / pi + 1) / 2 * 360;
-    if (dist > 0.8 && dist < 1.2) onColorChanged(hsvColor.withHue(((rad + 90) % 360).clamp(0, 360)));
+    if (dist > 0.7 && dist < 1.3) onColorChanged(hsvColor.withHue(((rad + 90) % 360).clamp(0, 360)));
   }
 
   @override
@@ -1335,7 +1340,7 @@ class ColorPickerHueRing extends StatelessWidget {
               },
             ),
           },
-          child: CustomPaint(painter: HueRingPainter(hsvColor)),
+          child: CustomPaint(painter: HueRingPainter(hsvColor, strokeWidth: strokeWidth)),
         );
       },
     );

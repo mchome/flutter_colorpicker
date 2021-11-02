@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
+    return AnimatedTheme(
       data: lightTheme ? ThemeData.light() : ThemeData.dark(),
       child: Builder(builder: (context) {
         return DefaultTabController(
@@ -45,17 +45,13 @@ class _MyAppState extends State<MyApp> {
           child: Scaffold(
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () => setState(() => lightTheme = !lightTheme),
-              icon: Icon(
-                lightTheme ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
-              ),
+              icon: Icon(lightTheme ? Icons.dark_mode_rounded : Icons.light_mode_rounded),
               label: Text(lightTheme ? 'Night' : '  Day '),
               backgroundColor: currentColor,
               foregroundColor: useWhiteForeground(currentColor) ? Colors.white : Colors.black,
             ),
             appBar: AppBar(
-              title: GestureDetector(
-                child: const Text('Flutter Color Picker Example'),
-              ),
+              title: GestureDetector(child: const Text('Flutter Color Picker Example')),
               bottom: const TabBar(
                 tabs: <Widget>[
                   Tab(text: 'HSV/HSL/RGB'),
@@ -101,7 +97,41 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'Change me',
+                        'HSL Color Picker with alpha slider and label',
+                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
+                      ),
+                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
+                    ),
+                    const SizedBox(height: 15),
+                    ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              titlePadding: const EdgeInsets.all(0.0),
+                              contentPadding: const EdgeInsets.all(0.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: MediaQuery.of(context).orientation == Orientation.portrait
+                                    ? const BorderRadius.vertical(
+                                        top: Radius.circular(500),
+                                        bottom: Radius.circular(100),
+                                      )
+                                    : const BorderRadius.horizontal(right: Radius.circular(500)),
+                              ),
+                              content: SingleChildScrollView(
+                                child: HueRingPicker(
+                                  pickerColor: currentColor,
+                                  onColorChanged: changeColor,
+                                  enableAlpha: false,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Text(
+                        'HSV Color Picker with Hue Ring',
                         style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
                       style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
@@ -133,15 +163,10 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'Change me again',
-                        style: TextStyle(
-                          color: useWhiteForeground(currentColor) ? Colors.white : Colors.black,
-                        ),
+                        'RGB Slider-only Color Picker',
+                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: currentColor,
-                        elevation: 3,
-                      ),
+                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
                     ),
                     const SizedBox(height: 15),
                     ElevatedButton(
@@ -215,7 +240,7 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'Change me via text input',
+                        'HSV Color Picker with you own text field controller',
                         style: TextStyle(
                           color: useWhiteForeground(currentColor) ? Colors.white : Colors.black,
                         ),
@@ -251,7 +276,7 @@ class _MyAppState extends State<MyApp> {
                       );
                     },
                     child: Text(
-                      'Change me',
+                      'Kiss me with you finger',
                       style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                     ),
                     style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
@@ -277,10 +302,8 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'Change me',
-                        style: TextStyle(
-                          color: useWhiteForeground(currentColor) ? Colors.white : Colors.black,
-                        ),
+                        'Come and Change ME, NOW !',
+                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
                       style: ElevatedButton.styleFrom(
                         primary: currentColor,
@@ -306,15 +329,10 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'Change me again',
-                        style: TextStyle(
-                          color: useWhiteForeground(currentColor) ? Colors.white : Colors.black,
-                        ),
+                        'Multiple selection Blocky Color Picker',
+                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: currentColor,
-                        elevation: 3,
-                      ),
+                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
                     )
                   ]),
                 ),
