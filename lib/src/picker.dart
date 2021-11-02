@@ -1292,23 +1292,6 @@ class ColorPickerArea extends StatelessWidget {
   }
 }
 
-class AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
-  @override
-  void addAllowedPointer(event) {
-    super.addAllowedPointer(event);
-    resolve(GestureDisposition.accepted);
-  }
-
-  @override
-  String get debugDescription => 'alwaysWin';
-}
-
-class UpperCaseTextFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(oldValue, TextEditingValue newValue) =>
-      TextEditingValue(text: newValue.text.toUpperCase(), selection: newValue.selection);
-}
-
 class ColorPickerHueRing extends StatelessWidget {
   const ColorPickerHueRing(
     this.hsvColor,
@@ -1357,4 +1340,21 @@ class ColorPickerHueRing extends StatelessWidget {
       },
     );
   }
+}
+
+class AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
+  @override
+  void addAllowedPointer(event) {
+    super.addAllowedPointer(event);
+    resolve(GestureDisposition.accepted);
+  }
+
+  @override
+  String get debugDescription => 'alwaysWin';
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(oldValue, TextEditingValue newValue) =>
+      TextEditingValue(text: newValue.text.toUpperCase(), selection: newValue.selection);
 }

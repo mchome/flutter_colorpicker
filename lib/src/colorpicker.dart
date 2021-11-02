@@ -4,6 +4,7 @@
 
 library hsv_picker;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/src/picker.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
@@ -608,8 +609,19 @@ class _HueRingPickerState extends State<HueRingPicker> {
     return ClipRRect(
       borderRadius: widget.pickerAreaBorderRadius,
       child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ColorPickerHueRing(currentHsvColor, onColorChanging),
+        padding: const EdgeInsets.all(15),
+        child: Stack(alignment: AlignmentDirectional.center, children: <Widget>[
+          SizedBox(
+            width: widget.colorPickerWidth,
+            height: widget.colorPickerWidth,
+            child: ColorPickerHueRing(currentHsvColor, onColorChanging),
+          ),
+          SizedBox(
+            width: widget.colorPickerWidth / 1.6,
+            height: widget.colorPickerWidth / 1.6,
+            child: ColorPickerArea(currentHsvColor, onColorChanging, PaletteType.hsv),
+          )
+        ]),
       ),
     );
   }
@@ -619,11 +631,7 @@ class _HueRingPickerState extends State<HueRingPicker> {
     if (MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly) {
       return Column(
         children: <Widget>[
-          SizedBox(
-            width: widget.colorPickerWidth,
-            height: widget.colorPickerWidth,
-            child: colorPicker(),
-          ),
+          colorPicker(),
         ],
       );
     } else {
