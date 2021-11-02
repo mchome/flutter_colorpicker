@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
 enum PaletteType {
@@ -499,10 +500,11 @@ class HUEColorWheelPainter extends CustomPainter {
 }
 
 class HueRingPainter extends CustomPainter {
-  const HueRingPainter(this.hsvColor, {this.pointerColor});
+  const HueRingPainter(this.hsvColor, {this.pointerColor, this.strokeWidth = 5});
 
   final HSVColor hsvColor;
   final Color? pointerColor;
+  final double strokeWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -525,19 +527,27 @@ class HueRingPainter extends CustomPainter {
       Paint()
         ..shader = SweepGradient(colors: colors).createShader(rect)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 5,
+        ..strokeWidth = strokeWidth,
     );
 
+    final Offset offset = Offset(
+      center.dx + radio * cos((hsvColor.hue * pi / 180)),
+      center.dy - radio * sin((hsvColor.hue * pi / 180)),
+    );
+    canvas.drawShadow(Path()..addOval(Rect.fromCircle(center: offset, radius: 12)), Colors.black, 3.0, true);
     canvas.drawCircle(
-      Offset(
-        center.dx + radio * radio * cos((hsvColor.hue * pi / 180)),
-        center.dy - radio * radio * sin((hsvColor.hue * pi / 180)),
-      ),
+      offset,
       size.height * 0.04,
       Paint()
-        ..color = pointerColor ?? (useWhiteForeground(hsvColor.toColor()) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
-        ..style = PaintingStyle.stroke,
+        ..color = Colors.white
+        ..style = PaintingStyle.fill,
+    );
+    canvas.drawCircle(
+      offset,
+      size.height * 0.03,
+      Paint()
+        ..color = hsvColor.toColor()
+        ..style = PaintingStyle.fill,
     );
   }
 
@@ -1297,4 +1307,54 @@ class UpperCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(oldValue, TextEditingValue newValue) =>
       TextEditingValue(text: newValue.text.toUpperCase(), selection: newValue.selection);
+}
+
+class ColorPickerHueRing extends StatelessWidget {
+  const ColorPickerHueRing(
+    this.hsvColor,
+    this.onColorChanged, {
+    Key? key,
+  }) : super(key: key);
+
+  final HSVColor hsvColor;
+  final ValueChanged<HSVColor> onColorChanged;
+
+  void _handleGesture(Offset position, BuildContext context, double height, double width) {
+    RenderBox? getBox = context.findRenderObject() as RenderBox?;
+    if (getBox == null) return;
+
+    Offset localOffset = getBox.globalToLocal(position);
+    double horizontal = localOffset.dx.clamp(0.0, width);
+    double vertical = localOffset.dy.clamp(0.0, height);
+
+    Offset center = Offset(width / 2, height / 2);
+    double radio = width <= height ? width / 2 : height / 2;
+    double dist = sqrt(pow(horizontal - center.dx, 2) + pow(vertical - center.dy, 2)) / radio;
+    double rad = (atan2(horizontal - center.dx, vertical - center.dy) / pi + 1) / 2 * 360;
+    if (dist > 0.8 && dist < 1.2) onColorChanged(hsvColor.withHue(((rad + 90) % 360).clamp(0, 360)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        double width = constraints.maxWidth;
+        double height = constraints.maxHeight;
+
+        return RawGestureDetector(
+          gestures: {
+            AlwaysWinPanGestureRecognizer: GestureRecognizerFactoryWithHandlers<AlwaysWinPanGestureRecognizer>(
+              () => AlwaysWinPanGestureRecognizer(),
+              (AlwaysWinPanGestureRecognizer instance) {
+                instance
+                  ..onDown = ((details) => _handleGesture(details.globalPosition, context, height, width))
+                  ..onUpdate = ((details) => _handleGesture(details.globalPosition, context, height, width));
+              },
+            ),
+          },
+          child: CustomPaint(painter: HueRingPainter(hsvColor)),
+        );
+      },
+    );
+  }
 }

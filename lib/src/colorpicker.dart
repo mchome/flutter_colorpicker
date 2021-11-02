@@ -568,23 +568,68 @@ class HueRingPicker extends StatefulWidget {
     required this.pickerColor,
     required this.onColorChanged,
     this.portraitOnly = false,
+    this.colorPickerWidth = 300.0,
+    this.pickerAreaBorderRadius = const BorderRadius.all(Radius.zero),
+    this.hexInputBar = false,
   }) : super(key: key);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final bool portraitOnly;
+  final double colorPickerWidth;
+  final BorderRadius pickerAreaBorderRadius;
+  final bool hexInputBar;
 
   @override
   _HueRingPickerState createState() => _HueRingPickerState();
 }
 
 class _HueRingPickerState extends State<HueRingPicker> {
+  HSVColor currentHsvColor = const HSVColor.fromAHSV(0.0, 0.0, 0.0, 0.0);
+
+  @override
+  void initState() {
+    currentHsvColor = HSVColor.fromColor(widget.pickerColor);
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(HueRingPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    currentHsvColor = HSVColor.fromColor(widget.pickerColor);
+  }
+
+  Widget colorPicker() {
+    void onColorChanging(HSVColor color) {
+      setState(() => currentHsvColor = color);
+      widget.onColorChanged(currentHsvColor.toColor());
+    }
+
+    return ClipRRect(
+      borderRadius: widget.pickerAreaBorderRadius,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ColorPickerHueRing(currentHsvColor, onColorChanging),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly) {
-      return Container();
+      return Column(
+        children: <Widget>[
+          SizedBox(
+            width: widget.colorPickerWidth,
+            height: widget.colorPickerWidth,
+            child: colorPicker(),
+          ),
+        ],
+      );
     } else {
-      return Container();
+      return Row(
+        children: <Widget>[],
+      );
     }
   }
 }
