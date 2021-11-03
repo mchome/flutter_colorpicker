@@ -19,6 +19,7 @@ class _MyAppState extends State<MyApp> {
   bool lightTheme = true;
   Color currentColor = Colors.amber;
   List<Color> currentColors = [Colors.limeAccent, Colors.green];
+  List<Color> colorHistory = [];
 
   void changeColor(Color color) => setState(() => currentColor = color);
   void changeColors(List<Color> colors) => setState(() => currentColors = colors);
@@ -90,6 +91,8 @@ class _MyAppState extends State<MyApp> {
                                     topRight: Radius.circular(2.0),
                                   ),
                                   hexInputBar: false,
+                                  colorHistory: colorHistory,
+                                  onHistoryChanged: (List<Color> colors) => colorHistory = colors,
                                 ),
                               ),
                             );
@@ -97,7 +100,7 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'HSL Color Picker with alpha slider and label',
+                        '         HSL Color Picker\n(with alpha slider and label)',
                         style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
                       style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
@@ -131,7 +134,7 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'HSV Color Picker with Hue Ring',
+                        'HSV Color Picker\n (with Hue Ring)',
                         style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
                       style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
@@ -163,7 +166,7 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'RGB Slider-only Color Picker',
+                        'RGB  Color Picker\n    (Slider-only)',
                         style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
                       style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
@@ -240,15 +243,10 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'HSV Color Picker with you own text field controller',
-                        style: TextStyle(
-                          color: useWhiteForeground(currentColor) ? Colors.white : Colors.black,
-                        ),
+                        '               HSV Color Picker\n(with you own text field controller)',
+                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: currentColor,
-                        elevation: 3,
-                      ),
+                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
                     ),
                   ],
                 ),
@@ -302,7 +300,7 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                       child: Text(
-                        'Come and Change ME, NOW !',
+                        'Blocky Color Picker',
                         style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
                       ),
                       style: ElevatedButton.styleFrom(
