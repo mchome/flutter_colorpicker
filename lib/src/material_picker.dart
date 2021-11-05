@@ -12,13 +12,13 @@ class MaterialPicker extends StatefulWidget {
     required this.pickerColor,
     required this.onColorChanged,
     this.enableLabel = false,
-    this.orientation,
+    this.portraitOnly = false,
   }) : super(key: key);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final bool enableLabel;
-  final Orientation? orientation;
+  final bool portraitOnly;
 
   @override
   State<StatefulWidget> createState() => _MaterialPickerState();
@@ -48,29 +48,30 @@ class _MaterialPickerState extends State<MaterialPicker> {
     [Colors.black],
   ];
 
-  List<Color> _currentColor = [Colors.red, Colors.redAccent];
-  Color? _currentShading;
+  List<Color> _currentColorType = [Colors.red, Colors.redAccent];
+  late Color _currentShading;
 
-  List<Color> _shadingTypes(List<Color> colors) {
-    List<Color> result = [];
+  List<Map<Color, String>> _shadingTypes(List<Color> colors) {
+    List<Map<Color, String>> result = [];
 
-    for (var colorType in colors) {
+    for (Color colorType in colors) {
       if (colorType == Colors.grey) {
-        result.addAll([50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900].map((int shade) {
-          return Colors.grey[shade]!;
-        }).toList());
+        result.addAll([50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900]
+            .map((int shade) => {Colors.grey[shade]!: shade.toString()})
+            .toList());
       } else if (colorType == Colors.black || colorType == Colors.white) {
-        result.addAll([Colors.black, Colors.white]);
+        result.addAll([
+          {Colors.black: ''},
+          {Colors.white: ''}
+        ]);
       } else if (colorType is MaterialAccentColor) {
-        result.addAll([100, 200, 400, 700].map((int shade) {
-          return colorType[shade]!;
-        }).toList());
+        result.addAll([100, 200, 400, 700].map((int shade) => {colorType[shade]!: 'A$shade'}).toList());
       } else if (colorType is MaterialColor) {
-        result.addAll([50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((int shade) {
-          return colorType[shade]!;
-        }).toList());
+        result.addAll([50, 100, 200, 300, 400, 500, 600, 700, 800, 900]
+            .map((int shade) => {colorType[shade]!: shade.toString()})
+            .toList());
       } else {
-        result.add(const Color(0x00000000));
+        result.add({const Color(0x00000000): ''});
       }
     }
 
@@ -79,12 +80,12 @@ class _MaterialPickerState extends State<MaterialPicker> {
 
   @override
   void initState() {
-    for (var _colors in _colorTypes) {
-      _shadingTypes(_colors).forEach((Color color) {
-        if (widget.pickerColor.value == color.value) {
+    for (List<Color> _colors in _colorTypes) {
+      _shadingTypes(_colors).forEach((Map<Color, String> color) {
+        if (widget.pickerColor.value == color.keys.first.value) {
           return setState(() {
-            _currentColor = _colors;
-            _currentShading = color;
+            _currentColorType = _colors;
+            _currentShading = color.keys.first;
           });
         }
       });
@@ -94,10 +95,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
 
   @override
   Widget build(BuildContext context) {
-    Orientation _orientation = MediaQuery.of(context).orientation;
-    bool _isPortrait = (widget.orientation != null)
-        ? widget.orientation == Orientation.portrait
-        : _orientation == Orientation.portrait;
+    bool _isPortrait = MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly;
 
     Widget _colorList() {
       return Container(
@@ -117,7 +115,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
             ..._colorTypes.map((List<Color> _colors) {
               Color _colorType = _colors[0];
               return GestureDetector(
-                onTap: () => setState(() => _currentColor = _colors),
+                onTap: () => setState(() => _currentColorType = _colors),
                 child: Container(
                   color: const Color(0x00000000),
                   padding: _isPortrait
@@ -131,7 +129,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                       decoration: BoxDecoration(
                         color: _colorType,
                         borderRadius: BorderRadius.circular(60.0),
-                        boxShadow: _currentColor == _colors
+                        boxShadow: _currentColorType == _colors
                             ? [
                                 _colorType == Theme.of(context).cardColor
                                     ? BoxShadow(
@@ -168,7 +166,8 @@ class _MaterialPickerState extends State<MaterialPicker> {
           _isPortrait
               ? const Padding(padding: EdgeInsets.only(top: 15.0))
               : const Padding(padding: EdgeInsets.only(left: 15.0)),
-          ..._shadingTypes(_currentColor).map((Color _color) {
+          ..._shadingTypes(_currentColorType).map((Map<Color, String> color) {
+            final Color _color = color.keys.first;
             return GestureDetector(
               onTap: () {
                 setState(() => _currentShading = _color);
@@ -181,9 +180,11 @@ class _MaterialPickerState extends State<MaterialPicker> {
                     : const EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
                 child: Align(
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    width: _isPortrait ? 250.0 : 50.0,
-                    height: _isPortrait ? 50.0 : 220.0,
+                    curve: Curves.fastOutSlowIn,
+                    duration: const Duration(milliseconds: 500),
+                    width:
+                        _isPortrait ? (_currentShading == _color ? 250 : 220) : (_currentShading == _color ? 50 : 30),
+                    height: _isPortrait ? 50 : 220,
                     decoration: BoxDecoration(
                       color: _color,
                       boxShadow: _currentShading == _color
@@ -191,11 +192,11 @@ class _MaterialPickerState extends State<MaterialPicker> {
                               _color == Theme.of(context).cardColor
                                   ? BoxShadow(
                                       color: Colors.grey[300]!,
-                                      blurRadius: 5.0,
+                                      blurRadius: 10,
                                     )
                                   : BoxShadow(
                                       color: _color,
-                                      blurRadius: 5.0,
+                                      blurRadius: 10,
                                     ),
                             ]
                           : null,
@@ -204,20 +205,27 @@ class _MaterialPickerState extends State<MaterialPicker> {
                           : null,
                     ),
                     child: (_isPortrait && widget.enableLabel)
-                        ? Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              '#' +
-                                  (_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', ''))
-                                      .toUpperCase() +
-                                  '  ',
-                              style: TextStyle(
-                                color: useWhiteForeground(_color) ? Colors.white : Colors.black,
-                                fontWeight: FontWeight.bold,
+                        ? Row(
+                            children: [
+                              Text(
+                                '  ${color.values.first}',
+                                style: TextStyle(color: useWhiteForeground(_color) ? Colors.white : Colors.black),
                               ),
-                            ),
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    '#${(_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', '')).toUpperCase()}  ',
+                                    style: TextStyle(
+                                      color: useWhiteForeground(_color) ? Colors.white : Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           )
-                        : Container(),
+                        : const SizedBox(),
                   ),
                 ),
               ),
@@ -230,48 +238,38 @@ class _MaterialPickerState extends State<MaterialPicker> {
       );
     }
 
-    var _portraitPicker = SizedBox(
-      width: 350.0,
-      height: 500.0,
-      child: Row(
-        children: <Widget>[
-          _colorList(),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: _shadingList(),
+    if (_isPortrait) {
+      return SizedBox(
+        width: 350.0,
+        height: 500.0,
+        child: Row(
+          children: <Widget>[
+            _colorList(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: _shadingList(),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-    var _landscapePixker = SizedBox(
-      width: 500.0,
-      height: 300.0,
-      child: Column(
-        children: <Widget>[
-          _colorList(),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: _shadingList(),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox(
+        width: 500.0,
+        height: 300.0,
+        child: Column(
+          children: <Widget>[
+            _colorList(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: _shadingList(),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-    if (widget.orientation != null) {
-      if (widget.orientation == Orientation.portrait) {
-        return _portraitPicker;
-      } else if (widget.orientation == Orientation.landscape) {
-        return _landscapePixker;
-      }
-    }
-    switch (_orientation) {
-      case Orientation.portrait:
-        return _portraitPicker;
-      case Orientation.landscape:
-        return _landscapePixker;
+          ],
+        ),
+      );
     }
   }
 }
