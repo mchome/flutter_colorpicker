@@ -291,6 +291,15 @@ class _ColorPickerState extends State<ColorPicker> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                GestureDetector(
+                  onTap: () => setState(() {
+                    if (widget.onHistoryChanged != null && !colorHistory.contains(currentHsvColor.toColor())) {
+                      colorHistory.add(currentHsvColor.toColor());
+                      widget.onHistoryChanged!(colorHistory);
+                    }
+                  }),
+                  child: ColorIndicator(currentHsvColor),
+                ),
                 Expanded(
                   child: Column(
                     children: <Widget>[
