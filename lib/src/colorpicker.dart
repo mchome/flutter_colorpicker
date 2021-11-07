@@ -518,24 +518,30 @@ class _SlidePickerState extends State<SlidePicker> {
     return ClipRRect(
       borderRadius: widget.indicatorBorderRadius,
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: Container(
-        width: widget.indicatorSize.width,
-        height: widget.indicatorSize.height,
-        margin: const EdgeInsets.only(bottom: 15.0),
-        foregroundDecoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              widget.pickerColor,
-              widget.pickerColor,
-              currentHsvColor.toColor(),
-              currentHsvColor.toColor(),
-            ],
-            begin: widget.indicatorAlignmentBegin,
-            end: widget.indicatorAlignmentEnd,
-            stops: const [0.0, 0.5, 0.5, 1.0],
+      child: GestureDetector(
+        onTap: () {
+          setState(() => currentHsvColor = HSVColor.fromColor(widget.pickerColor));
+          widget.onColorChanged(currentHsvColor.toColor());
+        },
+        child: Container(
+          width: widget.indicatorSize.width,
+          height: widget.indicatorSize.height,
+          margin: const EdgeInsets.only(bottom: 15.0),
+          foregroundDecoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                widget.pickerColor,
+                widget.pickerColor,
+                currentHsvColor.toColor(),
+                currentHsvColor.toColor(),
+              ],
+              begin: widget.indicatorAlignmentBegin,
+              end: widget.indicatorAlignmentEnd,
+              stops: const [0.0, 0.5, 0.5, 1.0],
+            ),
           ),
+          child: const CustomPaint(painter: CheckerPainter()),
         ),
-        child: const CustomPaint(painter: CheckerPainter()),
       ),
     );
   }
@@ -617,6 +623,7 @@ class _SlidePickerState extends State<SlidePicker> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         if (widget.showIndicator) indicator(),
+        if (!widget.showIndicator) const SizedBox(height: 20),
         ...sliders,
         const SizedBox(height: 20.0),
         if (widget.showLabel && widget.labelTypes.isNotEmpty)
