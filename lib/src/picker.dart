@@ -513,13 +513,13 @@ class HueRingPainter extends CustomPainter {
     double radio = size.width <= size.height ? size.width / 2 : size.height / 2;
 
     final List<Color> colors = [
-      const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 300.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 240.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 180.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 120.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 60.0, 1.0, 1.0).toColor(),
-      const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
+      HSVColor.fromAHSV(1.0, 360.0, hsvColor.saturation, hsvColor.value).toColor(),
+      HSVColor.fromAHSV(1.0, 300.0, hsvColor.saturation, hsvColor.value).toColor(),
+      HSVColor.fromAHSV(1.0, 240.0, hsvColor.saturation, hsvColor.value).toColor(),
+      HSVColor.fromAHSV(1.0, 180.0, hsvColor.saturation, hsvColor.value).toColor(),
+      HSVColor.fromAHSV(1.0, 120.0, hsvColor.saturation, hsvColor.value).toColor(),
+      HSVColor.fromAHSV(1.0, 60.0, hsvColor.saturation, hsvColor.value).toColor(),
+      HSVColor.fromAHSV(1.0, 0.0, hsvColor.saturation, hsvColor.value).toColor(),
     ];
     canvas.drawCircle(
       center,
@@ -973,7 +973,9 @@ class _ColorPickerInputState extends State<ColorPickerInput> {
             ),
             onChanged: (String value) {
               String input = value;
-              if (value.length == 9) input = value.substring(7) + value.substring(1, 3);
+              if (value.length == 9) {
+                input = value.split('').getRange(7, 9).join() + value.split('').getRange(1, 7).join();
+              }
               final Color? color = colorFromHex(input);
               if (color != null) {
                 widget.onColorChanged(color);
