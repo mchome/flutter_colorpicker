@@ -452,7 +452,7 @@ class SlidePicker extends StatefulWidget {
     this.sliderSize = const Size(260, 40),
     this.showSliderText = true,
     @Deprecated('Use Theme.of(context).textTheme.bodyText1 & 2 to alter text style.') this.sliderTextStyle,
-    this.showParams = false,
+    this.showParams = true,
     @Deprecated('Use empty list in [labelTypes] to disable label.') this.showLabel = true,
     this.labelTypes = const [],
     @Deprecated('Use Theme.of(context).textTheme.bodyText1 & 2 to alter text style.') this.labelTextStyle,
@@ -460,7 +460,7 @@ class SlidePicker extends StatefulWidget {
     this.indicatorSize = const Size(280, 50),
     this.indicatorAlignmentBegin = const Alignment(-1.0, -3.0),
     this.indicatorAlignmentEnd = const Alignment(1.0, 3.0),
-    this.displayThumbColor = false,
+    this.displayThumbColor = true,
     this.indicatorBorderRadius = const BorderRadius.all(Radius.zero),
   }) : super(key: key);
 
@@ -650,6 +650,7 @@ class HueRingPicker extends StatefulWidget {
     this.colorPickerHeight = 250.0,
     this.hueRingStrokeWidth = 20.0,
     this.enableAlpha = false,
+    this.displayThumbColor = true,
     this.pickerAreaBorderRadius = const BorderRadius.all(Radius.zero),
   }) : super(key: key);
 
@@ -659,6 +660,7 @@ class HueRingPicker extends StatefulWidget {
   final double colorPickerHeight;
   final double hueRingStrokeWidth;
   final bool enableAlpha;
+  final bool displayThumbColor;
   final BorderRadius pickerAreaBorderRadius;
 
   @override
@@ -716,7 +718,7 @@ class _HueRingPickerState extends State<HueRingPicker> {
                 TrackType.alpha,
                 currentHsvColor,
                 onColorChanging,
-                displayThumbColor: true,
+                displayThumbColor: widget.displayThumbColor,
               ),
             ),
           Padding(
