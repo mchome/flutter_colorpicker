@@ -700,7 +700,12 @@ class _HueRingPickerState extends State<HueRingPicker> {
                 SizedBox(
                   width: widget.colorPickerHeight,
                   height: widget.colorPickerHeight,
-                  child: ColorPickerHueRing(currentHsvColor, onColorChanging, strokeWidth: widget.hueRingStrokeWidth),
+                  child: ColorPickerHueRing(
+                    currentHsvColor,
+                    onColorChanging,
+                    displayThumbColor: widget.displayThumbColor,
+                    strokeWidth: widget.hueRingStrokeWidth,
+                  ),
                 ),
                 SizedBox(
                   width: widget.colorPickerHeight / 1.6,

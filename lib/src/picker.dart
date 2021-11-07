@@ -500,10 +500,10 @@ class HUEColorWheelPainter extends CustomPainter {
 }
 
 class HueRingPainter extends CustomPainter {
-  const HueRingPainter(this.hsvColor, {this.pointerColor, this.strokeWidth = 5});
+  const HueRingPainter(this.hsvColor, {this.displayThumbColor = true, this.strokeWidth = 5});
 
   final HSVColor hsvColor;
-  final Color? pointerColor;
+  final bool displayThumbColor;
   final double strokeWidth;
 
   @override
@@ -542,13 +542,15 @@ class HueRingPainter extends CustomPainter {
         ..color = Colors.white
         ..style = PaintingStyle.fill,
     );
-    canvas.drawCircle(
-      offset,
-      size.height * 0.03,
-      Paint()
-        ..color = hsvColor.toColor()
-        ..style = PaintingStyle.fill,
-    );
+    if (displayThumbColor) {
+      canvas.drawCircle(
+        offset,
+        size.height * 0.03,
+        Paint()
+          ..color = hsvColor.toColor()
+          ..style = PaintingStyle.fill,
+      );
+    }
   }
 
   @override
@@ -1302,11 +1304,13 @@ class ColorPickerHueRing extends StatelessWidget {
     this.hsvColor,
     this.onColorChanged, {
     Key? key,
+    this.displayThumbColor = true,
     this.strokeWidth = 5.0,
   }) : super(key: key);
 
   final HSVColor hsvColor;
   final ValueChanged<HSVColor> onColorChanged;
+  final bool displayThumbColor;
   final double strokeWidth;
 
   void _handleGesture(Offset position, BuildContext context, double height, double width) {
@@ -1342,7 +1346,9 @@ class ColorPickerHueRing extends StatelessWidget {
               },
             ),
           },
-          child: CustomPaint(painter: HueRingPainter(hsvColor, strokeWidth: strokeWidth)),
+          child: CustomPaint(
+            painter: HueRingPainter(hsvColor, displayThumbColor: displayThumbColor, strokeWidth: strokeWidth),
+          ),
         );
       },
     );
