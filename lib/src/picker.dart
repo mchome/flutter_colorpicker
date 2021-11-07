@@ -513,13 +513,13 @@ class HueRingPainter extends CustomPainter {
     double radio = size.width <= size.height ? size.width / 2 : size.height / 2;
 
     final List<Color> colors = [
-      HSVColor.fromAHSV(1.0, 360.0, hsvColor.saturation, hsvColor.value).toColor(),
-      HSVColor.fromAHSV(1.0, 300.0, hsvColor.saturation, hsvColor.value).toColor(),
-      HSVColor.fromAHSV(1.0, 240.0, hsvColor.saturation, hsvColor.value).toColor(),
-      HSVColor.fromAHSV(1.0, 180.0, hsvColor.saturation, hsvColor.value).toColor(),
-      HSVColor.fromAHSV(1.0, 120.0, hsvColor.saturation, hsvColor.value).toColor(),
-      HSVColor.fromAHSV(1.0, 60.0, hsvColor.saturation, hsvColor.value).toColor(),
-      HSVColor.fromAHSV(1.0, 0.0, hsvColor.saturation, hsvColor.value).toColor(),
+      const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 300.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 240.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 180.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 120.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 60.0, 1.0, 1.0).toColor(),
+      const HSVColor.fromAHSV(1.0, 0.0, 1.0, 1.0).toColor(),
     ];
     canvas.drawCircle(
       center,
