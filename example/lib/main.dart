@@ -1,10 +1,8 @@
-// import 'package:flutter/foundation.dart' show kIsWeb;
-// import 'dart:io' show Platform;
-
-import 'package:flutter/cupertino.dart' show CupertinoTextField;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import './pickers/hsv_picker.dart';
+import './pickers/material_picker.dart';
+import './pickers/block_picker.dart';
 
 void main() => runApp(const MaterialApp(home: MyApp()));
 
@@ -24,20 +22,9 @@ class _MyAppState extends State<MyApp> {
   void changeColor(Color color) => setState(() => currentColor = color);
   void changeColors(List<Color> colors) => setState(() => currentColors = colors);
 
-  // Just an example of how to use/interpret/format text input's result.
-  Future<void> copyToClipboard(String input) async {
-    late String textToCopy;
-    final hex = input.toUpperCase();
-    if (hex.startsWith('FF') && hex.length == 8) {
-      textToCopy = hex.replaceFirst('FF', '');
-    } else {
-      textToCopy = hex;
-    }
-    await Clipboard.setData(ClipboardData(text: '#$textToCopy'));
-  }
-
   @override
   Widget build(BuildContext context) {
+    final foregroundColor = useWhiteForeground(currentColor) ? Colors.white : Colors.black;
     return AnimatedTheme(
       data: lightTheme ? ThemeData.light() : ThemeData.dark(),
       child: Builder(builder: (context) {
@@ -49,12 +36,16 @@ class _MyAppState extends State<MyApp> {
               icon: Icon(lightTheme ? Icons.dark_mode_rounded : Icons.light_mode_rounded),
               label: Text(lightTheme ? 'Night' : '  Day '),
               backgroundColor: currentColor,
-              foregroundColor: useWhiteForeground(currentColor) ? Colors.white : Colors.black,
+              foregroundColor: foregroundColor,
+              elevation: 15,
             ),
             appBar: AppBar(
-              title: GestureDetector(child: const Text('Flutter Color Picker Example')),
-              bottom: const TabBar(
-                tabs: <Widget>[
+              title: const Text('Flutter Color Picker Example'),
+              backgroundColor: currentColor,
+              foregroundColor: foregroundColor,
+              bottom: TabBar(
+                labelColor: foregroundColor,
+                tabs: const <Widget>[
                   Tab(text: 'HSV/HSL/RGB'),
                   Tab(text: 'Material'),
                   Tab(text: 'Blocky'),
@@ -62,278 +53,15 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             body: TabBarView(
-              physics: const NeverScrollableScrollPhysics(),
               children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              titlePadding: const EdgeInsets.all(0.0),
-                              contentPadding: const EdgeInsets.all(0.0),
-                              content: SingleChildScrollView(
-                                child: ColorPicker(
-                                  pickerColor: currentColor,
-                                  onColorChanged: changeColor,
-                                  colorPickerWidth: 300.0,
-                                  pickerAreaHeightPercent: 0.7,
-                                  enableAlpha: true,
-                                  // labelTypes: const [], // disable label
-                                  labelTypes: const [ColorLabelType.hsl, ColorLabelType.hsv],
-                                  displayThumbColor: true,
-                                  paletteType: PaletteType.hsl,
-                                  pickerAreaBorderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(2.0),
-                                    topRight: Radius.circular(2.0),
-                                  ),
-                                  hexInputBar: false,
-                                  colorHistory: colorHistory,
-                                  onHistoryChanged: (List<Color> colors) => colorHistory = colors,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Text(
-                        '         HSL Color Picker\n(with alpha slider and label)',
-                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
-                    ),
-                    const SizedBox(height: 15),
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              titlePadding: const EdgeInsets.all(0.0),
-                              contentPadding: const EdgeInsets.all(0.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: MediaQuery.of(context).orientation == Orientation.portrait
-                                    ? const BorderRadius.vertical(
-                                        top: Radius.circular(500),
-                                        bottom: Radius.circular(100),
-                                      )
-                                    : const BorderRadius.horizontal(right: Radius.circular(500)),
-                              ),
-                              content: SingleChildScrollView(
-                                child: HueRingPicker(
-                                  pickerColor: currentColor,
-                                  onColorChanged: changeColor,
-                                  enableAlpha: false,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Text(
-                        'HSV Color Picker\n (with Hue Ring)',
-                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
-                    ),
-                    const SizedBox(height: 15),
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              titlePadding: const EdgeInsets.all(0.0),
-                              contentPadding: const EdgeInsets.all(0.0),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
-                              content: SingleChildScrollView(
-                                child: SlidePicker(
-                                  pickerColor: currentColor,
-                                  onColorChanged: changeColor,
-                                  colorModel: ColorModel.rgb,
-                                  enableAlpha: false,
-                                  displayThumbColor: true,
-                                  showParams: true,
-                                  showIndicator: true,
-                                  indicatorBorderRadius: const BorderRadius.vertical(top: Radius.circular(25.0)),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Text(
-                        'RGB  Color Picker\n    (Slider-only)',
-                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
-                    ),
-                    const SizedBox(height: 15),
-                    ElevatedButton(
-                      onPressed: () {
-                        // The initial value can be provided directly to the controller.
-                        final textController = TextEditingController(text: '#2F19DB');
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              scrollable: true,
-                              titlePadding: const EdgeInsets.all(0.0),
-                              contentPadding: const EdgeInsets.all(0.0),
-                              content: Column(
-                                children: [
-                                  ColorPicker(
-                                    pickerColor: currentColor,
-                                    onColorChanged: changeColor,
-                                    colorPickerWidth: 300.0,
-                                    pickerAreaHeightPercent: 0.7,
-                                    enableAlpha: true, // hexInputController will respect it too.
-                                    displayThumbColor: true,
-                                    paletteType: PaletteType.hsvWithHue,
-                                    labelTypes: const [],
-                                    pickerAreaBorderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(2.0),
-                                      topRight: Radius.circular(2.0),
-                                    ),
-                                    hexInputController: textController, // <- here
-                                    portraitOnly: true,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    /* It can be any text field, for example:
-
-                                      * TextField
-                                      * TextFormField
-                                      * CupertinoTextField
-                                      * EditableText
-                                      * any text field from 3-rd party package
-                                      * your own text field
-
-                                      so basically anything that supports/uses
-                                      a TextEditingController for an editable text.
-                                      */
-                                    child: CupertinoTextField(
-                                      controller: textController,
-                                      // Everything below is purely optional.
-                                      prefix: const Padding(
-                                        padding: EdgeInsets.only(left: 8),
-                                        child: Icon(Icons.tag),
-                                      ),
-                                      suffix: IconButton(
-                                        icon: const Icon(Icons.content_paste_rounded),
-                                        onPressed: () async => copyToClipboard(textController.text),
-                                      ),
-                                      autofocus: true,
-                                      maxLength: 9,
-                                      inputFormatters: [
-                                        // Any custom input formatter can be passed
-                                        // here or use any Form validator you want.
-                                        UpperCaseTextFormatter(),
-                                        FilteringTextInputFormatter.allow(RegExp(kValidHexPattern)),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Text(
-                        '               HSV Color Picker\n(with you own text field controller)',
-                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
-                    ),
-                  ],
+                HSVColorPickerExample(
+                  pickerColor: currentColor,
+                  onColorChanged: changeColor,
+                  colorHistory: colorHistory,
+                  onHistoryChanged: (List<Color> colors) => colorHistory = colors,
                 ),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            titlePadding: const EdgeInsets.all(0.0),
-                            contentPadding: const EdgeInsets.all(0.0),
-                            content: SingleChildScrollView(
-                              child: MaterialPicker(
-                                pickerColor: currentColor,
-                                onColorChanged: changeColor,
-                                enableLabel: true,
-                                // orientation: (kIsWeb || Platform.isWindows)
-                                //     ? Orientation.portrait
-                                //     : null,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: Text(
-                      'Kiss me with you finger',
-                      style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
-                    ),
-                    style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
-                  ),
-                ),
-                Center(
-                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Select a color'),
-                              content: SingleChildScrollView(
-                                child: BlockPicker(
-                                  pickerColor: currentColor,
-                                  onColorChanged: changeColor,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Text(
-                        'Blocky Color Picker',
-                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: currentColor,
-                        elevation: 3,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Select colors'),
-                              content: SingleChildScrollView(
-                                child: MultipleChoiceBlockPicker(
-                                  pickerColors: currentColors,
-                                  onColorsChanged: changeColors,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Text(
-                        'Multiple selection Blocky Color Picker',
-                        style: TextStyle(color: useWhiteForeground(currentColor) ? Colors.white : Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(primary: currentColor, elevation: 3),
-                    )
-                  ]),
-                ),
+                MaterialColorPickerExample(pickerColor: currentColor, onColorChanged: changeColor),
+                BlockColorPickerExample(pickerColor: currentColor, onColorChanged: changeColor),
               ],
             ),
           ),

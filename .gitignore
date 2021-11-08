@@ -76,3 +76,5 @@ build/
 
 # dev
 lib/src/color.dart
+**/ref.dart
+**/test.dart

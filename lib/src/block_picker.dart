@@ -5,19 +5,9 @@ library block_colorpicker;
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
-typedef PickerItem = Widget Function(
-  Color color,
-);
-typedef PickerLayoutBuilder = Widget Function(
-  BuildContext context,
-  List<Color> colors,
-  PickerItem child,
-);
-typedef PickerItemBuilder = Widget Function(
-  Color color,
-  bool isCurrentColor,
-  void Function() changeColor,
-);
+typedef PickerItem = Widget Function(Color color);
+typedef PickerLayoutBuilder = Widget Function(BuildContext context, List<Color> colors, PickerItem child);
+typedef PickerItemBuilder = Widget Function(Color color, bool isCurrentColor, void Function() changeColor);
 
 // Provide a list of colors for block color picker.
 const List<Color> _defaultColors = [
@@ -44,41 +34,33 @@ const List<Color> _defaultColors = [
 ];
 
 // Provide a layout for BlockPicker.
-Widget _defaultLayoutBuilder(
-  BuildContext context,
-  List<Color> colors,
-  PickerItem child,
-) {
+Widget _defaultLayoutBuilder(BuildContext context, List<Color> colors, PickerItem child) {
   Orientation orientation = MediaQuery.of(context).orientation;
 
   return SizedBox(
-    width: orientation == Orientation.portrait ? 300.0 : 300.0,
-    height: orientation == Orientation.portrait ? 360.0 : 200.0,
+    width: orientation == Orientation.portrait ? 300 : 300,
+    height: orientation == Orientation.portrait ? 360 : 200,
     child: GridView.count(
       crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
-      crossAxisSpacing: 5.0,
-      mainAxisSpacing: 5.0,
+      crossAxisSpacing: 5,
+      mainAxisSpacing: 5,
       children: colors.map((Color color) => child(color)).toList(),
     ),
   );
 }
 
 // Provide a shape for BlockPicker.
-Widget _defaultItemBuilder(
-  Color color,
-  bool isCurrentColor,
-  void Function() changeColor,
-) {
+Widget _defaultItemBuilder(Color color, bool isCurrentColor, void Function() changeColor) {
   return Container(
-    margin: const EdgeInsets.all(5.0),
+    margin: const EdgeInsets.all(5),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(50.0),
+      borderRadius: BorderRadius.circular(50),
       color: color,
       boxShadow: [
         BoxShadow(
           color: color.withOpacity(0.8),
-          offset: const Offset(1.0, 2.0),
-          blurRadius: 3.0,
+          offset: const Offset(1, 2),
+          blurRadius: 3,
         ),
       ],
     ),
@@ -86,10 +68,10 @@ Widget _defaultItemBuilder(
       color: Colors.transparent,
       child: InkWell(
         onTap: changeColor,
-        borderRadius: BorderRadius.circular(50.0),
+        borderRadius: BorderRadius.circular(50),
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 210),
-          opacity: isCurrentColor ? 1.0 : 0.0,
+          opacity: isCurrentColor ? 1 : 0,
           child: Icon(
             Icons.done,
             color: useWhiteForeground(color) ? Colors.white : Colors.black,
