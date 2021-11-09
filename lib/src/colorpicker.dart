@@ -336,11 +336,13 @@ class _ColorPickerState extends State<ColorPicker> {
               ]),
             ),
           if (widget.showLabel && widget.labelTypes.isNotEmpty)
-            ColorPickerLabel(
-              currentHsvColor,
-              enableAlpha: widget.enableAlpha,
-              textStyle: widget.labelTextStyle,
-              colorLabelTypes: widget.labelTypes,
+            FittedBox(
+              child: ColorPickerLabel(
+                currentHsvColor,
+                enableAlpha: widget.enableAlpha,
+                textStyle: widget.labelTextStyle,
+                colorLabelTypes: widget.labelTypes,
+              ),
             ),
           if (widget.hexInputBar)
             ColorPickerInput(
@@ -414,11 +416,13 @@ class _ColorPickerState extends State<ColorPicker> {
                 ),
               const SizedBox(height: 20.0),
               if (widget.showLabel && widget.labelTypes.isNotEmpty)
-                ColorPickerLabel(
-                  currentHsvColor,
-                  enableAlpha: widget.enableAlpha,
-                  textStyle: widget.labelTextStyle,
-                  colorLabelTypes: widget.labelTypes,
+                FittedBox(
+                  child: ColorPickerLabel(
+                    currentHsvColor,
+                    enableAlpha: widget.enableAlpha,
+                    textStyle: widget.labelTextStyle,
+                    colorLabelTypes: widget.labelTypes,
+                  ),
                 ),
               if (widget.hexInputBar)
                 ColorPickerInput(
