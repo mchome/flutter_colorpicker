@@ -54,7 +54,7 @@ Widget _defaultItemBuilder(Color color, bool isCurrentColor, void Function() cha
   return Container(
     margin: const EdgeInsets.all(5),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(50),
+      shape: BoxShape.circle,
       color: color,
       boxShadow: [
         BoxShadow(

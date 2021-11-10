@@ -6,7 +6,7 @@ library hsv_picker;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/src/picker.dart';
+import 'package:flutter_colorpicker/src/palette_picker.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
 // The default layout of Color Picker.
