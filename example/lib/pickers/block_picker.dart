@@ -25,55 +25,6 @@ const List<Color> colors = [
   Colors.black,
 ];
 
-// Provide a layout for BlockPicker.
-Widget pickerLayoutBuilder(BuildContext context, List<Color> colors, PickerItem child) {
-  Orientation orientation = MediaQuery.of(context).orientation;
-
-  return SizedBox(
-    width: orientation == Orientation.portrait ? 300 : 300,
-    height: orientation == Orientation.portrait ? 360 : 200,
-    child: GridView.count(
-      crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
-      crossAxisSpacing: 5,
-      mainAxisSpacing: 5,
-      children: colors.map((Color color) => child(color)).toList(),
-    ),
-  );
-}
-
-// Provide a shape for BlockPicker.
-Widget pickerItemBuilder(Color color, bool isCurrentColor, void Function() changeColor) {
-  return Container(
-    margin: const EdgeInsets.all(5),
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: color,
-      boxShadow: [
-        BoxShadow(
-          color: color.withOpacity(0.8),
-          offset: const Offset(1, 2),
-          blurRadius: 10,
-        ),
-      ],
-    ),
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: changeColor,
-        borderRadius: BorderRadius.circular(50),
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 210),
-          opacity: isCurrentColor ? 1 : 0,
-          child: Icon(
-            Icons.done,
-            color: useWhiteForeground(color) ? Colors.white : Colors.black,
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
 class BlockColorPickerExample extends StatefulWidget {
   const BlockColorPickerExample({
     Key? key,
@@ -91,10 +42,55 @@ class BlockColorPickerExample extends StatefulWidget {
 }
 
 class _BlockColorPickerExampleState extends State<BlockColorPickerExample> {
+  Widget pickerLayoutBuilder(BuildContext context, List<Color> colors, PickerItem child) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+
+    return SizedBox(
+      width: 300,
+      height: orientation == Orientation.portrait ? 360 : 200,
+      child: GridView.count(
+        crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
+        crossAxisSpacing: 5,
+        mainAxisSpacing: 5,
+        children: [for (Color color in colors) child(color)],
+      ),
+    );
+  }
+
+  Widget pickerItemBuilder(Color color, bool isCurrentColor, void Function() changeColor) {
+    return Container(
+      margin: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+        boxShadow: [BoxShadow(color: color.withOpacity(0.8), offset: const Offset(1, 2), blurRadius: 10)],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: changeColor,
+          borderRadius: BorderRadius.circular(50),
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 210),
+            opacity: isCurrentColor ? 1 : 0,
+            child: Icon(Icons.done, color: useWhiteForeground(color) ? Colors.white : Colors.black),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        const SizedBox(height: 20),
+        // SwitchListTile(
+        //   title: const Text('Enable Label in Portrait Mode'),
+        //   value: _enableLabel,
+        //   onChanged: (bool value) => setState(() => _enableLabel = !_enableLabel),
+        // ),
+        const Divider(),
         const SizedBox(height: 20),
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -112,6 +108,8 @@ class _BlockColorPickerExampleState extends State<BlockColorPickerExample> {
                           pickerColor: widget.pickerColor,
                           onColorChanged: widget.onColorChanged,
                           availableColors: widget.colorHistory.isNotEmpty ? widget.colorHistory : colors,
+                          layoutBuilder: pickerLayoutBuilder,
+                          itemBuilder: pickerItemBuilder,
                         ),
                       ),
                     );

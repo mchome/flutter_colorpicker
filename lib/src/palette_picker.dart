@@ -7,7 +7,6 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
 enum PaletteType {

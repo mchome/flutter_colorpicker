@@ -38,13 +38,13 @@ Widget _defaultLayoutBuilder(BuildContext context, List<Color> colors, PickerIte
   Orientation orientation = MediaQuery.of(context).orientation;
 
   return SizedBox(
-    width: orientation == Orientation.portrait ? 300 : 300,
+    width: 300,
     height: orientation == Orientation.portrait ? 360 : 200,
     child: GridView.count(
       crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
       crossAxisSpacing: 5,
       mainAxisSpacing: 5,
-      children: colors.map((Color color) => child(color)).toList(),
+      children: [for (Color color in colors) child(color)],
     ),
   );
 }
@@ -56,13 +56,7 @@ Widget _defaultItemBuilder(Color color, bool isCurrentColor, void Function() cha
     decoration: BoxDecoration(
       shape: BoxShape.circle,
       color: color,
-      boxShadow: [
-        BoxShadow(
-          color: color.withOpacity(0.8),
-          offset: const Offset(1, 2),
-          blurRadius: 3,
-        ),
-      ],
+      boxShadow: [BoxShadow(color: color.withOpacity(0.8), offset: const Offset(1, 2), blurRadius: 10)],
     ),
     child: Material(
       color: Colors.transparent,
@@ -72,10 +66,7 @@ Widget _defaultItemBuilder(Color color, bool isCurrentColor, void Function() cha
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 210),
           opacity: isCurrentColor ? 1 : 0,
-          child: Icon(
-            Icons.done,
-            color: useWhiteForeground(color) ? Colors.white : Colors.black,
-          ),
+          child: Icon(Icons.done, color: useWhiteForeground(color) ? Colors.white : Colors.black),
         ),
       ),
     ),
