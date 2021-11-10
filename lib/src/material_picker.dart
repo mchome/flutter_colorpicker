@@ -2,6 +2,7 @@
 
 library material_colorpicker;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
@@ -50,6 +51,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
 
   List<Color> _currentColorType = [Colors.red, Colors.redAccent];
   late Color _currentShading;
+  final ScrollController scrollController = ScrollController();
 
   List<Map<Color, String>> _shadingTypes(List<Color> colors) {
     List<Map<Color, String>> result = [];
@@ -94,6 +96,12 @@ class _MaterialPickerState extends State<MaterialPicker> {
   }
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool _isPortrait = MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly;
 
@@ -106,135 +114,138 @@ class _MaterialPickerState extends State<MaterialPicker> {
               ? Border(right: BorderSide(color: Colors.grey[300]!, width: 1))
               : Border(top: BorderSide(color: Colors.grey[300]!, width: 1)),
         ),
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(dragDevices: PointerDeviceKind.values.toSet()),
+          child: ListView(
+            scrollDirection: _isPortrait ? Axis.vertical : Axis.horizontal,
+            children: [
+              _isPortrait
+                  ? const Padding(padding: EdgeInsets.only(top: 7))
+                  : const Padding(padding: EdgeInsets.only(left: 7)),
+              ..._colorTypes.map((List<Color> _colors) {
+                Color _colorType = _colors[0];
+                return GestureDetector(
+                  onTap: () => setState(() => _currentColorType = _colors),
+                  child: Container(
+                    color: const Color(0x00000000),
+                    padding:
+                        _isPortrait ? const EdgeInsets.fromLTRB(0, 7, 0, 7) : const EdgeInsets.fromLTRB(7, 0, 7, 0),
+                    child: Align(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        width: 25,
+                        height: 25,
+                        decoration: BoxDecoration(
+                          color: _colorType,
+                          shape: BoxShape.circle,
+                          boxShadow: _currentColorType == _colors
+                              ? [
+                                  _colorType == Theme.of(context).cardColor
+                                      ? BoxShadow(
+                                          color: Colors.grey[300]!,
+                                          blurRadius: 10,
+                                        )
+                                      : BoxShadow(
+                                          color: _colorType,
+                                          blurRadius: 10,
+                                        ),
+                                ]
+                              : null,
+                          border: _colorType == Theme.of(context).cardColor
+                              ? Border.all(color: Colors.grey[300]!, width: 1)
+                              : null,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+              _isPortrait
+                  ? const Padding(padding: EdgeInsets.only(top: 5))
+                  : const Padding(padding: EdgeInsets.only(left: 5)),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget _shadingList() {
+      return ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(dragDevices: PointerDeviceKind.values.toSet()),
         child: ListView(
           scrollDirection: _isPortrait ? Axis.vertical : Axis.horizontal,
           children: [
             _isPortrait
-                ? const Padding(padding: EdgeInsets.only(top: 7))
-                : const Padding(padding: EdgeInsets.only(left: 7)),
-            ..._colorTypes.map((List<Color> _colors) {
-              Color _colorType = _colors[0];
+                ? const Padding(padding: EdgeInsets.only(top: 15))
+                : const Padding(padding: EdgeInsets.only(left: 15)),
+            ..._shadingTypes(_currentColorType).map((Map<Color, String> color) {
+              final Color _color = color.keys.first;
               return GestureDetector(
-                onTap: () => setState(() => _currentColorType = _colors),
+                onTap: () {
+                  setState(() => _currentShading = _color);
+                  widget.onColorChanged(_color);
+                },
                 child: Container(
                   color: const Color(0x00000000),
-                  padding: _isPortrait
-                      ? const EdgeInsets.fromLTRB(0, 7, 0, 7)
-                      : const EdgeInsets.fromLTRB(7, 0, 7, 0),
+                  padding: _isPortrait ? const EdgeInsets.fromLTRB(0, 7, 0, 7) : const EdgeInsets.fromLTRB(7, 0, 7, 0),
                   child: Align(
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      width: 25,
-                      height: 25,
+                      curve: Curves.fastOutSlowIn,
+                      duration: const Duration(milliseconds: 500),
+                      width:
+                          _isPortrait ? (_currentShading == _color ? 250 : 220) : (_currentShading == _color ? 50 : 30),
+                      height: _isPortrait ? 50 : 220,
                       decoration: BoxDecoration(
-                        color: _colorType,
-                        shape: BoxShape.circle,
-                        boxShadow: _currentColorType == _colors
+                        color: _color,
+                        boxShadow: _currentShading == _color
                             ? [
-                                _colorType == Theme.of(context).cardColor
+                                _color == Theme.of(context).cardColor
                                     ? BoxShadow(
                                         color: Colors.grey[300]!,
                                         blurRadius: 10,
                                       )
                                     : BoxShadow(
-                                        color: _colorType,
+                                        color: _color,
                                         blurRadius: 10,
                                       ),
                               ]
                             : null,
-                        border: _colorType == Theme.of(context).cardColor
+                        border: _color == Theme.of(context).cardColor
                             ? Border.all(color: Colors.grey[300]!, width: 1)
                             : null,
                       ),
+                      child: (_isPortrait && widget.enableLabel)
+                          ? Row(
+                              children: [
+                                Text(
+                                  '  ${color.values.first}',
+                                  style: TextStyle(color: useWhiteForeground(_color) ? Colors.white : Colors.black),
+                                ),
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      '#${(_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', '')).toUpperCase()}  ',
+                                      style: TextStyle(
+                                        color: useWhiteForeground(_color) ? Colors.white : Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : const SizedBox(),
                     ),
                   ),
                 ),
               );
             }),
             _isPortrait
-                ? const Padding(padding: EdgeInsets.only(top: 5))
-                : const Padding(padding: EdgeInsets.only(left: 5)),
+                ? const Padding(padding: EdgeInsets.only(top: 15))
+                : const Padding(padding: EdgeInsets.only(left: 15)),
           ],
         ),
-      );
-    }
-
-    Widget _shadingList() {
-      return ListView(
-        scrollDirection: _isPortrait ? Axis.vertical : Axis.horizontal,
-        children: [
-          _isPortrait
-              ? const Padding(padding: EdgeInsets.only(top: 15))
-              : const Padding(padding: EdgeInsets.only(left: 15)),
-          ..._shadingTypes(_currentColorType).map((Map<Color, String> color) {
-            final Color _color = color.keys.first;
-            return GestureDetector(
-              onTap: () {
-                setState(() => _currentShading = _color);
-                widget.onColorChanged(_color);
-              },
-              child: Container(
-                color: const Color(0x00000000),
-                padding: _isPortrait
-                    ? const EdgeInsets.fromLTRB(0, 7, 0, 7)
-                    : const EdgeInsets.fromLTRB(7, 0, 7, 0),
-                child: Align(
-                  child: AnimatedContainer(
-                    curve: Curves.fastOutSlowIn,
-                    duration: const Duration(milliseconds: 500),
-                    width:
-                        _isPortrait ? (_currentShading == _color ? 250 : 220) : (_currentShading == _color ? 50 : 30),
-                    height: _isPortrait ? 50 : 220,
-                    decoration: BoxDecoration(
-                      color: _color,
-                      boxShadow: _currentShading == _color
-                          ? [
-                              _color == Theme.of(context).cardColor
-                                  ? BoxShadow(
-                                      color: Colors.grey[300]!,
-                                      blurRadius: 10,
-                                    )
-                                  : BoxShadow(
-                                      color: _color,
-                                      blurRadius: 10,
-                                    ),
-                            ]
-                          : null,
-                      border: _color == Theme.of(context).cardColor
-                          ? Border.all(color: Colors.grey[300]!, width: 1)
-                          : null,
-                    ),
-                    child: (_isPortrait && widget.enableLabel)
-                        ? Row(
-                            children: [
-                              Text(
-                                '  ${color.values.first}',
-                                style: TextStyle(color: useWhiteForeground(_color) ? Colors.white : Colors.black),
-                              ),
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    '#${(_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', '')).toUpperCase()}  ',
-                                    style: TextStyle(
-                                      color: useWhiteForeground(_color) ? Colors.white : Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        : const SizedBox(),
-                  ),
-                ),
-              ),
-            );
-          }),
-          _isPortrait
-              ? const Padding(padding: EdgeInsets.only(top: 15))
-              : const Padding(padding: EdgeInsets.only(left: 15)),
-        ],
       );
     }
 
