@@ -6,10 +6,10 @@ library hsv_picker;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/src/palette_picker.dart';
+import 'package:flutter_colorpicker/src/palette.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
-// The default layout of Color Picker.
+/// The default layout of Color Picker.
 class ColorPicker extends StatefulWidget {
   const ColorPicker({
     Key? key,
@@ -445,7 +445,7 @@ class _ColorPickerState extends State<ColorPicker> {
   }
 }
 
-// The Color Picker with sliders only. Support HSV, HSL and RGB color model.
+/// The Color Picker with sliders only. Support HSV, HSL and RGB color model.
 class SlidePicker extends StatefulWidget {
   const SlidePicker({
     Key? key,
@@ -645,6 +645,7 @@ class _SlidePickerState extends State<SlidePicker> {
   }
 }
 
+/// The Color Picker with HUE Ring & HSV model.
 class HueRingPicker extends StatefulWidget {
   const HueRingPicker({
     Key? key,

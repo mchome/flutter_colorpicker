@@ -3,12 +3,12 @@
 /// Try to create a Color Picker with other layout on your own :)
 
 import 'dart:math';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
+/// Palette types for color picker area widget.
 enum PaletteType {
   hsv,
   hsvWithHue,
@@ -23,6 +23,8 @@ enum PaletteType {
   rgbWithRed,
   hueWheel,
 }
+
+/// Track types for slider picker.
 enum TrackType {
   hue,
   saturation,
@@ -34,10 +36,15 @@ enum TrackType {
   blue,
   alpha,
 }
+
+/// Color information label type.
 enum ColorLabelType { hex, rgb, hsv, hsl }
+
+/// Types for slider picker widget.
 enum ColorModel { rgb, hsv, hsl }
 // enum ColorSpace { rgb, hsv, hsl, hsp, okhsv, okhsl, xyz, yuv, lab, lch, cmyk }
 
+/// Painter for SV mixture.
 class HSVWithHueColorPainter extends CustomPainter {
   const HSVWithHueColorPainter(this.hsvColor, {this.pointerColor});
 
@@ -80,6 +87,7 @@ class HSVWithHueColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for HV mixture.
 class HSVWithSaturationColorPainter extends CustomPainter {
   const HSVWithSaturationColorPainter(this.hsvColor, {this.pointerColor});
 
@@ -124,6 +132,7 @@ class HSVWithSaturationColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for HS mixture.
 class HSVWithValueColorPainter extends CustomPainter {
   const HSVWithValueColorPainter(this.hsvColor, {this.pointerColor});
 
@@ -172,6 +181,7 @@ class HSVWithValueColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for SL mixture.
 class HSLWithHueColorPainter extends CustomPainter {
   const HSLWithHueColorPainter(this.hslColor, {this.pointerColor});
 
@@ -215,6 +225,7 @@ class HSLWithHueColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for HL mixture.
 class HSLWithSaturationColorPainter extends CustomPainter {
   const HSLWithSaturationColorPainter(this.hslColor, {this.pointerColor});
 
@@ -262,6 +273,7 @@ class HSLWithSaturationColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for HS mixture.
 class HSLWithLightnessColorPainter extends CustomPainter {
   const HSLWithLightnessColorPainter(this.hslColor, {this.pointerColor});
 
@@ -314,6 +326,7 @@ class HSLWithLightnessColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for GB mixture.
 class RGBWithRedColorPainter extends CustomPainter {
   const RGBWithRedColorPainter(this.color, {this.pointerColor});
 
@@ -359,6 +372,7 @@ class RGBWithRedColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for RB mixture.
 class RGBWithGreenColorPainter extends CustomPainter {
   const RGBWithGreenColorPainter(this.color, {this.pointerColor});
 
@@ -404,6 +418,7 @@ class RGBWithGreenColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for RG mixture.
 class RGBWithBlueColorPainter extends CustomPainter {
   const RGBWithBlueColorPainter(this.color, {this.pointerColor});
 
@@ -449,6 +464,7 @@ class RGBWithBlueColorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for hue color wheel.
 class HUEColorWheelPainter extends CustomPainter {
   const HUEColorWheelPainter(this.hsvColor, {this.pointerColor});
 
@@ -498,6 +514,7 @@ class HUEColorWheelPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for hue ring.
 class HueRingPainter extends CustomPainter {
   const HueRingPainter(this.hsvColor, {this.displayThumbColor = true, this.strokeWidth = 5});
 
@@ -587,6 +604,7 @@ class _SliderLayout extends MultiChildLayoutDelegate {
   bool shouldRelayout(_SliderLayout oldDelegate) => false;
 }
 
+/// Painter for all kinds of track types.
 class TrackPainter extends CustomPainter {
   const TrackPainter(this.trackType, this.hsvColor);
 
@@ -696,6 +714,7 @@ class TrackPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for thumb of slider.
 class ThumbPainter extends CustomPainter {
   const ThumbPainter({this.thumbColor, this.fullThumbColor = false});
 
@@ -733,6 +752,7 @@ class ThumbPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for chess type alpha background in color indicator widget.
 class IndicatorPainter extends CustomPainter {
   const IndicatorPainter(this.color);
 
@@ -764,6 +784,7 @@ class IndicatorPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Painter for chess type alpha background in slider track widget.
 class CheckerPainter extends CustomPainter {
   const CheckerPainter();
 
@@ -786,6 +807,7 @@ class CheckerPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Provide label for color information.
 class ColorPickerLabel extends StatefulWidget {
   const ColorPickerLabel(
     this.hsvColor, {
@@ -914,6 +936,7 @@ class _ColorPickerLabelState extends State<ColorPickerLabel> {
   }
 }
 
+/// Provide hex input wiget for 3/6/8 digits.
 class ColorPickerInput extends StatefulWidget {
   const ColorPickerInput(
     this.color,
@@ -990,6 +1013,7 @@ class _ColorPickerInputState extends State<ColorPickerInput> {
   }
 }
 
+/// 9 track types for slider picker widget.
 class ColorPickerSlider extends StatelessWidget {
   const ColorPickerSlider(
     this.trackType,
@@ -1132,6 +1156,7 @@ class ColorPickerSlider extends StatelessWidget {
   }
 }
 
+/// Simple round color indicator.
 class ColorIndicator extends StatelessWidget {
   const ColorIndicator(
     this.hsvColor, {
@@ -1161,6 +1186,7 @@ class ColorIndicator extends StatelessWidget {
   }
 }
 
+/// Provide Rectangle & Circle 2 categories, 10 variations of palette widget.
 class ColorPickerArea extends StatelessWidget {
   const ColorPickerArea(
     this.hsvColor,
@@ -1253,9 +1279,9 @@ class ColorPickerArea extends StatelessWidget {
 
         return RawGestureDetector(
           gestures: {
-            AlwaysWinPanGestureRecognizer: GestureRecognizerFactoryWithHandlers<AlwaysWinPanGestureRecognizer>(
-              () => AlwaysWinPanGestureRecognizer(),
-              (AlwaysWinPanGestureRecognizer instance) {
+            _AlwaysWinPanGestureRecognizer: GestureRecognizerFactoryWithHandlers<_AlwaysWinPanGestureRecognizer>(
+              () => _AlwaysWinPanGestureRecognizer(),
+              (_AlwaysWinPanGestureRecognizer instance) {
                 instance
                   ..onDown = ((details) => _handleGesture(details.globalPosition, context, height, width))
                   ..onUpdate = ((details) => _handleGesture(details.globalPosition, context, height, width));
@@ -1298,6 +1324,7 @@ class ColorPickerArea extends StatelessWidget {
   }
 }
 
+/// Provide Hue Ring with HSV Rectangle of palette widget.
 class ColorPickerHueRing extends StatelessWidget {
   const ColorPickerHueRing(
     this.hsvColor,
@@ -1336,9 +1363,9 @@ class ColorPickerHueRing extends StatelessWidget {
 
         return RawGestureDetector(
           gestures: {
-            AlwaysWinPanGestureRecognizer: GestureRecognizerFactoryWithHandlers<AlwaysWinPanGestureRecognizer>(
-              () => AlwaysWinPanGestureRecognizer(),
-              (AlwaysWinPanGestureRecognizer instance) {
+            _AlwaysWinPanGestureRecognizer: GestureRecognizerFactoryWithHandlers<_AlwaysWinPanGestureRecognizer>(
+              () => _AlwaysWinPanGestureRecognizer(),
+              (_AlwaysWinPanGestureRecognizer instance) {
                 instance
                   ..onDown = ((details) => _handleGesture(details.globalPosition, context, height, width))
                   ..onUpdate = ((details) => _handleGesture(details.globalPosition, context, height, width));
@@ -1354,7 +1381,7 @@ class ColorPickerHueRing extends StatelessWidget {
   }
 }
 
-class AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
+class _AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
   @override
   void addAllowedPointer(event) {
     super.addAllowedPointer(event);
@@ -1365,6 +1392,7 @@ class AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
   String get debugDescription => 'alwaysWin';
 }
 
+/// Uppercase text formater
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(oldValue, TextEditingValue newValue) =>

@@ -5,8 +5,13 @@ library block_colorpicker;
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/src/utils.dart';
 
+/// Child widget for layout builder.
 typedef PickerItem = Widget Function(Color color);
+
+/// Customize the layout.
 typedef PickerLayoutBuilder = Widget Function(BuildContext context, List<Color> colors, PickerItem child);
+
+/// Customize the item shape.
 typedef PickerItemBuilder = Widget Function(Color color, bool isCurrentColor, void Function() changeColor);
 
 // Provide a list of colors for block color picker.
@@ -33,7 +38,7 @@ const List<Color> _defaultColors = [
   Colors.black,
 ];
 
-// Provide a layout for BlockPicker.
+// Provide a layout for [BlockPicker].
 Widget _defaultLayoutBuilder(BuildContext context, List<Color> colors, PickerItem child) {
   Orientation orientation = MediaQuery.of(context).orientation;
 
@@ -49,7 +54,7 @@ Widget _defaultLayoutBuilder(BuildContext context, List<Color> colors, PickerIte
   );
 }
 
-// Provide a shape for BlockPicker.
+// Provide a shape for [BlockPicker].
 Widget _defaultItemBuilder(Color color, bool isCurrentColor, void Function() changeColor) {
   return Container(
     margin: const EdgeInsets.all(7),

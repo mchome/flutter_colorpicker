@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-// Provide a list of colors for block color picker.
 const List<Color> colors = [
   Colors.red,
   Colors.pink,
