@@ -52,11 +52,11 @@ Widget _defaultLayoutBuilder(BuildContext context, List<Color> colors, PickerIte
 // Provide a shape for BlockPicker.
 Widget _defaultItemBuilder(Color color, bool isCurrentColor, void Function() changeColor) {
   return Container(
-    margin: const EdgeInsets.all(5),
+    margin: const EdgeInsets.all(7),
     decoration: BoxDecoration(
       shape: BoxShape.circle,
       color: color,
-      boxShadow: [BoxShadow(color: color.withOpacity(0.8), offset: const Offset(1, 2), blurRadius: 10)],
+      boxShadow: [BoxShadow(color: color.withOpacity(0.8), offset: const Offset(1, 2), blurRadius: 5)],
     ),
     child: Material(
       color: Colors.transparent,

@@ -51,7 +51,6 @@ class _MaterialPickerState extends State<MaterialPicker> {
 
   List<Color> _currentColorType = [Colors.red, Colors.redAccent];
   late Color _currentShading;
-  final ScrollController scrollController = ScrollController();
 
   List<Map<Color, String>> _shadingTypes(List<Color> colors) {
     List<Map<Color, String>> result = [];
@@ -93,12 +92,6 @@ class _MaterialPickerState extends State<MaterialPicker> {
       });
     }
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
   }
 
   @override

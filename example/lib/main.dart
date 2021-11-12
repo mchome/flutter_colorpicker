@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool lightTheme = true;
   Color currentColor = Colors.amber;
-  List<Color> currentColors = [Colors.limeAccent, Colors.green];
+  List<Color> currentColors = [Colors.yellow, Colors.green];
   List<Color> colorHistory = [];
 
   void changeColor(Color color) => setState(() => currentColor = color);
@@ -64,6 +64,8 @@ class _MyAppState extends State<MyApp> {
                 BlockColorPickerExample(
                   pickerColor: currentColor,
                   onColorChanged: changeColor,
+                  pickerColors: currentColors,
+                  onColorsChanged: changeColors,
                   colorHistory: colorHistory,
                 ),
               ],
