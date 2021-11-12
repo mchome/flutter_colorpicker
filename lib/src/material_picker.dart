@@ -207,27 +207,41 @@ class _MaterialPickerState extends State<MaterialPicker> {
                             ? Border.all(color: Colors.grey[300]!, width: 1)
                             : null,
                       ),
-                      child: (_isPortrait && widget.enableLabel)
-                          ? Row(
-                              children: [
-                                Text(
-                                  '  ${color.values.first}',
-                                  style: TextStyle(color: useWhiteForeground(_color) ? Colors.white : Colors.black),
-                                ),
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      '#${(_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', '')).toUpperCase()}  ',
-                                      style: TextStyle(
-                                        color: useWhiteForeground(_color) ? Colors.white : Colors.black,
-                                        fontWeight: FontWeight.bold,
+                      child: widget.enableLabel
+                          ? _isPortrait
+                              ? Row(
+                                  children: [
+                                    Text(
+                                      '  ${color.values.first}',
+                                      style: TextStyle(color: useWhiteForeground(_color) ? Colors.white : Colors.black),
+                                    ),
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          '#${(_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', '')).toUpperCase()}  ',
+                                          style: TextStyle(
+                                            color: useWhiteForeground(_color) ? Colors.white : Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                     ),
+                                  ],
+                                )
+                              : AnimatedOpacity(
+                                  duration: const Duration(milliseconds: 300),
+                                  opacity: _currentShading == _color ? 1 : 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.only(top: 16),
+                                    alignment: Alignment.topCenter,
+                                    child: Text(
+                                      color.values.first,
+                                      style: TextStyle(color: useWhiteForeground(_color) ? Colors.white : Colors.black),
+                                      softWrap: false,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
+                                )
                           : const SizedBox(),
                     ),
                   ),
