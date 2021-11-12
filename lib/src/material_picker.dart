@@ -12,12 +12,14 @@ class MaterialPicker extends StatefulWidget {
     Key? key,
     required this.pickerColor,
     required this.onColorChanged,
+    this.onPrimaryChanged,
     this.enableLabel = false,
     this.portraitOnly = false,
   }) : super(key: key);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
+  final ValueChanged<Color>? onPrimaryChanged;
   final bool enableLabel;
   final bool portraitOnly;
 
@@ -118,7 +120,10 @@ class _MaterialPickerState extends State<MaterialPicker> {
               ..._colorTypes.map((List<Color> _colors) {
                 Color _colorType = _colors[0];
                 return GestureDetector(
-                  onTap: () => setState(() => _currentColorType = _colors),
+                  onTap: () {
+                    if (widget.onPrimaryChanged != null) widget.onPrimaryChanged!(_colorType);
+                    setState(() => _currentColorType = _colors);
+                  },
                   child: Container(
                     color: const Color(0x00000000),
                     padding:

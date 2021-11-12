@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## [1.0.0-dev.1]
+
+- [#21](https://github.com/mchome/flutter_colorpicker/pull/21) Add onPrimaryChanged in MaterialPicker.
+- Add shading label with landscape mode in MaterialPicker.
+
+## [1.0.0-dev.0]
+
+- Add some new pickers like RGB palette, HUE Wheel and HUE Ring...
+- Move hsv_colorpicker to colorpicker.
+- [#58](https://github.com/mchome/flutter_colorpicker/issues/58) Fix the scroll problem in platform web and desktop.
+- Add built-in hex input bar.
+- Update example.
+
+## [0.6.1]
+
+- [#59](https://github.com/mchome/flutter_colorpicker/pull/59) You can modify the textStyle of label heading now.
+- [#61](https://github.com/mchome/flutter_colorpicker/issues/61) Fix *setState* was called after widget was disposed.
+- This is a quick hot fix so not in git, it's fixed in v1.0.0.
+
 ## [0.6.0]
 
 - Added ***hexInputController*** for Manual Hex Input [#31](https://github.com/mchome/flutter_colorpicker/issues/31).
