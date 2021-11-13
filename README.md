@@ -70,5 +70,5 @@ showDialog(
 ![SlidePicker](https://user-images.githubusercontent.com/7392658/74600957-5efa3980-50d3-11ea-9458-55842927e565.png)
 
 <!-- markdownlint-disable MD033 -->
-<img src="https://user-images.githubusercontent.com/7392658/141605429-1fdb7cc3-411b-4f02-8787-a7072bf134c0.png">
+<img src="https://user-images.githubusercontent.com/7392658/141606774-8193f4ee-e40d-49fc-b081-261c72325bf8.png">
 Details in [example/](https://github.com/mchome/flutter_colorpicker/tree/master/example) folder.
