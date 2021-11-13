@@ -31,7 +31,6 @@ showDialog(
       child: ColorPicker(
         pickerColor: pickerColor,
         onColorChanged: changeColor,
-        showLabel: true,
         pickerAreaHeightPercent: 0.8,
       ),
       // Use Material color picker:
@@ -71,13 +70,5 @@ showDialog(
 ![SlidePicker](https://user-images.githubusercontent.com/7392658/74600957-5efa3980-50d3-11ea-9458-55842927e565.png)
 
 <!-- markdownlint-disable MD033 -->
-<img src="https://user-images.githubusercontent.com/7392658/46619114-de790f80-cb53-11e8-81c8-278d4dc51606.png" width="23%">
-<img src="https://user-images.githubusercontent.com/7392658/57980467-c577fb80-7a5e-11e9-85ee-033963b48162.png" width="23%">
-<img src="https://user-images.githubusercontent.com/7392658/46619111-dd47e280-cb53-11e8-9701-38900857321f.png" width="23%">
-<img src="https://user-images.githubusercontent.com/7392658/50912123-56fdae00-146c-11e9-8d63-be3a26a20b72.png" width="23%">
-<img src="https://user-images.githubusercontent.com/7392658/46619116-df11a600-cb53-11e8-8b6b-4e495f8dbea9.png" width="23%">
-<img src="https://user-images.githubusercontent.com/7392658/57980469-c6109200-7a5e-11e9-8c32-5f4ba74c88da.png" width="23%">
-<img src="https://user-images.githubusercontent.com/7392658/46619112-dde07900-cb53-11e8-91d9-a4d1ee70cf3b.png" width="23%">
-<img src="https://user-images.githubusercontent.com/7392658/57980462-b8f3a300-7a5e-11e9-95e4-1748b14793ae.png" width="23%">
-
+<img src="https://user-images.githubusercontent.com/7392658/141605429-1fdb7cc3-411b-4f02-8787-a7072bf134c0.png">
 Details in [example/](https://github.com/mchome/flutter_colorpicker/tree/master/example) folder.

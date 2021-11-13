@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [1.0.1]
+
+- Fix late value not initialized in MaterialPicker.
+
 ## [1.0.0]
 
 - Update shading label text style in MaterialPicker.

@@ -330,9 +330,7 @@ HueRingPicker(
                     return AlertDialog(
                       titlePadding: const EdgeInsets.all(0),
                       contentPadding: const EdgeInsets.all(0),
-                      shape: _showIndicator
-                          ? const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25)))
-                          : null,
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
                       content: SingleChildScrollView(
                         child: SlidePicker(
                           pickerColor: widget.pickerColor,
