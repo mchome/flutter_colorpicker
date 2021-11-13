@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [1.0.0]
+
+- Update shading label text style in MaterialPicker.
+
 ## [1.0.0-dev.1]
 
 - [#21](https://github.com/mchome/flutter_colorpicker/pull/21) Add onPrimaryChanged in MaterialPicker.
