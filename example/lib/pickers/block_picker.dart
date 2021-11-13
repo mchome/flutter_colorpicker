@@ -143,7 +143,7 @@ Widget pickerLayoutBuilder(BuildContext context, List<Color> colors, PickerItem 
           title: const Text('Portrait Cross Axis Count'),
           subtitle: Text(_portraitCrossAxisCount.toString()),
           trailing: SizedBox(
-            width: 300,
+            width: 200,
             child: Slider(
               value: _portraitCrossAxisCount.toDouble(),
               min: 1,
@@ -158,7 +158,7 @@ Widget pickerLayoutBuilder(BuildContext context, List<Color> colors, PickerItem 
           title: const Text('Landscape Cross Axis Count'),
           subtitle: Text(_landscapeCrossAxisCount.toString()),
           trailing: SizedBox(
-            width: 300,
+            width: 200,
             child: Slider(
               value: _landscapeCrossAxisCount.toDouble(),
               min: 1,
@@ -228,7 +228,7 @@ Widget pickerItemBuilder(Color color, bool isCurrentColor, void Function() chang
           title: const Text('Border Radius'),
           subtitle: Text(_borderRadius.toString()),
           trailing: SizedBox(
-            width: 300,
+            width: 200,
             child: Slider(
               value: _borderRadius,
               min: 0,
@@ -243,7 +243,7 @@ Widget pickerItemBuilder(Color color, bool isCurrentColor, void Function() chang
           title: const Text('Blur Radius'),
           subtitle: Text(_blurRadius.toString()),
           trailing: SizedBox(
-            width: 300,
+            width: 200,
             child: Slider(
               value: _blurRadius,
               min: 0,
@@ -258,7 +258,7 @@ Widget pickerItemBuilder(Color color, bool isCurrentColor, void Function() chang
           title: const Text('Icon Size'),
           subtitle: Text(_iconSize.toString()),
           trailing: SizedBox(
-            width: 300,
+            width: 200,
             child: Slider(
               value: _iconSize,
               min: 1,
