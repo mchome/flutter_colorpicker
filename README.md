@@ -31,7 +31,6 @@ showDialog(
       child: ColorPicker(
         pickerColor: pickerColor,
         onColorChanged: changeColor,
-        pickerAreaHeightPercent: 0.8,
       ),
       // Use Material color picker:
       //
@@ -54,7 +53,7 @@ showDialog(
       // ),
     ),
     actions: <Widget>[
-      FlatButton(
+      ElevatedButton(
         child: const Text('Got it'),
         onPressed: () {
           setState(() => currentColor = pickerColor);
@@ -71,4 +70,5 @@ showDialog(
 
 <!-- markdownlint-disable MD033 -->
 <img src="https://user-images.githubusercontent.com/7392658/141606774-8193f4ee-e40d-49fc-b081-261c72325bf8.png">
-Details in [example/](https://github.com/mchome/flutter_colorpicker/tree/master/example) folder.
+
+Details in [example](https://github.com/mchome/flutter_colorpicker/tree/master/example) folder.
