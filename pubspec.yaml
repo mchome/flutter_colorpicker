@@ -1,6 +1,6 @@
 name: flutter_colorpicker
-description: HSV(HSB)/HSL/RGB/Material color picker inspired by all the good design for your amazing flutter apps. Adorable color pickers out of the box with highly customized widgets to all developers' needs.
-version: 1.0.0-dev.1
+description: HSV(HSB)/HSL/RGB/Material color picker inspired by all the good design for your amazing flutter apps.
+version: 1.0.0
 homepage: https://github.com/mchome/flutter_colorpicker
 
 environment:

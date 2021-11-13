@@ -242,7 +242,11 @@ class _MaterialPickerState extends State<MaterialPicker> {
                                     alignment: Alignment.topCenter,
                                     child: Text(
                                       color.values.first,
-                                      style: TextStyle(color: useWhiteForeground(_color) ? Colors.white : Colors.black),
+                                      style: TextStyle(
+                                        color: useWhiteForeground(_color) ? Colors.white : Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
                                       softWrap: false,
                                     ),
                                   ),
