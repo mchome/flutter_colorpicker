@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [1.0.2]
+
+- Fix the slider of hsv color picker in landscape mode.
+- Check the color of input in block color picker.
+
 ## [1.0.1]
 
 - Fix late value not initialized in MaterialPicker.

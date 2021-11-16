@@ -381,7 +381,7 @@ class _ColorPickerState extends State<ColorPicker> {
                   ),
                   Column(
                     children: <Widget>[
-                      SizedBox(height: 40.0, width: 260.0, child: colorPickerSlider(TrackType.hue)),
+                      SizedBox(height: 40.0, width: 260.0, child: sliderByPaletteType()),
                       if (widget.enableAlpha)
                         SizedBox(height: 40.0, width: 260.0, child: colorPickerSlider(TrackType.alpha)),
                     ],

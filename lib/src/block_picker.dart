@@ -169,7 +169,7 @@ class _MultipleChoiceBlockPickerState extends State<MultipleChoiceBlockPicker> {
       widget.availableColors,
       (Color color, [bool? _, Function? __]) => widget.itemBuilder(
         color,
-        _currentColors.contains(color),
+        _currentColors.contains(color) && widget.pickerColors.contains(color),
         () => toggleColor(color),
       ),
     );
