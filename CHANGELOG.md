@@ -3,7 +3,7 @@
 ## [1.0.2]
 
 - Fix the slider of hsv color picker in landscape mode.
-- Check the color of input in block color picker.
+- [#50](https://github.com/mchome/flutter_colorpicker/issues/50) Check the color of input in block color picker.
 
 ## [1.0.1]
 
@@ -29,12 +29,12 @@
 ## [0.6.1]
 
 - [#59](https://github.com/mchome/flutter_colorpicker/pull/59) You can modify the textStyle of label heading now.
-- [#61](https://github.com/mchome/flutter_colorpicker/issues/61) Fix *setState* was called after widget was disposed.
+- [#61](https://github.com/mchome/flutter_colorpicker/issues/61) Fix _setState_ was called after widget was disposed.
 - This is a quick hot fix so not in git, it's fixed in v1.0.0.
 
 ## [0.6.0]
 
-- Added ***hexInputController*** for Manual Hex Input [#31](https://github.com/mchome/flutter_colorpicker/issues/31).
+- Added **_hexInputController_** for Manual Hex Input [#31](https://github.com/mchome/flutter_colorpicker/issues/31).
 - Added 122 tests and documentation for colorToHex() and colorFromHex().
 - Update example app.
 
