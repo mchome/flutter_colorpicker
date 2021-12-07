@@ -102,66 +102,73 @@ class _MaterialPickerState extends State<MaterialPicker> {
 
     Widget _colorList() {
       return Container(
-        width: _isPortrait ? 60 : null,
-        height: _isPortrait ? null : 60,
-        decoration: BoxDecoration(
-          border: _isPortrait
-              ? Border(right: BorderSide(color: Colors.grey[300]!, width: 1))
-              : Border(top: BorderSide(color: Colors.grey[300]!, width: 1)),
-        ),
-        child: ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(dragDevices: PointerDeviceKind.values.toSet()),
-          child: ListView(
-            scrollDirection: _isPortrait ? Axis.vertical : Axis.horizontal,
-            children: [
-              _isPortrait
-                  ? const Padding(padding: EdgeInsets.only(top: 7))
-                  : const Padding(padding: EdgeInsets.only(left: 7)),
-              ..._colorTypes.map((List<Color> _colors) {
-                Color _colorType = _colors[0];
-                return GestureDetector(
-                  onTap: () {
-                    if (widget.onPrimaryChanged != null) widget.onPrimaryChanged!(_colorType);
-                    setState(() => _currentColorType = _colors);
-                  },
-                  child: Container(
-                    color: const Color(0x00000000),
-                    padding:
-                        _isPortrait ? const EdgeInsets.fromLTRB(0, 7, 0, 7) : const EdgeInsets.fromLTRB(7, 0, 7, 0),
-                    child: Align(
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                          color: _colorType,
-                          shape: BoxShape.circle,
-                          boxShadow: _currentColorType == _colors
-                              ? [
-                                  _colorType == Theme.of(context).cardColor
-                                      ? BoxShadow(
-                                          color: Colors.grey[300]!,
-                                          blurRadius: 10,
-                                        )
-                                      : BoxShadow(
-                                          color: _colorType,
-                                          blurRadius: 10,
-                                        ),
-                                ]
-                              : null,
-                          border: _colorType == Theme.of(context).cardColor
-                              ? Border.all(color: Colors.grey[300]!, width: 1)
-                              : null,
+        clipBehavior: Clip.hardEdge,
+        decoration: const BoxDecoration(),
+        child: Container(
+          margin: _isPortrait ? const EdgeInsets.only(right: 10) : const EdgeInsets.only(bottom: 10),
+          width: _isPortrait ? 60 : null,
+          height: _isPortrait ? null : 60,
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            boxShadow: [BoxShadow(color: Colors.grey[300]!, blurRadius: 10)],
+            border: _isPortrait
+                ? Border(right: BorderSide(color: Colors.grey[300]!, width: 1))
+                : Border(top: BorderSide(color: Colors.grey[300]!, width: 1)),
+          ),
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(dragDevices: PointerDeviceKind.values.toSet()),
+            child: ListView(
+              scrollDirection: _isPortrait ? Axis.vertical : Axis.horizontal,
+              children: [
+                _isPortrait
+                    ? const Padding(padding: EdgeInsets.only(top: 7))
+                    : const Padding(padding: EdgeInsets.only(left: 7)),
+                ..._colorTypes.map((List<Color> _colors) {
+                  Color _colorType = _colors[0];
+                  return GestureDetector(
+                    onTap: () {
+                      if (widget.onPrimaryChanged != null) widget.onPrimaryChanged!(_colorType);
+                      setState(() => _currentColorType = _colors);
+                    },
+                    child: Container(
+                      color: const Color(0x00000000),
+                      padding:
+                          _isPortrait ? const EdgeInsets.fromLTRB(0, 7, 0, 7) : const EdgeInsets.fromLTRB(7, 0, 7, 0),
+                      child: Align(
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: _colorType,
+                            shape: BoxShape.circle,
+                            boxShadow: _currentColorType == _colors
+                                ? [
+                                    _colorType == Theme.of(context).cardColor
+                                        ? BoxShadow(
+                                            color: Colors.grey[300]!,
+                                            blurRadius: 10,
+                                          )
+                                        : BoxShadow(
+                                            color: _colorType,
+                                            blurRadius: 10,
+                                          ),
+                                  ]
+                                : null,
+                            border: _colorType == Theme.of(context).cardColor
+                                ? Border.all(color: Colors.grey[300]!, width: 1)
+                                : null,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              }),
-              _isPortrait
-                  ? const Padding(padding: EdgeInsets.only(top: 5))
-                  : const Padding(padding: EdgeInsets.only(left: 5)),
-            ],
+                  );
+                }),
+                _isPortrait
+                    ? const Padding(padding: EdgeInsets.only(top: 5))
+                    : const Padding(padding: EdgeInsets.only(left: 5)),
+              ],
+            ),
           ),
         ),
       );
@@ -185,19 +192,20 @@ class _MaterialPickerState extends State<MaterialPicker> {
                 },
                 child: Container(
                   color: const Color(0x00000000),
+                  margin: _isPortrait ? const EdgeInsets.only(right: 10) : const EdgeInsets.only(bottom: 10),
                   padding: _isPortrait ? const EdgeInsets.fromLTRB(0, 7, 0, 7) : const EdgeInsets.fromLTRB(7, 0, 7, 0),
                   child: Align(
                     child: AnimatedContainer(
                       curve: Curves.fastOutSlowIn,
                       duration: const Duration(milliseconds: 500),
                       width:
-                          _isPortrait ? (_currentShading == _color ? 250 : 220) : (_currentShading == _color ? 50 : 30),
+                          _isPortrait ? (_currentShading == _color ? 250 : 230) : (_currentShading == _color ? 50 : 30),
                       height: _isPortrait ? 50 : 220,
                       decoration: BoxDecoration(
                         color: _color,
                         boxShadow: _currentShading == _color
                             ? [
-                                _color == Theme.of(context).cardColor
+                                (_color == Colors.white) || (_color == Colors.black)
                                     ? BoxShadow(
                                         color: Colors.grey[300]!,
                                         blurRadius: 10,
@@ -208,7 +216,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                                       ),
                               ]
                             : null,
-                        border: _color == Theme.of(context).cardColor
+                        border: (_color == Colors.white) || (_color == Colors.black)
                             ? Border.all(color: Colors.grey[300]!, width: 1)
                             : null,
                       ),
