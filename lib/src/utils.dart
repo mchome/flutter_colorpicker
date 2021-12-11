@@ -7,8 +7,10 @@ import 'package:flutter/painting.dart';
 /// the background color, and optional bias.
 ///
 /// Reference:
+/// 
 /// Old: https://www.w3.org/TR/WCAG20-TECHS/G18.html
-/// new: https://github.com/mchome/flutter_statusbarcolor/issues/40
+/// 
+/// New: https://github.com/mchome/flutter_statusbarcolor/issues/40
 bool useWhiteForeground(Color backgroundColor, {double bias = 0.0}) {
   // Old:
   // return 1.05 / (color.computeLuminance() + 0.05) > 4.5;

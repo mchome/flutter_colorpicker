@@ -85,6 +85,7 @@ class BlockPicker extends StatefulWidget {
     required this.pickerColor,
     required this.onColorChanged,
     this.availableColors = _defaultColors,
+    this.useInShowDialog = true,
     this.layoutBuilder = _defaultLayoutBuilder,
     this.itemBuilder = _defaultItemBuilder,
   }) : super(key: key);
@@ -92,6 +93,7 @@ class BlockPicker extends StatefulWidget {
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final List<Color> availableColors;
+  final bool useInShowDialog;
   final PickerLayoutBuilder layoutBuilder;
   final PickerItemBuilder itemBuilder;
 
@@ -118,9 +120,10 @@ class _BlockPickerState extends State<BlockPicker> {
     return widget.layoutBuilder(
       context,
       widget.availableColors,
-      (Color color, [bool? _, Function? __]) => widget.itemBuilder(
+      (Color color) => widget.itemBuilder(
         color,
-        _currentColor.value == color.value,
+        (_currentColor.value == color.value) &&
+            (widget.useInShowDialog ? true : widget.pickerColor.value == color.value),
         () => changeColor(color),
       ),
     );
@@ -134,6 +137,7 @@ class MultipleChoiceBlockPicker extends StatefulWidget {
     required this.pickerColors,
     required this.onColorsChanged,
     this.availableColors = _defaultColors,
+    this.useInShowDialog = true,
     this.layoutBuilder = _defaultLayoutBuilder,
     this.itemBuilder = _defaultItemBuilder,
   }) : super(key: key);
@@ -141,6 +145,7 @@ class MultipleChoiceBlockPicker extends StatefulWidget {
   final List<Color> pickerColors;
   final ValueChanged<List<Color>> onColorsChanged;
   final List<Color> availableColors;
+  final bool useInShowDialog;
   final PickerLayoutBuilder layoutBuilder;
   final PickerItemBuilder itemBuilder;
 
@@ -167,9 +172,9 @@ class _MultipleChoiceBlockPickerState extends State<MultipleChoiceBlockPicker> {
     return widget.layoutBuilder(
       context,
       widget.availableColors,
-      (Color color, [bool? _, Function? __]) => widget.itemBuilder(
+      (Color color) => widget.itemBuilder(
         color,
-        _currentColors.contains(color),
+        _currentColors.contains(color) && (widget.useInShowDialog ? true : widget.pickerColors.contains(color)),
         () => toggleColor(color),
       ),
     );
