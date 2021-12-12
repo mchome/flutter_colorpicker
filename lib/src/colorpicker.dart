@@ -5,8 +5,8 @@
 library hsv_picker;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/src/palette.dart';
-import 'package:flutter_colorpicker/src/utils.dart';
+import 'palette.dart';
+import 'utils.dart';
 
 /// The default layout of Color Picker.
 class ColorPicker extends StatefulWidget {
@@ -196,9 +196,8 @@ class _ColorPickerState extends State<ColorPicker> {
     // is provided, but it may help to calm the Dart analyzer in the future.
     if (widget.hexInputController == null) return;
     // If a user is inserting/typing any text — try to get the color value from it,
-    final Color? color = colorFromHex(widget.hexInputController!.text,
-        // and interpret its transparency, dependent on the widget's settings.
-        enableAlpha: widget.enableAlpha);
+    // and interpret its transparency, dependent on the widget's settings.
+    final Color? color = colorFromHex(widget.hexInputController!.text, enableAlpha: widget.enableAlpha);
     // If it's the valid color:
     if (color != null) {
       // set it as the current color and

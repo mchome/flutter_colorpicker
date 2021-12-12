@@ -2,14 +2,15 @@
 
 import 'dart:math';
 import 'package:flutter/painting.dart';
+import 'colors.dart';
 
 /// Check if is good condition to use white foreground color by passing
 /// the background color, and optional bias.
 ///
 /// Reference:
-/// 
+///
 /// Old: https://www.w3.org/TR/WCAG20-TECHS/G18.html
-/// 
+///
 /// New: https://github.com/mchome/flutter_statusbarcolor/issues/40
 bool useWhiteForeground(Color backgroundColor, {double bias = 0.0}) {
   // Old:
@@ -197,3 +198,18 @@ String colorToHex(
 
 // Shorthand for padLeft of RadixString, DRY.
 String _padRadix(int value) => value.toRadixString(16).padLeft(2, '0');
+
+// Extension for String
+extension ColorExtension1 on String {
+  Color? toColor() {
+    Color? color = colorFromName(this);
+    if (color != null) return color;
+    return colorFromHex(this);
+  }
+}
+
+// Extension from Color
+extension ColorExtension2 on Color {
+  String toHexString({bool includeHashSign = false, bool enableAlpha = true, bool toUpperCase = true}) =>
+      colorToHex(this, includeHashSign: false, enableAlpha: true, toUpperCase: true);
+}

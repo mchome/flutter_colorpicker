@@ -3,7 +3,7 @@
 library block_colorpicker;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/src/utils.dart';
+import 'utils.dart';
 
 /// Child widget for layout builder.
 typedef PickerItem = Widget Function(Color color);
@@ -90,7 +90,7 @@ class BlockPicker extends StatefulWidget {
     this.itemBuilder = _defaultItemBuilder,
   }) : super(key: key);
 
-  final Color pickerColor;
+  final Color? pickerColor;
   final ValueChanged<Color> onColorChanged;
   final List<Color> availableColors;
   final bool useInShowDialog;
@@ -102,7 +102,7 @@ class BlockPicker extends StatefulWidget {
 }
 
 class _BlockPickerState extends State<BlockPicker> {
-  late Color _currentColor;
+  Color? _currentColor;
 
   @override
   void initState() {
@@ -122,8 +122,10 @@ class _BlockPickerState extends State<BlockPicker> {
       widget.availableColors,
       (Color color) => widget.itemBuilder(
         color,
-        (_currentColor.value == color.value) &&
-            (widget.useInShowDialog ? true : widget.pickerColor.value == color.value),
+        (_currentColor != null && (widget.useInShowDialog ? true : widget.pickerColor != null))
+            ? (_currentColor?.value == color.value) &&
+                (widget.useInShowDialog ? true : widget.pickerColor?.value == color.value)
+            : false,
         () => changeColor(color),
       ),
     );
@@ -142,7 +144,7 @@ class MultipleChoiceBlockPicker extends StatefulWidget {
     this.itemBuilder = _defaultItemBuilder,
   }) : super(key: key);
 
-  final List<Color> pickerColors;
+  final List<Color>? pickerColors;
   final ValueChanged<List<Color>> onColorsChanged;
   final List<Color> availableColors;
   final bool useInShowDialog;
@@ -154,7 +156,7 @@ class MultipleChoiceBlockPicker extends StatefulWidget {
 }
 
 class _MultipleChoiceBlockPickerState extends State<MultipleChoiceBlockPicker> {
-  late List<Color> _currentColors;
+  List<Color>? _currentColors;
 
   @override
   void initState() {
@@ -163,8 +165,12 @@ class _MultipleChoiceBlockPickerState extends State<MultipleChoiceBlockPicker> {
   }
 
   void toggleColor(Color color) {
-    setState(() => _currentColors.contains(color) ? _currentColors.remove(color) : _currentColors.add(color));
-    widget.onColorsChanged(_currentColors);
+    setState(() {
+      if (_currentColors != null) {
+        _currentColors!.contains(color) ? _currentColors!.remove(color) : _currentColors!.add(color);
+      }
+    });
+    widget.onColorsChanged(_currentColors ?? []);
   }
 
   @override
@@ -174,7 +180,9 @@ class _MultipleChoiceBlockPickerState extends State<MultipleChoiceBlockPicker> {
       widget.availableColors,
       (Color color) => widget.itemBuilder(
         color,
-        _currentColors.contains(color) && (widget.useInShowDialog ? true : widget.pickerColors.contains(color)),
+        (_currentColors != null && (widget.useInShowDialog ? true : widget.pickerColors != null))
+            ? _currentColors!.contains(color) && (widget.useInShowDialog ? true : widget.pickerColors!.contains(color))
+            : false,
         () => toggleColor(color),
       ),
     );
