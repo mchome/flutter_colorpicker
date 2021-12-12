@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [1.0.3]
+
+- [#68](https://github.com/mchome/flutter_colorpicker/issues/68) Fix material color picker outline for white color.
+- [#69](https://github.com/mchome/flutter_colorpicker/issues/69) Fix the selector in block color picker in showDialog.
+
 ## [1.0.2]
 
 - Fix the slider of hsv color picker in landscape mode.
