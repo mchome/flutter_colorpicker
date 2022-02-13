@@ -432,7 +432,6 @@ class _ColorPickerState extends State<ColorPicker> {
                   },
                   enableAlpha: widget.enableAlpha,
                   embeddedText: false,
-                  disable: true,
                 ),
               const SizedBox(height: 5),
             ],
