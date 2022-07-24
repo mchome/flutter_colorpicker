@@ -110,10 +110,10 @@ class _MaterialPickerState extends State<MaterialPicker> {
           height: _isPortrait ? null : 60,
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            boxShadow: [BoxShadow(color: Theme.of(context).cardColor, blurRadius: 10)],
+            boxShadow: [BoxShadow(color: (Theme.of(context).brightness == Brightness.light) ? (Theme.of(context).brightness == Brightness.light) ? Colors.grey[300]! : Colors.black38 : Colors.black38, blurRadius: 10)],
             border: _isPortrait
-                ? Border(right: BorderSide(color: Theme.of(context).cardColor, width: 1))
-                : Border(top: BorderSide(color: Theme.of(context).cardColor, width: 1)),
+                ? Border(right: BorderSide(color: (Theme.of(context).brightness == Brightness.light) ? Colors.grey[300]! : Colors.black38, width: 1))
+                : Border(top: BorderSide(color: (Theme.of(context).brightness == Brightness.light) ? Colors.grey[300]! : Colors.black38, width: 1)),
           ),
           child: ScrollConfiguration(
             behavior: ScrollConfiguration.of(context).copyWith(dragDevices: PointerDeviceKind.values.toSet()),
@@ -133,7 +133,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                     child: Container(
                       color: const Color(0x00000000),
                       padding:
-                          _isPortrait ? const EdgeInsets.fromLTRB(0, 7, 0, 7) : const EdgeInsets.fromLTRB(7, 0, 7, 0),
+                      _isPortrait ? const EdgeInsets.fromLTRB(0, 7, 0, 7) : const EdgeInsets.fromLTRB(7, 0, 7, 0),
                       child: Align(
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
@@ -144,19 +144,19 @@ class _MaterialPickerState extends State<MaterialPicker> {
                             shape: BoxShape.circle,
                             boxShadow: _currentColorType == _colors
                                 ? [
-                                    _colorType == Theme.of(context).cardColor
-                                        ? BoxShadow(
-                                            color: Theme.of(context).cardColor,
-                                            blurRadius: 10,
-                                          )
-                                        : BoxShadow(
-                                            color: _colorType,
-                                            blurRadius: 10,
-                                          ),
-                                  ]
+                              _colorType == Theme.of(context).cardColor
+                                  ? BoxShadow(
+                                color: (Theme.of(context).brightness == Brightness.light) ? Colors.grey[300]! : Colors.black38,
+                                blurRadius: 10,
+                              )
+                                  : BoxShadow(
+                                color: _colorType,
+                                blurRadius: 10,
+                              ),
+                            ]
                                 : null,
                             border: _colorType == Theme.of(context).cardColor
-                                ? Border.all(color: Theme.of(context).cardColor, width: 1)
+                                ? Border.all(color: (Theme.of(context).brightness == Brightness.light) ? Colors.grey[300]! : Colors.black38, width: 1)
                                 : null,
                           ),
                         ),
@@ -199,66 +199,66 @@ class _MaterialPickerState extends State<MaterialPicker> {
                       curve: Curves.fastOutSlowIn,
                       duration: const Duration(milliseconds: 500),
                       width:
-                          _isPortrait ? (_currentShading == _color ? 250 : 230) : (_currentShading == _color ? 50 : 30),
+                      _isPortrait ? (_currentShading == _color ? 250 : 230) : (_currentShading == _color ? 50 : 30),
                       height: _isPortrait ? 50 : 220,
                       decoration: BoxDecoration(
                         color: _color,
                         boxShadow: _currentShading == _color
                             ? [
-                                (_color == Colors.white) || (_color == Colors.black)
-                                    ? BoxShadow(
-                                        color: Theme.of(context).cardColor,
-                                        blurRadius: 10,
-                                      )
-                                    : BoxShadow(
-                                        color: _color,
-                                        blurRadius: 10,
-                                      ),
-                              ]
+                          (_color == Colors.white) || (_color == Colors.black)
+                              ? BoxShadow(
+                            color: (Theme.of(context).brightness == Brightness.light) ? Colors.grey[300]! : Colors.black38,
+                            blurRadius: 10,
+                          )
+                              : BoxShadow(
+                            color: _color,
+                            blurRadius: 10,
+                          ),
+                        ]
                             : null,
                         border: (_color == Colors.white) || (_color == Colors.black)
-                            ? Border.all(color: Theme.of(context).cardColor, width: 1)
+                            ? Border.all(color: (Theme.of(context).brightness == Brightness.light) ? Colors.grey[300]! : Colors.black38, width: 1)
                             : null,
                       ),
                       child: widget.enableLabel
                           ? _isPortrait
-                              ? Row(
-                                  children: [
-                                    Text(
-                                      '  ${color.values.first}',
-                                      style: TextStyle(color: useWhiteForeground(_color) ? Colors.white : Colors.black),
-                                    ),
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          '#${(_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', '')).toUpperCase()}  ',
-                                          style: TextStyle(
-                                            color: useWhiteForeground(_color) ? Colors.white : Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : AnimatedOpacity(
-                                  duration: const Duration(milliseconds: 300),
-                                  opacity: _currentShading == _color ? 1 : 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.only(top: 16),
-                                    alignment: Alignment.topCenter,
-                                    child: Text(
-                                      color.values.first,
-                                      style: TextStyle(
-                                        color: useWhiteForeground(_color) ? Colors.white : Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                      softWrap: false,
-                                    ),
-                                  ),
-                                )
+                          ? Row(
+                        children: [
+                          Text(
+                            '  ${color.values.first}',
+                            style: TextStyle(color: useWhiteForeground(_color) ? Colors.white : Colors.black),
+                          ),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                '#${(_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', '')).toUpperCase()}  ',
+                                style: TextStyle(
+                                  color: useWhiteForeground(_color) ? Colors.white : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                          : AnimatedOpacity(
+                        duration: const Duration(milliseconds: 300),
+                        opacity: _currentShading == _color ? 1 : 0,
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 16),
+                          alignment: Alignment.topCenter,
+                          child: Text(
+                            color.values.first,
+                            style: TextStyle(
+                              color: useWhiteForeground(_color) ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                            softWrap: false,
+                          ),
+                        ),
+                      )
                           : const SizedBox(),
                     ),
                   ),
