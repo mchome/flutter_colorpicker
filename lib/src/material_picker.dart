@@ -110,10 +110,10 @@ class _MaterialPickerState extends State<MaterialPicker> {
           height: _isPortrait ? null : 60,
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            boxShadow: [BoxShadow(color: Colors.grey[300]!, blurRadius: 10)],
+            boxShadow: [BoxShadow(color: Theme.of(context).primaryColorLight.withAlpha(80), blurRadius: 10)],
             border: _isPortrait
-                ? Border(right: BorderSide(color: Colors.grey[300]!, width: 1))
-                : Border(top: BorderSide(color: Colors.grey[300]!, width: 1)),
+                ? Border(right: BorderSide(color: Theme.of(context).primaryColorLight.withAlpha(80), width: 1))
+                : Border(top: BorderSide(color: Theme.of(context).primaryColorLight.withAlpha(80), width: 1)),
           ),
           child: ScrollConfiguration(
             behavior: ScrollConfiguration.of(context).copyWith(dragDevices: PointerDeviceKind.values.toSet()),
@@ -146,7 +146,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                                 ? [
                                     _colorType == Theme.of(context).cardColor
                                         ? BoxShadow(
-                                            color: Colors.grey[300]!,
+                                            color: Theme.of(context).primaryColorLight.withAlpha(80),
                                             blurRadius: 10,
                                           )
                                         : BoxShadow(
@@ -156,7 +156,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                                   ]
                                 : null,
                             border: _colorType == Theme.of(context).cardColor
-                                ? Border.all(color: Colors.grey[300]!, width: 1)
+                                ? Border.all(color: Theme.of(context).primaryColorLight.withAlpha(80), width: 1)
                                 : null,
                           ),
                         ),
@@ -207,7 +207,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                             ? [
                                 (_color == Colors.white) || (_color == Colors.black)
                                     ? BoxShadow(
-                                        color: Colors.grey[300]!,
+                                        color: Theme.of(context).primaryColorLight.withAlpha(80),
                                         blurRadius: 10,
                                       )
                                     : BoxShadow(
@@ -217,7 +217,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                               ]
                             : null,
                         border: (_color == Colors.white) || (_color == Colors.black)
-                            ? Border.all(color: Colors.grey[300]!, width: 1)
+                            ? Border.all(color: Theme.of(context).primaryColorLight.withAlpha(80), width: 1)
                             : null,
                       ),
                       child: widget.enableLabel
