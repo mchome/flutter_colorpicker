@@ -312,8 +312,8 @@ class _ColorPickerState extends State<ColorPicker> {
                       SizedBox(
                         height: 40.0,
                         width: widget.displayColorIndicator
-                            ? widget.palletTypeSliderWidth
-                            : widget.colorPickerWidth - 75.0,
+                            ? widget.colorPickerWidth - 75.0
+                            : widget.palletTypeSliderWidth,
                         child: sliderByPaletteType(),
                       ),
                       if (widget.enableAlpha)
