@@ -23,6 +23,7 @@ class ColorPicker extends StatefulWidget {
     @Deprecated('Use Theme.of(context).textTheme.bodyText1 & 2 to alter text style.') this.labelTextStyle,
     this.displayThumbColor = false,
     this.displayColorIndicator = true,
+    this.palletTypeSliderWidth = 225.0,
     this.portraitOnly = false,
     this.colorPickerWidth = 300.0,
     this.pickerAreaHeightPercent = 1.0,
@@ -49,6 +50,7 @@ class ColorPicker extends StatefulWidget {
   final BorderRadius pickerAreaBorderRadius;
   final bool hexInputBar;
   final bool displayColorIndicator;
+  final double palletTypeSliderWidth;
 
   /// Allows setting the color using text input, via [TextEditingController].
   ///
@@ -307,7 +309,13 @@ class _ColorPickerState extends State<ColorPicker> {
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: 40.0, width: widget.colorPickerWidth - 75.0, child: sliderByPaletteType()),
+                      SizedBox(
+                        height: 40.0,
+                        width: widget.displayColorIndicator
+                            ? widget.palletTypeSliderWidth
+                            : widget.colorPickerWidth - 75.0,
+                        child: sliderByPaletteType(),
+                      ),
                       if (widget.enableAlpha)
                         SizedBox(
                           height: 40.0,
