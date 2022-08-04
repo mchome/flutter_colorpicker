@@ -1333,6 +1333,7 @@ class ColorPickerHueRing extends StatelessWidget {
     this.displayThumbColor = true,
     this.strokeWidth = 5.0,
     this.gesturesOnlyInside = false,
+    this.onEnd,
   }) : super(key: key);
 
   final HSVColor hsvColor;
@@ -1342,6 +1343,9 @@ class ColorPickerHueRing extends StatelessWidget {
 
   /// Whether to recognize gestures only when inside the hue ring or anywhere in it’s bounds
   final bool gesturesOnlyInside;
+
+  /// Callback called when the user finishes interacting with color picker
+  final VoidCallback? onEnd;
 
   void _handleGesture(Offset position, BuildContext context, double height, double width) {
     RenderBox? getBox = context.findRenderObject() as RenderBox?;
@@ -1369,7 +1373,8 @@ class ColorPickerHueRing extends StatelessWidget {
           instance
             ..onDown = ((details) => _handleGesture(details.globalPosition, context, height, width))
             ..onUpdate =
-                ((details) => _handleGesture(details.globalPosition, context, height, width));
+                ((details) => _handleGesture(details.globalPosition, context, height, width))
+            ..onEnd = (_) => onEnd?.call();
         };
 
         return RawGestureDetector(
