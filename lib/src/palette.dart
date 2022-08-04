@@ -526,7 +526,7 @@ class HueRingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Rect rect = Offset.zero & size;
     Offset center = Offset(size.width / 2, size.height / 2);
-    double radio = size.width <= size.height ? size.width / 2 : size.height / 2;
+    double radio = (size.width <= size.height ? size.width / 2 : size.height / 2) - strokeWidth / 2;
 
     final List<Color> colors = [
       const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
