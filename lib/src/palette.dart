@@ -740,32 +740,35 @@ class TrackPainter extends CustomPainter {
 
 /// Painter for thumb of slider.
 class ThumbPainter extends CustomPainter {
-  const ThumbPainter({this.thumbColor, this.fullThumbColor = false});
+  const ThumbPainter({this.thumbColor, this.scale = 1, this.fullThumbColor = false});
 
+  final double scale;
   final Color? thumbColor;
   final bool fullThumbColor;
 
   @override
   void paint(Canvas canvas, Size size) {
+    final thumbSize = size.height * scale;
+    final center = Offset(0.0, size.height * 0.4);
     canvas.drawShadow(
       Path()
         ..addOval(
-          Rect.fromCircle(center: const Offset(0.5, 2.0), radius: size.width * 1.8),
+          Rect.fromCircle(center: center - Offset(-0.5, 2 + scale), radius: thumbSize * .9),
         ),
       Colors.black,
       3.0,
       true,
     );
     canvas.drawCircle(
-        Offset(0.0, size.height * 0.4),
-        size.height,
+        center,
+        thumbSize,
         Paint()
           ..color = Colors.white
           ..style = PaintingStyle.fill);
     if (thumbColor != null) {
       canvas.drawCircle(
-          Offset(0.0, size.height * 0.4),
-          size.height * (fullThumbColor ? 1.0 : 0.65),
+          center,
+          thumbSize * (fullThumbColor ? 1.0 : 0.65),
           Paint()
             ..color = thumbColor!
             ..style = PaintingStyle.fill);
@@ -1046,6 +1049,7 @@ class ColorPickerSlider extends StatelessWidget {
     Key? key,
     this.displayThumbColor = false,
     this.fullThumbColor = false,
+    this.thumbScale = 1,
   }) : super(key: key);
 
   final TrackType trackType;
@@ -1053,6 +1057,7 @@ class ColorPickerSlider extends StatelessWidget {
   final ValueChanged<HSVColor> onColorChanged;
   final bool displayThumbColor;
   final bool fullThumbColor;
+  final double thumbScale;
 
   void slideEvent(RenderBox getBox, BoxConstraints box, Offset globalPosition) {
     double localDx = getBox.globalToLocal(globalPosition).dx - 15.0;
@@ -1155,6 +1160,7 @@ class ColorPickerSlider extends StatelessWidget {
               child: CustomPaint(
                 painter: ThumbPainter(
                   thumbColor: displayThumbColor ? thumbColor : null,
+                  scale: thumbScale,
                   fullThumbColor: fullThumbColor,
                 ),
               ),
