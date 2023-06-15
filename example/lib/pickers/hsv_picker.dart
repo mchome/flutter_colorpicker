@@ -19,12 +19,14 @@ class HSVColorPickerExample extends StatefulWidget {
     required this.onColorChanged,
     this.colorHistory,
     this.onHistoryChanged,
+    this.onLabelTypeChanged
   }) : super(key: key);
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;
   final List<Color>? colorHistory;
   final ValueChanged<List<Color>>? onHistoryChanged;
+  final ValueChanged<ColorLabelType>? onLabelTypeChanged;
 
   @override
   State<HSVColorPickerExample> createState() => _HSVColorPickerExampleState();
@@ -94,6 +96,7 @@ class _HSVColorPickerExampleState extends State<HSVColorPickerExample> {
                           hexInputBar: _displayHexInputBar,
                           colorHistory: widget.colorHistory,
                           onHistoryChanged: widget.onHistoryChanged,
+                          onLabelTypeChanged: widget.onLabelTypeChanged,
                         ),
                       ),
                     );

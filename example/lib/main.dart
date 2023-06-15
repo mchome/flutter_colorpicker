@@ -59,6 +59,9 @@ class _MyAppState extends State<MyApp> {
                   onColorChanged: changeColor,
                   colorHistory: colorHistory,
                   onHistoryChanged: (List<Color> colors) => colorHistory = colors,
+                  onLabelTypeChanged: (c){
+                    print('COLOR ${c.name}');
+                  },
                 ),
                 MaterialColorPickerExample(pickerColor: currentColor, onColorChanged: changeColor),
                 BlockColorPickerExample(
