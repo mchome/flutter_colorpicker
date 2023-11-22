@@ -46,10 +46,12 @@ enum ColorModel { rgb, hsv, hsl }
 
 /// Painter for SV mixture.
 class HSVWithHueColorPainter extends CustomPainter {
-  const HSVWithHueColorPainter(this.hsvColor, {this.pointerColor});
+  const HSVWithHueColorPainter(this.hsvColor, this.circleSelectorRadius, this.circleSelectorWidth, {this.pointerColor});
 
   final HSVColor hsvColor;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -75,10 +77,10 @@ class HSVWithHueColorPainter extends CustomPainter {
 
     canvas.drawCircle(
       Offset(size.width * hsvColor.saturation, size.height * (1 - hsvColor.value)),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(hsvColor.toColor()) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -89,10 +91,13 @@ class HSVWithHueColorPainter extends CustomPainter {
 
 /// Painter for HV mixture.
 class HSVWithSaturationColorPainter extends CustomPainter {
-  const HSVWithSaturationColorPainter(this.hsvColor, {this.pointerColor});
+  const HSVWithSaturationColorPainter(this.hsvColor, this.circleSelectorRadius, this.circleSelectorWidth,
+      {this.pointerColor});
 
   final HSVColor hsvColor;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -120,10 +125,10 @@ class HSVWithSaturationColorPainter extends CustomPainter {
         size.width * hsvColor.hue / 360,
         size.height * (1 - hsvColor.value),
       ),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(hsvColor.toColor()) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -134,10 +139,13 @@ class HSVWithSaturationColorPainter extends CustomPainter {
 
 /// Painter for HS mixture.
 class HSVWithValueColorPainter extends CustomPainter {
-  const HSVWithValueColorPainter(this.hsvColor, {this.pointerColor});
+  const HSVWithValueColorPainter(this.hsvColor, this.circleSelectorRadius, this.circleSelectorWidth,
+      {this.pointerColor});
 
   final HSVColor hsvColor;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -169,10 +177,10 @@ class HSVWithValueColorPainter extends CustomPainter {
         size.width * hsvColor.hue / 360,
         size.height * (1 - hsvColor.saturation),
       ),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(hsvColor.toColor()) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -183,10 +191,12 @@ class HSVWithValueColorPainter extends CustomPainter {
 
 /// Painter for SL mixture.
 class HSLWithHueColorPainter extends CustomPainter {
-  const HSLWithHueColorPainter(this.hslColor, {this.pointerColor});
+  const HSLWithHueColorPainter(this.hslColor, this.circleSelectorRadius, this.circleSelectorWidth, {this.pointerColor});
 
   final HSLColor hslColor;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -213,10 +223,10 @@ class HSLWithHueColorPainter extends CustomPainter {
 
     canvas.drawCircle(
       Offset(size.width * hslColor.saturation, size.height * (1 - hslColor.lightness)),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(hslColor.toColor()) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -227,10 +237,13 @@ class HSLWithHueColorPainter extends CustomPainter {
 
 /// Painter for HL mixture.
 class HSLWithSaturationColorPainter extends CustomPainter {
-  const HSLWithSaturationColorPainter(this.hslColor, {this.pointerColor});
+  const HSLWithSaturationColorPainter(this.hslColor, this.circleSelectorRadius, this.circleSelectorWidth,
+      {this.pointerColor});
 
   final HSLColor hslColor;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -261,10 +274,10 @@ class HSLWithSaturationColorPainter extends CustomPainter {
 
     canvas.drawCircle(
       Offset(size.width * hslColor.hue / 360, size.height * (1 - hslColor.lightness)),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(hslColor.toColor()) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -275,10 +288,13 @@ class HSLWithSaturationColorPainter extends CustomPainter {
 
 /// Painter for HS mixture.
 class HSLWithLightnessColorPainter extends CustomPainter {
-  const HSLWithLightnessColorPainter(this.hslColor, {this.pointerColor});
+  const HSLWithLightnessColorPainter(this.hslColor, this.circleSelectorRadius, this.circleSelectorWidth,
+      {this.pointerColor});
 
   final HSLColor hslColor;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -314,10 +330,10 @@ class HSLWithLightnessColorPainter extends CustomPainter {
 
     canvas.drawCircle(
       Offset(size.width * hslColor.hue / 360, size.height * (1 - hslColor.saturation)),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(hslColor.toColor()) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -328,10 +344,12 @@ class HSLWithLightnessColorPainter extends CustomPainter {
 
 /// Painter for GB mixture.
 class RGBWithRedColorPainter extends CustomPainter {
-  const RGBWithRedColorPainter(this.color, {this.pointerColor});
+  const RGBWithRedColorPainter(this.color, this.circleSelectorRadius, this.circleSelectorWidth, {this.pointerColor});
 
   final Color color;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -360,10 +378,10 @@ class RGBWithRedColorPainter extends CustomPainter {
 
     canvas.drawCircle(
       Offset(size.width * color.blue / 255, size.height * (1 - color.green / 255)),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(color) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -374,10 +392,12 @@ class RGBWithRedColorPainter extends CustomPainter {
 
 /// Painter for RB mixture.
 class RGBWithGreenColorPainter extends CustomPainter {
-  const RGBWithGreenColorPainter(this.color, {this.pointerColor});
+  const RGBWithGreenColorPainter(this.color, this.circleSelectorRadius, this.circleSelectorWidth, {this.pointerColor});
 
   final Color color;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -406,10 +426,10 @@ class RGBWithGreenColorPainter extends CustomPainter {
 
     canvas.drawCircle(
       Offset(size.width * color.blue / 255, size.height * (1 - color.red / 255)),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(color) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -420,10 +440,12 @@ class RGBWithGreenColorPainter extends CustomPainter {
 
 /// Painter for RG mixture.
 class RGBWithBlueColorPainter extends CustomPainter {
-  const RGBWithBlueColorPainter(this.color, {this.pointerColor});
+  const RGBWithBlueColorPainter(this.color, this.circleSelectorRadius, this.circleSelectorWidth, {this.pointerColor});
 
   final Color color;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -452,10 +474,10 @@ class RGBWithBlueColorPainter extends CustomPainter {
 
     canvas.drawCircle(
       Offset(size.width * color.red / 255, size.height * (1 - color.green / 255)),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(color) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -466,10 +488,12 @@ class RGBWithBlueColorPainter extends CustomPainter {
 
 /// Painter for hue color wheel.
 class HUEColorWheelPainter extends CustomPainter {
-  const HUEColorWheelPainter(this.hsvColor, {this.pointerColor});
+  const HUEColorWheelPainter(this.hsvColor, this.circleSelectorRadius, this.circleSelectorWidth, {this.pointerColor});
 
   final HSVColor hsvColor;
   final Color? pointerColor;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -502,10 +526,10 @@ class HUEColorWheelPainter extends CustomPainter {
         center.dx + hsvColor.saturation * radio * cos((hsvColor.hue * pi / 180)),
         center.dy - hsvColor.saturation * radio * sin((hsvColor.hue * pi / 180)),
       ),
-      size.height * 0.04,
+      circleSelectorRadius,
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(hsvColor.toColor()) ? Colors.white : Colors.black)
-        ..strokeWidth = 1.5
+        ..strokeWidth = circleSelectorWidth
         ..style = PaintingStyle.stroke,
     );
   }
@@ -716,32 +740,35 @@ class TrackPainter extends CustomPainter {
 
 /// Painter for thumb of slider.
 class ThumbPainter extends CustomPainter {
-  const ThumbPainter({this.thumbColor, this.fullThumbColor = false});
+  const ThumbPainter({this.thumbColor, this.scale = 1, this.fullThumbColor = false});
 
+  final double scale;
   final Color? thumbColor;
   final bool fullThumbColor;
 
   @override
   void paint(Canvas canvas, Size size) {
+    final thumbSize = size.height * scale;
+    final center = Offset(0.0, size.height * 0.4);
     canvas.drawShadow(
       Path()
         ..addOval(
-          Rect.fromCircle(center: const Offset(0.5, 2.0), radius: size.width * 1.8),
+          Rect.fromCircle(center: center - Offset(-0.5, 2 + scale), radius: thumbSize * .9),
         ),
       Colors.black,
       3.0,
       true,
     );
     canvas.drawCircle(
-        Offset(0.0, size.height * 0.4),
-        size.height,
+        center,
+        thumbSize,
         Paint()
           ..color = Colors.white
           ..style = PaintingStyle.fill);
     if (thumbColor != null) {
       canvas.drawCircle(
-          Offset(0.0, size.height * 0.4),
-          size.height * (fullThumbColor ? 1.0 : 0.65),
+          center,
+          thumbSize * (fullThumbColor ? 1.0 : 0.65),
           Paint()
             ..color = thumbColor!
             ..style = PaintingStyle.fill);
@@ -1022,6 +1049,7 @@ class ColorPickerSlider extends StatelessWidget {
     Key? key,
     this.displayThumbColor = false,
     this.fullThumbColor = false,
+    this.thumbScale = 1,
   }) : super(key: key);
 
   final TrackType trackType;
@@ -1029,6 +1057,7 @@ class ColorPickerSlider extends StatelessWidget {
   final ValueChanged<HSVColor> onColorChanged;
   final bool displayThumbColor;
   final bool fullThumbColor;
+  final double thumbScale;
 
   void slideEvent(RenderBox getBox, BoxConstraints box, Offset globalPosition) {
     double localDx = getBox.globalToLocal(globalPosition).dx - 15.0;
@@ -1131,6 +1160,7 @@ class ColorPickerSlider extends StatelessWidget {
               child: CustomPaint(
                 painter: ThumbPainter(
                   thumbColor: displayThumbColor ? thumbColor : null,
+                  scale: thumbScale,
                   fullThumbColor: fullThumbColor,
                 ),
               ),
@@ -1193,11 +1223,15 @@ class ColorPickerArea extends StatelessWidget {
     this.onColorChanged,
     this.paletteType, {
     Key? key,
+    this.circleSelectorRadius = 10,
+    this.circleSelectorWidth = 1,
   }) : super(key: key);
 
   final HSVColor hsvColor;
   final ValueChanged<HSVColor> onColorChanged;
   final PaletteType paletteType;
+  final double circleSelectorRadius;
+  final double circleSelectorWidth;
 
   void _handleColorRectChange(double horizontal, double vertical) {
     switch (paletteType) {
@@ -1293,26 +1327,38 @@ class ColorPickerArea extends StatelessWidget {
               switch (paletteType) {
                 case PaletteType.hsv:
                 case PaletteType.hsvWithHue:
-                  return CustomPaint(painter: HSVWithHueColorPainter(hsvColor));
+                  return CustomPaint(
+                      painter: HSVWithHueColorPainter(hsvColor, circleSelectorRadius, circleSelectorWidth));
                 case PaletteType.hsvWithSaturation:
-                  return CustomPaint(painter: HSVWithSaturationColorPainter(hsvColor));
+                  return CustomPaint(
+                      painter: HSVWithSaturationColorPainter(hsvColor, circleSelectorRadius, circleSelectorWidth));
                 case PaletteType.hsvWithValue:
-                  return CustomPaint(painter: HSVWithValueColorPainter(hsvColor));
+                  return CustomPaint(
+                      painter: HSVWithValueColorPainter(hsvColor, circleSelectorRadius, circleSelectorWidth));
                 case PaletteType.hsl:
                 case PaletteType.hslWithHue:
-                  return CustomPaint(painter: HSLWithHueColorPainter(hsvToHsl(hsvColor)));
+                  return CustomPaint(
+                      painter: HSLWithHueColorPainter(hsvToHsl(hsvColor), circleSelectorRadius, circleSelectorWidth));
                 case PaletteType.hslWithSaturation:
-                  return CustomPaint(painter: HSLWithSaturationColorPainter(hsvToHsl(hsvColor)));
+                  return CustomPaint(
+                      painter:
+                          HSLWithSaturationColorPainter(hsvToHsl(hsvColor), circleSelectorRadius, circleSelectorWidth));
                 case PaletteType.hslWithLightness:
-                  return CustomPaint(painter: HSLWithLightnessColorPainter(hsvToHsl(hsvColor)));
+                  return CustomPaint(
+                      painter:
+                          HSLWithLightnessColorPainter(hsvToHsl(hsvColor), circleSelectorRadius, circleSelectorWidth));
                 case PaletteType.rgbWithRed:
-                  return CustomPaint(painter: RGBWithRedColorPainter(hsvColor.toColor()));
+                  return CustomPaint(
+                      painter: RGBWithRedColorPainter(hsvColor.toColor(), circleSelectorRadius, circleSelectorWidth));
                 case PaletteType.rgbWithGreen:
-                  return CustomPaint(painter: RGBWithGreenColorPainter(hsvColor.toColor()));
+                  return CustomPaint(
+                      painter: RGBWithGreenColorPainter(hsvColor.toColor(), circleSelectorRadius, circleSelectorWidth));
                 case PaletteType.rgbWithBlue:
-                  return CustomPaint(painter: RGBWithBlueColorPainter(hsvColor.toColor()));
+                  return CustomPaint(
+                      painter: RGBWithBlueColorPainter(hsvColor.toColor(), circleSelectorRadius, circleSelectorWidth));
                 case PaletteType.hueWheel:
-                  return CustomPaint(painter: HUEColorWheelPainter(hsvColor));
+                  return CustomPaint(
+                      painter: HUEColorWheelPainter(hsvColor, circleSelectorRadius, circleSelectorWidth));
                 default:
                   return const CustomPaint();
               }
