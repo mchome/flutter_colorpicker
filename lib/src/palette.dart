@@ -79,6 +79,7 @@ class HSVWithHueColorPainter extends CustomPainter {
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(hsvColor.toColor()) ? Colors.white : Colors.black)
         ..strokeWidth = 1.5
+        ..blendMode = BlendMode.luminosity
         ..style = PaintingStyle.stroke,
     );
   }
