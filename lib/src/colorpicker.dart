@@ -23,7 +23,7 @@ class ColorPicker extends StatefulWidget {
     @Deprecated('Use Theme.of(context).textTheme.bodyText1 & 2 to alter text style.') this.labelTextStyle,
     this.displayThumbColor = false,
     this.portraitOnly = false,
-    this.colorPickerWidth = 300.0,
+    required this.colorPickerWidth,
     this.pickerAreaHeightPercent = 1.0,
     this.pickerAreaBorderRadius = const BorderRadius.all(Radius.zero),
     this.hexInputBar = false,
@@ -167,7 +167,7 @@ class _ColorPickerState extends State<ColorPicker> {
   @override
   void initState() {
     currentHsvColor =
-        (widget.pickerHsvColor != null) ? widget.pickerHsvColor as HSVColor : HSVColor.fromColor(widget.pickerColor);
+    (widget.pickerHsvColor != null) ? widget.pickerHsvColor as HSVColor : HSVColor.fromColor(widget.pickerColor);
     // If there's no initial text in `hexInputController`,
     if (widget.hexInputController?.text.isEmpty == true) {
       // set it to the current's color HEX value.
@@ -188,7 +188,7 @@ class _ColorPickerState extends State<ColorPicker> {
   void didUpdateWidget(ColorPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     currentHsvColor =
-        (widget.pickerHsvColor != null) ? widget.pickerHsvColor as HSVColor : HSVColor.fromColor(widget.pickerColor);
+    (widget.pickerHsvColor != null) ? widget.pickerHsvColor as HSVColor : HSVColor.fromColor(widget.pickerColor);
   }
 
   void colorPickerTextInputListener() {
@@ -218,7 +218,7 @@ class _ColorPickerState extends State<ColorPicker> {
     return ColorPickerSlider(
       trackType,
       currentHsvColor,
-      (HSVColor color) {
+          (HSVColor color) {
         // Update text in `hexInputController` if provided.
         widget.hexInputController?.text = colorToHex(color.toColor(), enableAlpha: widget.enableAlpha);
         setState(() => currentHsvColor = color);
@@ -276,169 +276,91 @@ class _ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly) {
-      return Column(
-        children: <Widget>[
-          SizedBox(
-            width: widget.colorPickerWidth,
-            height: widget.colorPickerWidth * widget.pickerAreaHeightPercent,
-            child: colorPicker(),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15.0, 5.0, 10.0, 5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () => setState(() {
-                    if (widget.onHistoryChanged != null && !colorHistory.contains(currentHsvColor.toColor())) {
-                      colorHistory.add(currentHsvColor.toColor());
-                      widget.onHistoryChanged!(colorHistory);
-                    }
-                  }),
-                  child: ColorIndicator(currentHsvColor),
-                ),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(height: 40.0, width: widget.colorPickerWidth - 75.0, child: sliderByPaletteType()),
-                      if (widget.enableAlpha)
-                        SizedBox(
-                          height: 40.0,
-                          width: widget.colorPickerWidth - 75.0,
-                          child: colorPickerSlider(TrackType.alpha),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (colorHistory.isNotEmpty)
-            SizedBox(
-              width: widget.colorPickerWidth,
-              height: 50,
-              child: ListView(scrollDirection: Axis.horizontal, children: <Widget>[
-                for (Color color in colorHistory)
-                  Padding(
-                    key: Key(color.hashCode.toString()),
-                    padding: const EdgeInsets.fromLTRB(15, 0, 0, 10),
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: () => onColorChanging(HSVColor.fromColor(color)),
-                        child: ColorIndicator(HSVColor.fromColor(color), width: 30, height: 30),
-                      ),
-                    ),
-                  ),
-                const SizedBox(width: 15),
-              ]),
-            ),
-          if (widget.showLabel && widget.labelTypes.isNotEmpty)
-            FittedBox(
-              child: ColorPickerLabel(
-                currentHsvColor,
-                enableAlpha: widget.enableAlpha,
-                textStyle: widget.labelTextStyle,
-                colorLabelTypes: widget.labelTypes,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        SizedBox(
+          width: widget.colorPickerWidth,
+          height: widget.colorPickerWidth,
+          child: colorPicker(),
+        ),
+        SizedBox(height: 40.0, child: sliderByPaletteType()),
+        // if (colorHistory.isNotEmpty)
+        //   SizedBox(
+        //     width: widget.colorPickerWidth,
+        //     height: 50,
+        //     child: ListView(scrollDirection: Axis.horizontal, children: <Widget>[
+        //       for (Color color in colorHistory)
+        //         Padding(
+        //           key: Key(color.hashCode.toString()),
+        //           padding: const EdgeInsets.fromLTRB(15, 0, 0, 10),
+        //           child: Center(
+        //             child: GestureDetector(
+        //               onTap: () => onColorChanging(HSVColor.fromColor(color)),
+        //               child: ColorIndicator(HSVColor.fromColor(color), width: 30, height: 30),
+        //             ),
+        //           ),
+        //         ),
+        //       const SizedBox(width: 15),
+        //     ]),
+        //   ),
+        // if (widget.showLabel && widget.labelTypes.isNotEmpty)
+        //   FittedBox(
+        //     child: ColorPickerLabel(
+        //       currentHsvColor,
+        //       enableAlpha: widget.enableAlpha,
+        //       textStyle: widget.labelTextStyle,
+        //       colorLabelTypes: widget.labelTypes,
+        //     ),
+        //   ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Hex', style: TextStyle(fontSize: 14, color: Color(0xFF3B3E43), fontWeight: FontWeight.w600)),
+            Container(
+              width: 106,
+              height: 32,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Color(0xFFF4F6FA),
+                borderRadius: BorderRadius.circular(8),
               ),
-            ),
-          if (widget.hexInputBar)
-            ColorPickerInput(
-              currentHsvColor.toColor(),
-              (Color color) {
-                setState(() => currentHsvColor = HSVColor.fromColor(color));
-                widget.onColorChanged(currentHsvColor.toColor());
-                if (widget.onHsvColorChanged != null) widget.onHsvColorChanged!(currentHsvColor);
-              },
-              enableAlpha: widget.enableAlpha,
-              embeddedText: false,
-            ),
-          const SizedBox(height: 20.0),
-        ],
-      );
-    } else {
-      return Row(
-        children: <Widget>[
-          SizedBox(
-              width: widget.colorPickerWidth,
-              height: widget.colorPickerWidth * widget.pickerAreaHeightPercent,
-              child: colorPicker()),
-          Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  const SizedBox(width: 20.0),
-                  GestureDetector(
-                    onTap: () => setState(() {
-                      if (widget.onHistoryChanged != null && !colorHistory.contains(currentHsvColor.toColor())) {
-                        colorHistory.add(currentHsvColor.toColor());
-                        widget.onHistoryChanged!(colorHistory);
-                      }
-                    }),
-                    child: ColorIndicator(currentHsvColor),
-                  ),
-                  Column(
-                    children: <Widget>[
-                      SizedBox(height: 40.0, width: 260.0, child: sliderByPaletteType()),
-                      if (widget.enableAlpha)
-                        SizedBox(height: 40.0, width: 260.0, child: colorPickerSlider(TrackType.alpha)),
-                    ],
-                  ),
-                  const SizedBox(width: 10.0),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ColorIndicator(currentHsvColor),
+                  const Spacer(),
+                  Text('#', style: TextStyle(fontSize: 16, color: Color(0xFF888888), fontWeight: FontWeight.w400)),
+                  Text(currentHsvColor
+                      .toColor()
+                      .value
+                      .toRadixString(16)
+                      .substring(2)
+                      .toString()
+                      .toUpperCase(), style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF3B3E43),
+                    fontWeight: FontWeight.w400,
+                  ),),
                 ],
               ),
-              if (colorHistory.isNotEmpty)
-                SizedBox(
-                  width: widget.colorPickerWidth,
-                  height: 50,
-                  child: ListView(scrollDirection: Axis.horizontal, children: <Widget>[
-                    for (Color color in colorHistory)
-                      Padding(
-                        key: Key(color.hashCode.toString()),
-                        padding: const EdgeInsets.fromLTRB(15, 18, 0, 0),
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () => onColorChanging(HSVColor.fromColor(color)),
-                            onLongPress: () {
-                              if (colorHistory.remove(color)) {
-                                widget.onHistoryChanged!(colorHistory);
-                                setState(() {});
-                              }
-                            },
-                            child: ColorIndicator(HSVColor.fromColor(color), width: 30, height: 30),
-                          ),
-                        ),
-                      ),
-                    const SizedBox(width: 15),
-                  ]),
-                ),
-              const SizedBox(height: 20.0),
-              if (widget.showLabel && widget.labelTypes.isNotEmpty)
-                FittedBox(
-                  child: ColorPickerLabel(
-                    currentHsvColor,
-                    enableAlpha: widget.enableAlpha,
-                    textStyle: widget.labelTextStyle,
-                    colorLabelTypes: widget.labelTypes,
-                  ),
-                ),
-              if (widget.hexInputBar)
-                ColorPickerInput(
-                  currentHsvColor.toColor(),
-                  (Color color) {
-                    setState(() => currentHsvColor = HSVColor.fromColor(color));
-                    widget.onColorChanged(currentHsvColor.toColor());
-                    if (widget.onHsvColorChanged != null) widget.onHsvColorChanged!(currentHsvColor);
-                  },
-                  enableAlpha: widget.enableAlpha,
-                  embeddedText: false,
-                ),
-              const SizedBox(height: 5),
-            ],
-          ),
-        ],
-      );
-    }
+            ),
+            // ColorPickerInput(
+            //   currentHsvColor.toColor(),
+            //       (Color color) {
+            //     setState(() => currentHsvColor = HSVColor.fromColor(color));
+            //     widget.onColorChanged(currentHsvColor.toColor());
+            //     if (widget.onHsvColorChanged != null) widget.onHsvColorChanged!(currentHsvColor);
+            //   },
+            //   enableAlpha: widget.enableAlpha,
+            //   embeddedText: false,
+            // ),
+          ],
+        ),
+
+        const SizedBox(height: 20.0),
+      ],
+    );
   }
 }
 
@@ -506,7 +428,7 @@ class _SlidePickerState extends State<SlidePicker> {
     return ColorPickerSlider(
       trackType,
       currentHsvColor,
-      (HSVColor color) {
+          (HSVColor color) {
         setState(() => currentHsvColor = color);
         widget.onColorChanged(currentHsvColor.toColor());
       },
@@ -600,8 +522,14 @@ class _SlidePickerState extends State<SlidePicker> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(
-                    trackType.toString().split('.').last[0].toUpperCase(),
-                    style: widget.sliderTextStyle ?? Theme.of(context).textTheme.bodyLarge,
+                    trackType
+                        .toString()
+                        .split('.')
+                        .last[0].toUpperCase(),
+                    style: widget.sliderTextStyle ?? Theme
+                        .of(context)
+                        .textTheme
+                        .bodyLarge,
                   ),
                 ),
               Expanded(child: colorPickerSlider(trackType)),
@@ -610,7 +538,10 @@ class _SlidePickerState extends State<SlidePicker> {
                   constraints: BoxConstraints(minWidth: fontSize * 2 + 5),
                   child: Text(
                     getColorParams(trackTypes.indexOf(trackType)),
-                    style: widget.sliderTextStyle ?? Theme.of(context).textTheme.bodyMedium,
+                    style: widget.sliderTextStyle ?? Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium,
                     textAlign: TextAlign.right,
                   ),
                 ),
@@ -691,7 +622,9 @@ class _HueRingPickerState extends State<HueRingPicker> {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).orientation == Orientation.portrait || widget.portraitOnly) {
+    if (MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait || widget.portraitOnly) {
       return Column(
         children: <Widget>[
           ClipRRect(
@@ -740,7 +673,7 @@ class _HueRingPickerState extends State<HueRingPicker> {
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 20),
                     child: ColorPickerInput(
                       currentHsvColor.toColor(),
-                      (Color color) {
+                          (Color color) {
                         setState(() => currentHsvColor = HSVColor.fromColor(color));
                         widget.onColorChanged(currentHsvColor.toColor());
                       },
@@ -784,7 +717,7 @@ class _HueRingPickerState extends State<HueRingPicker> {
                     const SizedBox(height: 10),
                     ColorPickerInput(
                       currentHsvColor.toColor(),
-                      (Color color) {
+                          (Color color) {
                         setState(() => currentHsvColor = HSVColor.fromColor(color));
                         widget.onColorChanged(currentHsvColor.toColor());
                       },

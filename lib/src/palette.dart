@@ -1162,8 +1162,8 @@ class ColorIndicator extends StatelessWidget {
   const ColorIndicator(
     this.hsvColor, {
     Key? key,
-    this.width = 50.0,
-    this.height = 50.0,
+    this.width = 16.0,
+    this.height = 16.0,
   }) : super(key: key);
 
   final HSVColor hsvColor;
@@ -1176,13 +1176,16 @@ class ColorIndicator extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(1000.0)),
-        border: Border.all(color: const Color(0xffdddddd)),
+        color: hsvColor.toColor(),
+        borderRadius: BorderRadius.circular(4),
       ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(1000.0)),
-        child: CustomPaint(painter: IndicatorPainter(hsvColor.toColor())),
-      ),
+      // decoration: BoxDecoration(
+      //   borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+      // ),
+      // child: ClipRRect(
+      //   borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+      //   child: CustomPaint(painter: IndicatorPainter(hsvColor.toColor())),
+      // ),
     );
   }
 }
