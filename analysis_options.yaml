@@ -1,3 +1,6 @@
+analyzer:
+  errors:
+    no_leading_underscores_for_local_identifiers: ignore
 include: package:flutter_lints/flutter.yaml
 
 # Additional information about this file can be found at

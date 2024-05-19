@@ -211,7 +211,7 @@ void main() {
       final String transparency = string.substring(4);
       test(
         'It should convert $color: to #${transparency + string} with hash',
-        () => expect(colorToHex(color, includeHashSign: true), '#' + transparency + string),
+        () => expect(colorToHex(color, includeHashSign: true), '#$transparency$string'),
       );
     });
 
@@ -220,7 +220,7 @@ void main() {
       test(
         'It should convert $color: to #${transparency + string.toLowerCase()}, with hash, to lower case',
         () => expect(
-            colorToHex(color, includeHashSign: true, toUpperCase: false), '#' + transparency + string.toLowerCase()),
+            colorToHex(color, includeHashSign: true, toUpperCase: false), '#$transparency${string.toLowerCase()}'),
       );
     });
 

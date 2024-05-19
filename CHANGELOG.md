@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [1.1.0]
+
+- [#75](https://github.com/mchome/flutter_colorpicker/pull/75) Enable ColorPickerInput in landscape mode.
+- [#82](https://github.com/mchome/flutter_colorpicker/pull/82) Fixes Material Picker: Box shadow doesn't respect theme.
+- [#101](https://github.com/mchome/flutter_colorpicker/pull/101) Fixed static analysis issues.
+- [#106](https://github.com/mchome/flutter_colorpicker/pull/106) Fixed issues when running app with impeller on iOS.
+
 ## [1.0.3]
 
 - [#68](https://github.com/mchome/flutter_colorpicker/issues/68) Fix material color picker outline for white color.

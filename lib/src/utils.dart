@@ -1,4 +1,4 @@
-/// Common function lib
+// Common function lib
 
 import 'dart:math';
 import 'package:flutter/painting.dart';

@@ -157,7 +157,7 @@ class ColorPicker extends StatefulWidget {
   final ValueChanged<List<Color>>? onHistoryChanged;
 
   @override
-  _ColorPickerState createState() => _ColorPickerState();
+  State<ColorPicker> createState() => _ColorPickerState();
 }
 
 class _ColorPickerState extends State<ColorPicker> {
@@ -666,7 +666,7 @@ class HueRingPicker extends StatefulWidget {
   final BorderRadius pickerAreaBorderRadius;
 
   @override
-  _HueRingPickerState createState() => _HueRingPickerState();
+  State<HueRingPicker> createState() => _HueRingPickerState();
 }
 
 class _HueRingPickerState extends State<HueRingPicker> {

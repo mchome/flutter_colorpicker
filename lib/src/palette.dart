@@ -1,6 +1,6 @@
-/// The components of HSV Color Picker
-///
-/// Try to create a Color Picker with other layout on your own :)
+// The components of HSV Color Picker
+//
+// Try to create a Color Picker with other layout on your own :)
 
 import 'dart:math';
 import 'package:flutter/gestures.dart';
@@ -825,7 +825,7 @@ class ColorPickerLabel extends StatefulWidget {
   final List<ColorLabelType> colorLabelTypes;
 
   @override
-  _ColorPickerLabelState createState() => _ColorPickerLabelState();
+  State<ColorPickerLabel> createState() => _ColorPickerLabelState();
 }
 
 class _ColorPickerLabelState extends State<ColorPickerLabel> {
@@ -955,7 +955,7 @@ class ColorPickerInput extends StatefulWidget {
   final bool disable;
 
   @override
-  _ColorPickerInputState createState() => _ColorPickerInputState();
+  State<ColorPickerInput> createState() => _ColorPickerInputState();
 }
 
 class _ColorPickerInputState extends State<ColorPickerInput> {
@@ -971,6 +971,7 @@ class _ColorPickerInputState extends State<ColorPickerInput> {
   @override
   Widget build(BuildContext context) {
     if (inputColor != widget.color.value) {
+      // ignore: prefer_interpolation_to_compose_strings
       textEditingController.text = '#' +
           widget.color.red.toRadixString(16).toUpperCase().padLeft(2, '0') +
           widget.color.green.toRadixString(16).toUpperCase().padLeft(2, '0') +
