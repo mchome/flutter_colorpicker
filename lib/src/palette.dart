@@ -527,7 +527,7 @@ class HueRingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Rect rect = Offset.zero & size;
     Offset center = Offset(size.width / 2, size.height / 2);
-    double radio = size.width <= size.height ? size.width / 2 : size.height / 2;
+    double radio = (size.width <= size.height ? size.width / 2 : size.height / 2) - strokeWidth / 2;
 
     final List<Color> colors = [
       const HSVColor.fromAHSV(1.0, 360.0, 1.0, 1.0).toColor(),
@@ -551,10 +551,19 @@ class HueRingPainter extends CustomPainter {
       center.dx + radio * cos((hsvColor.hue * pi / 180)),
       center.dy - radio * sin((hsvColor.hue * pi / 180)),
     );
-    canvas.drawShadow(Path()..addOval(Rect.fromCircle(center: offset, radius: 12)), Colors.black, 3.0, true);
+    canvas.drawShadow(
+      Path()
+        ..addOval(Rect.fromCircle(
+          center: offset,
+          radius: strokeWidth / 2 + strokeWidth * 0.1,
+        )),
+      Colors.black,
+      3.0,
+      true,
+    );
     canvas.drawCircle(
       offset,
-      size.height * 0.04,
+      strokeWidth / 1.8,
       Paint()
         ..color = Colors.white
         ..style = PaintingStyle.fill,
@@ -562,7 +571,7 @@ class HueRingPainter extends CustomPainter {
     if (displayThumbColor) {
       canvas.drawCircle(
         offset,
-        size.height * 0.03,
+        strokeWidth / 2 - strokeWidth * 0.1,
         Paint()
           ..color = hsvColor.toColor()
           ..style = PaintingStyle.fill,
