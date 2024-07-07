@@ -653,6 +653,7 @@ class HueRingPicker extends StatefulWidget {
     this.hueRingStrokeWidth = 20.0,
     this.enableAlpha = false,
     this.displayThumbColor = true,
+    this.disableTextInput = false,
     this.pickerAreaBorderRadius = const BorderRadius.all(Radius.zero),
   }) : super(key: key);
 
@@ -663,6 +664,8 @@ class HueRingPicker extends StatefulWidget {
   final double hueRingStrokeWidth;
   final bool enableAlpha;
   final bool displayThumbColor;
+  /// Disables the ability to manually edit the ColorPicker TextInput Field
+  final bool disableTextInput;
   final BorderRadius pickerAreaBorderRadius;
 
   @override
@@ -746,6 +749,7 @@ class _HueRingPickerState extends State<HueRingPicker> {
                       },
                       enableAlpha: widget.enableAlpha,
                       embeddedText: true,
+                      disable: widget.disableTextInput,
                     ),
                   ),
                 ),
@@ -790,7 +794,7 @@ class _HueRingPickerState extends State<HueRingPicker> {
                       },
                       enableAlpha: widget.enableAlpha,
                       embeddedText: true,
-                      disable: true,
+                      disable: widget.disableTextInput,
                     ),
                     if (widget.enableAlpha) const SizedBox(height: 5),
                     if (widget.enableAlpha)
