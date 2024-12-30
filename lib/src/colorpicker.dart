@@ -579,10 +579,8 @@ class _SlidePickerState extends State<SlidePicker> {
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = 14;
-    if (widget.labelTextStyle != null && widget.labelTextStyle?.fontSize != null) {
-      fontSize = widget.labelTextStyle?.fontSize ?? 14;
-    }
+    final double fontSize = widget.labelTextStyle?.fontSize ?? 14;
+
     final List<TrackType> trackTypes = [
       if (widget.colorModel == ColorModel.hsv) ...[TrackType.hue, TrackType.saturation, TrackType.value],
       if (widget.colorModel == ColorModel.hsl) ...[TrackType.hue, TrackType.saturationForHSL, TrackType.lightness],
@@ -641,7 +639,7 @@ class _SlidePickerState extends State<SlidePicker> {
     );
   }
 }
-
+                                  
 /// The Color Picker with HUE Ring & HSV model.
 class HueRingPicker extends StatefulWidget {
   const HueRingPicker({
