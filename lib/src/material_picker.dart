@@ -232,7 +232,7 @@ class _MaterialPickerState extends State<MaterialPicker> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                '#${(_color.toString().replaceFirst('Color(0xff', '').replaceFirst(')', '')).toUpperCase()}  ',
+                                '#${(_color.value.toRadixString(16).padLeft(8, '0')).substring(2).toUpperCase()}  ',
                                 style: TextStyle(
                                   color: useWhiteForeground(_color) ? Colors.white : Colors.black,
                                   fontWeight: FontWeight.bold,
