@@ -4,6 +4,8 @@
 
 library hsv_picker;
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'palette.dart';
 import 'utils.dart';
@@ -695,11 +697,11 @@ class _HueRingPickerState extends State<HueRingPicker> {
           ClipRRect(
             borderRadius: widget.pickerAreaBorderRadius,
             child: Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(5),
               child: Stack(alignment: AlignmentDirectional.center, children: <Widget>[
                 SizedBox(
-                  width: widget.colorPickerHeight,
-                  height: widget.colorPickerHeight,
+                  width: widget.colorPickerHeight + widget.hueRingStrokeWidth,
+                  height: widget.colorPickerHeight + widget.hueRingStrokeWidth,
                   child: ColorPickerHueRing(
                     currentHsvColor,
                     onColorChanging,
@@ -708,8 +710,8 @@ class _HueRingPickerState extends State<HueRingPicker> {
                   ),
                 ),
                 SizedBox(
-                  width: widget.colorPickerHeight / 1.6,
-                  height: widget.colorPickerHeight / 1.6,
+                  width: (widget.colorPickerHeight - widget.hueRingStrokeWidth) / 1.45,
+                  height: (widget.colorPickerHeight - widget.hueRingStrokeWidth) / 1.45,
                   child: ColorPickerArea(currentHsvColor, onColorChanging, PaletteType.hsv),
                 )
               ]),
@@ -768,16 +770,16 @@ class _HueRingPickerState extends State<HueRingPicker> {
           ClipRRect(
             borderRadius: widget.pickerAreaBorderRadius,
             child: Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(5),
               child: Stack(alignment: AlignmentDirectional.topCenter, children: <Widget>[
                 SizedBox(
-                  width: widget.colorPickerHeight - widget.hueRingStrokeWidth * 2,
-                  height: widget.colorPickerHeight - widget.hueRingStrokeWidth * 2,
+                  width: widget.colorPickerHeight - widget.hueRingStrokeWidth,
+                  height: widget.colorPickerHeight - widget.hueRingStrokeWidth,
                   child: ColorPickerHueRing(currentHsvColor, onColorChanging, strokeWidth: widget.hueRingStrokeWidth),
                 ),
                 Column(
                   children: [
-                    SizedBox(height: widget.colorPickerHeight / 8.5),
+                    SizedBox(height: widget.colorPickerHeight / 8.5 + widget.hueRingStrokeWidth / 2),
                     ColorIndicator(currentHsvColor),
                     const SizedBox(height: 10),
                     ColorPickerInput(
