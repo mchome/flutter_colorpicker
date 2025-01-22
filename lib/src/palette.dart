@@ -1334,12 +1334,20 @@ class ColorPickerHueRing extends StatelessWidget {
     Key? key,
     this.displayThumbColor = true,
     this.strokeWidth = 5.0,
+    this.gesturesOnlyInside = false,
+    this.onEnd,
   }) : super(key: key);
 
   final HSVColor hsvColor;
   final ValueChanged<HSVColor> onColorChanged;
   final bool displayThumbColor;
   final double strokeWidth;
+
+  /// Whether to recognize gestures only when inside the hue ring or anywhere in it’s bounds
+  final bool gesturesOnlyInside;
+
+  /// Callback called when the user finishes interacting with color picker
+  final VoidCallback? onEnd;
 
   void _handleGesture(Offset position, BuildContext context, double height, double width) {
     RenderBox? getBox = context.findRenderObject() as RenderBox?;
@@ -1363,19 +1371,37 @@ class ColorPickerHueRing extends StatelessWidget {
         double width = constraints.maxWidth;
         double height = constraints.maxHeight;
 
+        final gestureInitializer = (PanGestureRecognizer instance) {
+          instance
+            ..onDown = ((details) => _handleGesture(details.globalPosition, context, height, width))
+            ..onUpdate =
+                ((details) => _handleGesture(details.globalPosition, context, height, width))
+            ..onEnd = (_) => onEnd?.call();
+        };
+
         return RawGestureDetector(
-          gestures: {
-            _AlwaysWinPanGestureRecognizer: GestureRecognizerFactoryWithHandlers<_AlwaysWinPanGestureRecognizer>(
-              () => _AlwaysWinPanGestureRecognizer(),
-              (_AlwaysWinPanGestureRecognizer instance) {
-                instance
-                  ..onDown = ((details) => _handleGesture(details.globalPosition, context, height, width))
-                  ..onUpdate = ((details) => _handleGesture(details.globalPosition, context, height, width));
-              },
-            ),
-          },
+          gestures: !gesturesOnlyInside
+              ? {
+                  _AlwaysWinPanGestureRecognizer:
+                      GestureRecognizerFactoryWithHandlers<_AlwaysWinPanGestureRecognizer>(
+                    () => _AlwaysWinPanGestureRecognizer(),
+                    gestureInitializer,
+                  ),
+                }
+              : {
+                  _InsideRingPanGestureRecognizer:
+                      GestureRecognizerFactoryWithHandlers<_InsideRingPanGestureRecognizer>(
+                    () => _InsideRingPanGestureRecognizer(
+                      width: width,
+                      height: height,
+                      strokeWidth: strokeWidth,
+                    ),
+                    gestureInitializer,
+                  ),
+                },
           child: CustomPaint(
-            painter: HueRingPainter(hsvColor, displayThumbColor: displayThumbColor, strokeWidth: strokeWidth),
+            painter: HueRingPainter(hsvColor,
+                displayThumbColor: displayThumbColor, strokeWidth: strokeWidth),
           ),
         );
       },
@@ -1392,6 +1418,38 @@ class _AlwaysWinPanGestureRecognizer extends PanGestureRecognizer {
 
   @override
   String get debugDescription => 'alwaysWin';
+}
+
+/// Pan gesture recgonizer that only accepts pointers inside the hue ring
+class _InsideRingPanGestureRecognizer extends PanGestureRecognizer {
+  final Offset center;
+  final double radio;
+  final double strokeWidth;
+
+  _InsideRingPanGestureRecognizer({
+    required width,
+    required height,
+    required this.strokeWidth,
+  })  : center = Offset(width / 2, height / 2),
+        radio = width <= height ? width / 2 : height / 2,
+        super();
+
+  @override
+  void addAllowedPointer(event) {
+    final x = pow(event.localPosition.dx - center.dx, 2);
+    final y = pow(event.localPosition.dy - center.dy, 2);
+    final bool passTest = x + y <= pow(radio, 2) && x + y >= pow(radio - strokeWidth, 2);
+
+    if (passTest) {
+      super.addAllowedPointer(event);
+      resolve(GestureDisposition.accepted);
+    } else {
+      resolve(GestureDisposition.rejected);
+    }
+  }
+
+  @override
+  String get debugDescription => 'insideRing';
 }
 
 /// Uppercase text formater
