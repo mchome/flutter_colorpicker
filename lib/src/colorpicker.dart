@@ -22,6 +22,8 @@ class ColorPicker extends StatefulWidget {
     this.labelTypes = const [ColorLabelType.rgb, ColorLabelType.hsv, ColorLabelType.hsl],
     @Deprecated('Use Theme.of(context).textTheme.bodyText1 & 2 to alter text style.') this.labelTextStyle,
     this.displayThumbColor = false,
+    this.displayColorIndicator = true,
+    this.palletTypeSliderWidth = 225.0,
     this.portraitOnly = false,
     this.colorPickerWidth = 300.0,
     this.pickerAreaHeightPercent = 1.0,
@@ -47,6 +49,8 @@ class ColorPicker extends StatefulWidget {
   final double pickerAreaHeightPercent;
   final BorderRadius pickerAreaBorderRadius;
   final bool hexInputBar;
+  final bool displayColorIndicator;
+  final double palletTypeSliderWidth;
 
   /// Allows setting the color using text input, via [TextEditingController].
   ///
@@ -290,18 +294,28 @@ class _ColorPickerState extends State<ColorPicker> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 GestureDetector(
-                  onTap: () => setState(() {
-                    if (widget.onHistoryChanged != null && !colorHistory.contains(currentHsvColor.toColor())) {
-                      colorHistory.add(currentHsvColor.toColor());
-                      widget.onHistoryChanged!(colorHistory);
+                  onTap: () {
+                    if (widget.displayColorIndicator) {
+                      setState(() {
+                        if (widget.onHistoryChanged != null && !colorHistory.contains(currentHsvColor.toColor())) {
+                          colorHistory.add(currentHsvColor.toColor());
+                          widget.onHistoryChanged!(colorHistory);
+                        }
+                      });
                     }
-                  }),
-                  child: ColorIndicator(currentHsvColor),
+                  },
+                  child: widget.displayColorIndicator ? ColorIndicator(currentHsvColor) : const SizedBox(),
                 ),
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: 40.0, width: widget.colorPickerWidth - 75.0, child: sliderByPaletteType()),
+                      SizedBox(
+                        height: 40.0,
+                        width: widget.displayColorIndicator
+                            ? widget.colorPickerWidth - 75.0
+                            : widget.palletTypeSliderWidth,
+                        child: sliderByPaletteType(),
+                      ),
                       if (widget.enableAlpha)
                         SizedBox(
                           height: 40.0,
