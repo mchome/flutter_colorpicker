@@ -1,7 +1,9 @@
 // Common function lib
 
 import 'dart:math';
+
 import 'package:flutter/painting.dart';
+
 import 'colors.dart';
 
 /// Check if is good condition to use white foreground color by passing
@@ -17,10 +19,7 @@ bool useWhiteForeground(Color backgroundColor, {double bias = 0.0}) {
   // return 1.05 / (color.computeLuminance() + 0.05) > 4.5;
 
   // New:
-  int v = sqrt(pow(backgroundColor.red, 2) * 0.299 +
-          pow(backgroundColor.green, 2) * 0.587 +
-          pow(backgroundColor.blue, 2) * 0.114)
-      .round();
+  int v = sqrt(pow(backgroundColor.r, 2) * 0.299 + pow(backgroundColor.g, 2) * 0.587 + pow(backgroundColor.b, 2) * 0.114).round();
   return v < 130 + bias ? true : false;
 }
 
@@ -148,32 +147,34 @@ const String kCompleteValidHexPattern = r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9
 /// colorFromHex('') == null // empty
 /// ```
 /// Reference: https://en.wikipedia.org/wiki/Web_colors#Hex_triplet
-Color? colorFromHex(String inputString, {bool enableAlpha = true}) {
+Color colorFromHex(String inputString, {bool enableAlpha = true}) {
   // Registers validator for exactly 6 or 8 digits long HEX (with optional #).
   final RegExp hexValidator = RegExp(kCompleteValidHexPattern);
   // Validating input, if it does not match — it's not proper HEX.
-  if (!hexValidator.hasMatch(inputString)) return null;
+  if (!hexValidator.hasMatch(inputString)) {
+    throw Exception('Invalid HEX color: $inputString');
+  }
   // Remove optional hash if exists and convert HEX to UPPER CASE.
   String hexToParse = inputString.replaceFirst('#', '').toUpperCase();
-  // It may allow HEXs with transparency information even if alpha is disabled,
+
   if (!enableAlpha && hexToParse.length == 8) {
     // but it will replace this info with 100% non-transparent value (FF).
     hexToParse = 'FF${hexToParse.substring(2)}';
-  }
-  // HEX may be provided in 3-digits format, let's just duplicate each letter.
-  if (hexToParse.length == 3) {
+  } else if (hexToParse.length == 6) {
+    // We will need 8 digits to parse the color, let's add missing digits.
+    hexToParse = 'FF$hexToParse';
+  } else if (hexToParse.length == 3) {
+    // HEX may be provided in 3-digits format, let's just duplicate each letter.
     hexToParse = hexToParse.split('').expand((i) => [i * 2]).join();
   }
-  // We will need 8 digits to parse the color, let's add missing digits.
-  if (hexToParse.length == 6) hexToParse = 'FF$hexToParse';
-  // HEX must be valid now, but as a precaution, it will just "try" to parse it.
-  final intColorValue = int.tryParse(hexToParse, radix: 16);
-  // If for some reason HEX is not valid — abort the operation, return nothing.
-  if (intColorValue == null) return null;
-  // Register output color for the last step.
+
+  // HEX should be valid; therefore, we can promote to not null, if error is thrown,
+  // that means the implementation is incorrect;
+  final intColorValue = int.tryParse(hexToParse, radix: 16)!;
+
   final color = Color(intColorValue);
-  // Decide to return color with transparency information or not.
-  return enableAlpha ? color : color.withAlpha(255);
+
+  return color;
 }
 
 /// Converts `dart:ui` [Color] to the 6/8 digits HEX [String].
@@ -189,10 +190,10 @@ String colorToHex(
   bool toUpperCase = true,
 }) {
   final String hex = (includeHashSign ? '#' : '') +
-      (enableAlpha ? _padRadix(color.alpha) : '') +
-      _padRadix(color.red) +
-      _padRadix(color.green) +
-      _padRadix(color.blue);
+      (enableAlpha ? _padRadix(color.a.toInt()) : '') +
+      _padRadix(color.r.toInt()) +
+      _padRadix(color.g.toInt()) +
+      _padRadix(color.b.toInt());
   return toUpperCase ? hex.toUpperCase() : hex;
 }
 
@@ -200,16 +201,23 @@ String colorToHex(
 String _padRadix(int value) => value.toRadixString(16).padLeft(2, '0');
 
 // Extension for String
-extension ColorExtension1 on String {
-  Color? toColor() {
-    Color? color = colorFromName(this);
-    if (color != null) return color;
+extension StringToColorExtension on String {
+  Color toColor() {
     return colorFromHex(this);
+  }
+
+  Color? toColorFromName() {
+    return colorFromName(this);
+  }
+
+  bool isColor() {
+    final RegExp hexValidator = RegExp(kCompleteValidHexPattern);
+    return hexValidator.hasMatch(this);
   }
 }
 
 // Extension from Color
-extension ColorExtension2 on Color {
+extension ColorToStringExtension on Color {
   String toHexString({
     bool includeHashSign = false,
     bool enableAlpha = true,
