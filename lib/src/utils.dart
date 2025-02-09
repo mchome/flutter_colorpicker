@@ -190,10 +190,10 @@ String colorToHex(
   bool toUpperCase = true,
 }) {
   final String hex = (includeHashSign ? '#' : '') +
-      (enableAlpha ? _padRadix(color.alpha.toInt()) : '') +
-      _padRadix(color.red.toInt()) +
-      _padRadix(color.green.toInt()) +
-      _padRadix(color.blue.toInt());
+      (enableAlpha ? _padRadix(color.alpha) : '') +
+      _padRadix(color.red) +
+      _padRadix(color.green) +
+      _padRadix(color.blue);
   return toUpperCase ? hex.toUpperCase() : hex;
 }
 
