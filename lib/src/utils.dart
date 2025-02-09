@@ -174,7 +174,7 @@ Color colorFromHex(String inputString, {bool enableAlpha = true}) {
 
   final color = Color(intColorValue);
 
-  return color;
+  return enableAlpha ? color : color.withAlpha(255);
 }
 
 /// Converts `dart:ui` [Color] to the 6/8 digits HEX [String].
