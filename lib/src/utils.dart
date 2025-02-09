@@ -19,7 +19,7 @@ bool useWhiteForeground(Color backgroundColor, {double bias = 0.0}) {
   // return 1.05 / (color.computeLuminance() + 0.05) > 4.5;
 
   // New:
-  int v = sqrt(pow(backgroundColor.r, 2) * 0.299 + pow(backgroundColor.g, 2) * 0.587 + pow(backgroundColor.b, 2) * 0.114).round();
+  int v = sqrt(pow(backgroundColor.red, 2) * 0.299 + pow(backgroundColor.green, 2) * 0.587 + pow(backgroundColor.blue, 2) * 0.114).round();
   return v < 130 + bias ? true : false;
 }
 
@@ -190,10 +190,10 @@ String colorToHex(
   bool toUpperCase = true,
 }) {
   final String hex = (includeHashSign ? '#' : '') +
-      (enableAlpha ? _padRadix(color.a.toInt()) : '') +
-      _padRadix(color.r.toInt()) +
-      _padRadix(color.g.toInt()) +
-      _padRadix(color.b.toInt());
+      (enableAlpha ? _padRadix(color.alpha.toInt()) : '') +
+      _padRadix(color.red.toInt()) +
+      _padRadix(color.green.toInt()) +
+      _padRadix(color.blue.toInt());
   return toUpperCase ? hex.toUpperCase() : hex;
 }
 
