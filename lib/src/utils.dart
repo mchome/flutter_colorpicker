@@ -165,7 +165,7 @@ Color colorFromHex(String inputString, {bool enableAlpha = true}) {
     hexToParse = 'FF$hexToParse';
   } else if (hexToParse.length == 3) {
     // HEX may be provided in 3-digits format, let's just duplicate each letter.
-    hexToParse = hexToParse.split('').expand((i) => [i * 2]).join();
+    hexToParse = 'FF${hexToParse.split('').expand((String i) => <String>[i * 2]).join()}';
   }
 
   // HEX should be valid; therefore, we can promote to not null, if error is thrown,
@@ -198,7 +198,7 @@ String colorToHex(
 }
 
 // Shorthand for padLeft of RadixString, DRY.
-String _padRadix(int value) => value.toRadixString(16).padLeft(2, '0');
+String _padRadix(int value) => value.toRadixString(16);
 
 // Extension for String
 extension StringToColorExtension on String {
