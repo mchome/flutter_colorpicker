@@ -34,6 +34,8 @@ class _HSVColorPickerExampleState extends State<HSVColorPickerExample> {
   // Picker 1
   PaletteType _paletteType = PaletteType.hsl;
   bool _enableAlpha = true;
+  bool _enableSlider = true;
+  bool _enableColorIndicator = true;
   bool _displayThumbColor = true;
   final List<ColorLabelType> _labelTypes = [ColorLabelType.hsl, ColorLabelType.hsv];
   bool _displayHexInputBar = false;
@@ -84,6 +86,8 @@ class _HSVColorPickerExampleState extends State<HSVColorPickerExample> {
                           colorPickerWidth: 300,
                           pickerAreaHeightPercent: 0.7,
                           enableAlpha: _enableAlpha,
+                          enableSlider: _enableSlider,
+                          enableColorIndicator: _enableColorIndicator,
                           labelTypes: _labelTypes,
                           displayThumbColor: _displayThumbColor,
                           paletteType: _paletteType,
@@ -126,6 +130,8 @@ ColorPicker(
   colorPickerWidth: 300,
   pickerAreaHeightPercent: 0.7,
   enableAlpha: $_enableAlpha,
+  enableSlider: $_enableSlider,
+  enableColorIndicator: $_enableColorIndicator,
   labelTypes: $_labelTypes,
   displayThumbColor: $_displayThumbColor,
   paletteType: $_paletteType,
@@ -158,6 +164,16 @@ ColorPicker(
           subtitle: const Text('Display alpha slider & label text'),
           value: _enableAlpha,
           onChanged: (bool value) => setState(() => _enableAlpha = !_enableAlpha),
+        ),
+        SwitchListTile(
+          title: const Text('Enable Slider'),
+          value: _enableSlider,
+          onChanged: (bool value) => setState(() => _enableSlider = !_enableSlider),
+        ),
+        SwitchListTile(
+          title: const Text('Enable Color Indicator'),
+          value: _enableColorIndicator,
+          onChanged: (bool value) => setState(() => _enableColorIndicator = !_enableColorIndicator),
         ),
         SwitchListTile(
           title: const Text('Display Thumb Color in slider'),
