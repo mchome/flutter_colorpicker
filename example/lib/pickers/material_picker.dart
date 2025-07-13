@@ -12,10 +12,12 @@ class MaterialColorPickerExample extends StatefulWidget {
   final ValueChanged<Color> onColorChanged;
 
   @override
-  State<MaterialColorPickerExample> createState() => _MaterialColorPickerExampleState();
+  State<MaterialColorPickerExample> createState() =>
+      _MaterialColorPickerExampleState();
 }
 
-class _MaterialColorPickerExampleState extends State<MaterialColorPickerExample> {
+class _MaterialColorPickerExampleState
+    extends State<MaterialColorPickerExample> {
   bool _enableLabel = true;
   bool _portraitOnly = false;
 
@@ -50,11 +52,14 @@ class _MaterialColorPickerExampleState extends State<MaterialColorPickerExample>
               },
               child: Text(
                 'Kiss Me with Your Finger',
-                style: TextStyle(color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+                style: TextStyle(
+                    color: useWhiteForeground(widget.pickerColor)
+                        ? Colors.white
+                        : Colors.black),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -83,10 +88,13 @@ MaterialPicker(
                   },
                 );
               },
-              child: Icon(Icons.code, color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+              child: Icon(Icons.code,
+                  color: useWhiteForeground(widget.pickerColor)
+                      ? Colors.white
+                      : Colors.black),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -95,12 +103,14 @@ MaterialPicker(
         SwitchListTile(
           title: const Text('Enable Label in Portrait Mode'),
           value: _enableLabel,
-          onChanged: (bool value) => setState(() => _enableLabel = !_enableLabel),
+          onChanged: (bool value) =>
+              setState(() => _enableLabel = !_enableLabel),
         ),
         SwitchListTile(
           title: const Text('Apply Portrait layout to Landscape Mode'),
           value: _portraitOnly,
-          onChanged: (bool value) => setState(() => _portraitOnly = !_portraitOnly),
+          onChanged: (bool value) =>
+              setState(() => _portraitOnly = !_portraitOnly),
         ),
       ],
     );
