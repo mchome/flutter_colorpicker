@@ -35,7 +35,10 @@ class _HSVColorPickerExampleState extends State<HSVColorPickerExample> {
   PaletteType _paletteType = PaletteType.hsl;
   bool _enableAlpha = true;
   bool _displayThumbColor = true;
-  final List<ColorLabelType> _labelTypes = [ColorLabelType.hsl, ColorLabelType.hsv];
+  final List<ColorLabelType> _labelTypes = [
+    ColorLabelType.hsl,
+    ColorLabelType.hsv
+  ];
   bool _displayHexInputBar = false;
 
   // Picker 2
@@ -50,8 +53,9 @@ class _HSVColorPickerExampleState extends State<HSVColorPickerExample> {
   bool _showIndicator = true;
 
   // Picker 4
-  final textController =
-      TextEditingController(text: '#2F19DB'); // The initial value can be provided directly to the controller.
+  final textController = TextEditingController(
+      text:
+          '#2F19DB'); // The initial value can be provided directly to the controller.
   bool _enableAlpha4 = true;
 
   @override
@@ -102,11 +106,14 @@ class _HSVColorPickerExampleState extends State<HSVColorPickerExample> {
               },
               child: Text(
                 'Color Picker with Slider',
-                style: TextStyle(color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+                style: TextStyle(
+                    color: useWhiteForeground(widget.pickerColor)
+                        ? Colors.white
+                        : Colors.black),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -144,10 +151,13 @@ ColorPicker(
                   },
                 );
               },
-              child: Icon(Icons.code, color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+              child: Icon(Icons.code,
+                  color: useWhiteForeground(widget.pickerColor)
+                      ? Colors.white
+                      : Colors.black),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -157,12 +167,14 @@ ColorPicker(
           title: const Text('Enable Alpha Slider'),
           subtitle: const Text('Display alpha slider & label text'),
           value: _enableAlpha,
-          onChanged: (bool value) => setState(() => _enableAlpha = !_enableAlpha),
+          onChanged: (bool value) =>
+              setState(() => _enableAlpha = !_enableAlpha),
         ),
         SwitchListTile(
           title: const Text('Display Thumb Color in slider'),
           value: _displayThumbColor,
-          onChanged: (bool value) => setState(() => _displayThumbColor = !_displayThumbColor),
+          onChanged: (bool value) =>
+              setState(() => _displayThumbColor = !_displayThumbColor),
         ),
         ListTile(
           title: const Text('Palette Type'),
@@ -178,7 +190,8 @@ ColorPicker(
                     value: type,
                     child: SizedBox(
                       width: 150,
-                      child: Text(type.toString().split('.').last, textAlign: TextAlign.end),
+                      child: Text(type.toString().split('.').last,
+                          textAlign: TextAlign.end),
                     ),
                   )
               ],
@@ -186,16 +199,23 @@ ColorPicker(
           ),
         ),
         ExpansionTile(
-          title: Text(_labelTypes.isNotEmpty ? 'Display Label' : 'Disable Label'),
+          title:
+              Text(_labelTypes.isNotEmpty ? 'Display Label' : 'Disable Label'),
           subtitle: Text(
-            _labelTypes.isNotEmpty ? _labelTypes.map((e) => e.toString().split('.').last.toUpperCase()).toString() : '',
+            _labelTypes.isNotEmpty
+                ? _labelTypes
+                    .map((e) => e.toString().split('.').last.toUpperCase())
+                    .toString()
+                : '',
           ),
           children: [
             SwitchListTile(
               title: const Text('    Display HEX Label Text'),
               value: _labelTypes.contains(ColorLabelType.hex),
               onChanged: (bool value) => setState(
-                () => value ? _labelTypes.add(ColorLabelType.hex) : _labelTypes.remove(ColorLabelType.hex),
+                () => value
+                    ? _labelTypes.add(ColorLabelType.hex)
+                    : _labelTypes.remove(ColorLabelType.hex),
               ),
               dense: true,
             ),
@@ -203,7 +223,9 @@ ColorPicker(
               title: const Text('    Display RGB Label Text'),
               value: _labelTypes.contains(ColorLabelType.rgb),
               onChanged: (bool value) => setState(
-                () => value ? _labelTypes.add(ColorLabelType.rgb) : _labelTypes.remove(ColorLabelType.rgb),
+                () => value
+                    ? _labelTypes.add(ColorLabelType.rgb)
+                    : _labelTypes.remove(ColorLabelType.rgb),
               ),
               dense: true,
             ),
@@ -211,7 +233,9 @@ ColorPicker(
               title: const Text('    Display HSV Label Text'),
               value: _labelTypes.contains(ColorLabelType.hsv),
               onChanged: (bool value) => setState(
-                () => value ? _labelTypes.add(ColorLabelType.hsv) : _labelTypes.remove(ColorLabelType.hsv),
+                () => value
+                    ? _labelTypes.add(ColorLabelType.hsv)
+                    : _labelTypes.remove(ColorLabelType.hsv),
               ),
               dense: true,
             ),
@@ -219,7 +243,9 @@ ColorPicker(
               title: const Text('    Display HSL Label Text'),
               value: _labelTypes.contains(ColorLabelType.hsl),
               onChanged: (bool value) => setState(
-                () => value ? _labelTypes.add(ColorLabelType.hsl) : _labelTypes.remove(ColorLabelType.hsl),
+                () => value
+                    ? _labelTypes.add(ColorLabelType.hsl)
+                    : _labelTypes.remove(ColorLabelType.hsl),
               ),
               dense: true,
             ),
@@ -228,7 +254,8 @@ ColorPicker(
         SwitchListTile(
           title: const Text('Display Hex Input Bar'),
           value: _displayHexInputBar,
-          onChanged: (bool value) => setState(() => _displayHexInputBar = !_displayHexInputBar),
+          onChanged: (bool value) =>
+              setState(() => _displayHexInputBar = !_displayHexInputBar),
         ),
         const Divider(),
         const SizedBox(height: 5),
@@ -245,12 +272,14 @@ ColorPicker(
                       titlePadding: const EdgeInsets.all(0),
                       contentPadding: const EdgeInsets.all(0),
                       shape: RoundedRectangleBorder(
-                        borderRadius: MediaQuery.of(context).orientation == Orientation.portrait
+                        borderRadius: MediaQuery.of(context).orientation ==
+                                Orientation.portrait
                             ? const BorderRadius.vertical(
                                 top: Radius.circular(500),
                                 bottom: Radius.circular(100),
                               )
-                            : const BorderRadius.horizontal(right: Radius.circular(500)),
+                            : const BorderRadius.horizontal(
+                                right: Radius.circular(500)),
                       ),
                       content: SingleChildScrollView(
                         child: HueRingPicker(
@@ -266,11 +295,14 @@ ColorPicker(
               },
               child: Text(
                 'Hue Ring Picker with Hex Input',
-                style: TextStyle(color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+                style: TextStyle(
+                    color: useWhiteForeground(widget.pickerColor)
+                        ? Colors.white
+                        : Colors.black),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -297,10 +329,13 @@ HueRingPicker(
                   },
                 );
               },
-              child: Icon(Icons.code, color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+              child: Icon(Icons.code,
+                  color: useWhiteForeground(widget.pickerColor)
+                      ? Colors.white
+                      : Colors.black),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -309,12 +344,14 @@ HueRingPicker(
         SwitchListTile(
           title: const Text('Enable Alpha Slider'),
           value: _enableAlpha2,
-          onChanged: (bool value) => setState(() => _enableAlpha2 = !_enableAlpha2),
+          onChanged: (bool value) =>
+              setState(() => _enableAlpha2 = !_enableAlpha2),
         ),
         SwitchListTile(
           title: const Text('Display Thumb Color in Slider'),
           value: _displayThumbColor2,
-          onChanged: (bool value) => setState(() => _displayThumbColor2 = !_displayThumbColor2),
+          onChanged: (bool value) =>
+              setState(() => _displayThumbColor2 = !_displayThumbColor2),
         ),
         const Divider(),
         const SizedBox(height: 5),
@@ -330,7 +367,8 @@ HueRingPicker(
                     return AlertDialog(
                       titlePadding: const EdgeInsets.all(0),
                       contentPadding: const EdgeInsets.all(0),
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
                       content: SingleChildScrollView(
                         child: SlidePicker(
                           pickerColor: widget.pickerColor,
@@ -340,7 +378,8 @@ HueRingPicker(
                           displayThumbColor: _displayThumbColor3,
                           showParams: _showParams,
                           showIndicator: _showIndicator,
-                          indicatorBorderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+                          indicatorBorderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(25)),
                         ),
                       ),
                     );
@@ -349,11 +388,14 @@ HueRingPicker(
               },
               child: Text(
                 'Slider-only Color Picker',
-                style: TextStyle(color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+                style: TextStyle(
+                    color: useWhiteForeground(widget.pickerColor)
+                        ? Colors.white
+                        : Colors.black),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -384,10 +426,13 @@ SlidePicker(
                   },
                 );
               },
-              child: Icon(Icons.code, color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+              child: Icon(Icons.code,
+                  color: useWhiteForeground(widget.pickerColor)
+                      ? Colors.white
+                      : Colors.black),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -407,7 +452,8 @@ SlidePicker(
                     value: type,
                     child: SizedBox(
                       width: 50,
-                      child: Text(type.toString().split('.').last, textAlign: TextAlign.end),
+                      child: Text(type.toString().split('.').last,
+                          textAlign: TextAlign.end),
                     ),
                   )
               ],
@@ -417,12 +463,14 @@ SlidePicker(
         SwitchListTile(
           title: const Text('Enable Alpha Slider'),
           value: _enableAlpha3,
-          onChanged: (bool value) => setState(() => _enableAlpha3 = !_enableAlpha3),
+          onChanged: (bool value) =>
+              setState(() => _enableAlpha3 = !_enableAlpha3),
         ),
         SwitchListTile(
           title: const Text('Display Thumb Color in Slider'),
           value: _displayThumbColor3,
-          onChanged: (bool value) => setState(() => _displayThumbColor3 = !_displayThumbColor3),
+          onChanged: (bool value) =>
+              setState(() => _displayThumbColor3 = !_displayThumbColor3),
         ),
         SwitchListTile(
           title: const Text('Show Parameters next to Slider'),
@@ -432,7 +480,8 @@ SlidePicker(
         SwitchListTile(
           title: const Text('Show Color Indicator'),
           value: _showIndicator,
-          onChanged: (bool value) => setState(() => _showIndicator = !_showIndicator),
+          onChanged: (bool value) =>
+              setState(() => _showIndicator = !_showIndicator),
         ),
         const Divider(),
         const SizedBox(height: 15),
@@ -456,7 +505,8 @@ SlidePicker(
                             onColorChanged: widget.onColorChanged,
                             colorPickerWidth: 300,
                             pickerAreaHeightPercent: 0.7,
-                            enableAlpha: _enableAlpha4, // hexInputController will respect it too.
+                            enableAlpha:
+                                _enableAlpha4, // hexInputController will respect it too.
                             displayThumbColor: true,
                             paletteType: PaletteType.hsvWithHue,
                             labelTypes: const [],
@@ -484,10 +534,13 @@ SlidePicker(
                             child: CupertinoTextField(
                               controller: textController,
                               // Everything below is purely optional.
-                              prefix: const Padding(padding: EdgeInsets.only(left: 8), child: Icon(Icons.tag)),
+                              prefix: const Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Icon(Icons.tag)),
                               suffix: IconButton(
                                 icon: const Icon(Icons.content_paste_rounded),
-                                onPressed: () => copyToClipboard(textController.text),
+                                onPressed: () =>
+                                    copyToClipboard(textController.text),
                               ),
                               autofocus: true,
                               maxLength: 9,
@@ -495,7 +548,8 @@ SlidePicker(
                                 // Any custom input formatter can be passed
                                 // here or use any Form validator you want.
                                 UpperCaseTextFormatter(),
-                                FilteringTextInputFormatter.allow(RegExp(kValidHexPattern)),
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(kValidHexPattern)),
                               ],
                             ),
                           )
@@ -507,11 +561,14 @@ SlidePicker(
               },
               child: Text(
                 '  HSV Color Picker\n(Your own text field)',
-                style: TextStyle(color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+                style: TextStyle(
+                    color: useWhiteForeground(widget.pickerColor)
+                        ? Colors.white
+                        : Colors.black),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -569,10 +626,13 @@ Column(
                   },
                 );
               },
-              child: Icon(Icons.code, color: useWhiteForeground(widget.pickerColor) ? Colors.white : Colors.black),
+              child: Icon(Icons.code,
+                  color: useWhiteForeground(widget.pickerColor)
+                      ? Colors.white
+                      : Colors.black),
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.pickerColor,
-                shadowColor: widget.pickerColor.withOpacity(1),
+                shadowColor: widget.pickerColor.withValues(alpha: 1),
                 elevation: 10,
               ),
             ),
@@ -581,7 +641,8 @@ Column(
         SwitchListTile(
           title: const Text('Enable Alpha Slider'),
           value: _enableAlpha4,
-          onChanged: (bool value) => setState(() => _enableAlpha4 = !_enableAlpha4),
+          onChanged: (bool value) =>
+              setState(() => _enableAlpha4 = !_enableAlpha4),
         ),
         const SizedBox(height: 80),
       ],
