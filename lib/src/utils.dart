@@ -1,7 +1,9 @@
 // Common function lib
 
 import 'dart:math';
+
 import 'package:flutter/painting.dart';
+
 import 'colors.dart';
 
 /// Check if is good condition to use white foreground color by passing
@@ -17,10 +19,7 @@ bool useWhiteForeground(Color backgroundColor, {double bias = 0.0}) {
   // return 1.05 / (color.computeLuminance() + 0.05) > 4.5;
 
   // New:
-  int v = sqrt(pow(backgroundColor.red, 2) * 0.299 +
-          pow(backgroundColor.green, 2) * 0.587 +
-          pow(backgroundColor.blue, 2) * 0.114)
-      .round();
+  int v = sqrt(pow(backgroundColor.red, 2) * 0.299 + pow(backgroundColor.green, 2) * 0.587 + pow(backgroundColor.blue, 2) * 0.114).round();
   return v < 130 + bias ? true : false;
 }
 
@@ -148,31 +147,33 @@ const String kCompleteValidHexPattern = r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9
 /// colorFromHex('') == null // empty
 /// ```
 /// Reference: https://en.wikipedia.org/wiki/Web_colors#Hex_triplet
-Color? colorFromHex(String inputString, {bool enableAlpha = true}) {
+Color colorFromHex(String inputString, {bool enableAlpha = true}) {
   // Registers validator for exactly 6 or 8 digits long HEX (with optional #).
   final RegExp hexValidator = RegExp(kCompleteValidHexPattern);
   // Validating input, if it does not match — it's not proper HEX.
-  if (!hexValidator.hasMatch(inputString)) return null;
+  if (!hexValidator.hasMatch(inputString)) {
+    throw Exception('Invalid HEX color: $inputString');
+  }
   // Remove optional hash if exists and convert HEX to UPPER CASE.
   String hexToParse = inputString.replaceFirst('#', '').toUpperCase();
-  // It may allow HEXs with transparency information even if alpha is disabled,
+
   if (!enableAlpha && hexToParse.length == 8) {
     // but it will replace this info with 100% non-transparent value (FF).
     hexToParse = 'FF${hexToParse.substring(2)}';
+  } else if (hexToParse.length == 6) {
+    // We will need 8 digits to parse the color, let's add missing digits.
+    hexToParse = 'FF$hexToParse';
+  } else if (hexToParse.length == 3) {
+    // HEX may be provided in 3-digits format, let's just duplicate each letter.
+    hexToParse = 'FF${hexToParse.split('').expand((String i) => <String>[i * 2]).join()}';
   }
-  // HEX may be provided in 3-digits format, let's just duplicate each letter.
-  if (hexToParse.length == 3) {
-    hexToParse = hexToParse.split('').expand((i) => [i * 2]).join();
-  }
-  // We will need 8 digits to parse the color, let's add missing digits.
-  if (hexToParse.length == 6) hexToParse = 'FF$hexToParse';
-  // HEX must be valid now, but as a precaution, it will just "try" to parse it.
-  final intColorValue = int.tryParse(hexToParse, radix: 16);
-  // If for some reason HEX is not valid — abort the operation, return nothing.
-  if (intColorValue == null) return null;
-  // Register output color for the last step.
+
+  // HEX should be valid; therefore, we can promote to not null, if error is thrown,
+  // that means the implementation is incorrect;
+  final intColorValue = int.tryParse(hexToParse, radix: 16)!;
+
   final color = Color(intColorValue);
-  // Decide to return color with transparency information or not.
+
   return enableAlpha ? color : color.withAlpha(255);
 }
 
@@ -197,19 +198,26 @@ String colorToHex(
 }
 
 // Shorthand for padLeft of RadixString, DRY.
-String _padRadix(int value) => value.toRadixString(16).padLeft(2, '0');
+String _padRadix(int value) => value.toRadixString(16);
 
 // Extension for String
-extension ColorExtension1 on String {
-  Color? toColor() {
-    Color? color = colorFromName(this);
-    if (color != null) return color;
+extension StringToColorExtension on String {
+  Color toColor() {
     return colorFromHex(this);
+  }
+
+  Color? toColorFromName() {
+    return colorFromName(this);
+  }
+
+  bool isColor() {
+    final RegExp hexValidator = RegExp(kCompleteValidHexPattern);
+    return hexValidator.hasMatch(this);
   }
 }
 
 // Extension from Color
-extension ColorExtension2 on Color {
+extension ColorToStringExtension on Color {
   String toHexString({
     bool includeHashSign = false,
     bool enableAlpha = true,

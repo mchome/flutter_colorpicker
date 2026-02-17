@@ -163,7 +163,3 @@ const Map<String, Color> x11Colors = {
 };
 
 Color? colorFromName(String val) => x11Colors[val.trim().replaceAll(' ', '').toLowerCase()];
-
-extension ColorExtension on String {
-  Color? toColor() => colorFromName(this);
-}
