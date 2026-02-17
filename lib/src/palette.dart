@@ -79,7 +79,8 @@ class HSVWithHueColorPainter extends CustomPainter {
       Paint()
         ..color = pointerColor ?? (useWhiteForeground(hsvColor.toColor()) ? Colors.white : Colors.black)
         ..strokeWidth = 1.5
-        ..blendMode = BlendMode.luminosity
+        // https://github.com/mchome/flutter_colorpicker/issues/130
+        // ..blendMode = BlendMode.luminosity
         ..style = PaintingStyle.stroke,
     );
   }
