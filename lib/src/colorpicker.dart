@@ -18,6 +18,8 @@ class ColorPicker extends StatefulWidget {
     this.onHsvColorChanged,
     this.paletteType = PaletteType.hsvWithHue,
     this.enableAlpha = true,
+    this.enableSlider = true,
+    this.enableColorIndicator = true,
     @Deprecated('Use empty list in [labelTypes] to disable label.') this.showLabel = true,
     this.labelTypes = const [ColorLabelType.rgb, ColorLabelType.hsv, ColorLabelType.hsl],
     @Deprecated('Use Theme.of(context).textTheme.bodyText1 & 2 to alter text style.') this.labelTextStyle,
@@ -38,6 +40,8 @@ class ColorPicker extends StatefulWidget {
   final ValueChanged<HSVColor>? onHsvColorChanged;
   final PaletteType paletteType;
   final bool enableAlpha;
+  final bool enableSlider;
+  final bool enableColorIndicator;
   final bool showLabel;
   final List<ColorLabelType> labelTypes;
   final TextStyle? labelTextStyle;
@@ -289,19 +293,21 @@ class _ColorPickerState extends State<ColorPicker> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                GestureDetector(
-                  onTap: () => setState(() {
-                    if (widget.onHistoryChanged != null && !colorHistory.contains(currentHsvColor.toColor())) {
-                      colorHistory.add(currentHsvColor.toColor());
-                      widget.onHistoryChanged!(colorHistory);
-                    }
-                  }),
-                  child: ColorIndicator(currentHsvColor),
-                ),
+                if (widget.enableColorIndicator)
+                  GestureDetector(
+                    onTap: () => setState(() {
+                      if (widget.onHistoryChanged != null && !colorHistory.contains(currentHsvColor.toColor())) {
+                        colorHistory.add(currentHsvColor.toColor());
+                        widget.onHistoryChanged!(colorHistory);
+                      }
+                    }),
+                    child: ColorIndicator(currentHsvColor),
+                  ),
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: 40.0, width: widget.colorPickerWidth - 75.0, child: sliderByPaletteType()),
+                      if (widget.enableSlider)
+                        SizedBox(height: 40.0, width: widget.colorPickerWidth - 75.0, child: sliderByPaletteType()),
                       if (widget.enableAlpha)
                         SizedBox(
                           height: 40.0,
@@ -368,18 +374,20 @@ class _ColorPickerState extends State<ColorPicker> {
               Row(
                 children: <Widget>[
                   const SizedBox(width: 20.0),
-                  GestureDetector(
-                    onTap: () => setState(() {
-                      if (widget.onHistoryChanged != null && !colorHistory.contains(currentHsvColor.toColor())) {
-                        colorHistory.add(currentHsvColor.toColor());
-                        widget.onHistoryChanged!(colorHistory);
-                      }
-                    }),
-                    child: ColorIndicator(currentHsvColor),
-                  ),
+                  if (widget.enableColorIndicator)
+                    GestureDetector(
+                      onTap: () => setState(() {
+                        if (widget.onHistoryChanged != null && !colorHistory.contains(currentHsvColor.toColor())) {
+                          colorHistory.add(currentHsvColor.toColor());
+                          widget.onHistoryChanged!(colorHistory);
+                        }
+                      }),
+                      child: ColorIndicator(currentHsvColor),
+                    ),
                   Column(
                     children: <Widget>[
-                      SizedBox(height: 40.0, width: 260.0, child: sliderByPaletteType()),
+                      if (widget.enableSlider)
+                        SizedBox(height: 40.0, width: 260.0, child: sliderByPaletteType()),
                       if (widget.enableAlpha)
                         SizedBox(height: 40.0, width: 260.0, child: colorPickerSlider(TrackType.alpha)),
                     ],
